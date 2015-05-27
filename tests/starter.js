@@ -1,9 +1,17 @@
 var app = require('rc-server')();
+var parse = require('co-busboy');
+
 app.use(function*() {
   if (this.url === '/upload.do') {
-    this.set('Content-Type', 'text/html');
+    var parts = parse(this, {
+      autoFields: true // saves the fields to parts.field(s)
+    });
+    var files = [];
+    var part = yield parts;
+    files.push(part.filename);
     this.status = 200;
-    this.res.end('["hello"]');
+    this.set('Content-Type', 'text/html');
+    this.res.end(JSON.stringify(files));
     return;
   }
 });

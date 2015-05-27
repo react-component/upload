@@ -13,5 +13,5 @@ var props = {
   }
 };
 
-React.render(<Upload {...props}>开始上传</Upload>,
+React.render(<Upload {...props}><a href="#nowhere">开始上传</a></Upload>,
     document.getElementById('__react-content'));

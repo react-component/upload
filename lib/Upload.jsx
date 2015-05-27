@@ -1,8 +1,8 @@
 'use strict';
 var React = require('react');
 var PropTypes = React.PropTypes;
-var AjaxUpload = require('./ajaxUploader');
-var IframeUpload = require('./iframeUploader');
+var AjaxUpload = require('./AjaxUploader');
+var IframeUpload = require('./IframeUploader');
 var empty = function() {};
 
 var Upload = React.createClass({

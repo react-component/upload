@@ -13,6 +13,7 @@ var boxStyle = {
 var inputStyle = {
   position: 'absolute',
   filter: 'alpha(opacity=0)',
+  outline: 0,
   right: 0,
   top: 0,
   fontSize: 100
