@@ -11,7 +11,9 @@ var AjaxUploader = React.createClass({
 
   _onClick: function() {
     var el = React.findDOMNode(this.refs.file);
-    if (!el) { return; }
+    if (!el) {
+      return;
+    }
     el.click();
     el.value = '';
   },
