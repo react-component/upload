@@ -41,7 +41,7 @@ var IframeUploader = React.createClass({
 
   _onload: function(e) {
     // ie8里面render方法会执行onLoad，应该是bug
-    if (!this.startUpload) {
+    if (!this.startUpload || !this.file) {
       return;
     }
 
@@ -50,13 +50,15 @@ var IframeUploader = React.createClass({
     var response;
     try {
       response = iframe.contentDocument.body.innerHTML;
-      props.onSuccess(response);
+      props.onSuccess(response, this.file);
     } catch (err) {
       response = 'cross-domain';
       props.onError(err);
     }
 
     this.startUpload = false;
+    this.file = null;
+
     this.setState({
       uid: this.state.uid + 1
     });
@@ -75,8 +77,9 @@ var IframeUploader = React.createClass({
     );
   },
 
-  _onChange: function() {
+  _onChange: function(e) {
     this.startUpload = true;
+    this.file = e.target.files[0];
     React.findDOMNode(this.refs.form).submit();
   },
 
