@@ -1,7 +1,7 @@
 /** @jsx React.DOM */
 // use jsx to render html, do not modify simple.html
 var React = require('react');
-var Upload = require('../lib/upload');
+var Upload = require('rc-upload');
 var props = {
   action: '/upload.do',
   data: {a: 1, b: 2},
