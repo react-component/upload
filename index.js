@@ -1,1 +1,1 @@
-module.exports = require('./lib/Upload');
+module.exports = require('./src/Upload');
