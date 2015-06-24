@@ -31,7 +31,9 @@ var Upload = React.createClass({
 
   render: function() {
     var props = this.props;
-    if (window.FormData) {
+    var isNode = typeof window === 'undefined';
+    // node环境或者支持FormData的情况使用AjaxUpload
+    if (isNode || typeof FormData === 'function') {
       return <AjaxUpload {...props} />;
     }
 

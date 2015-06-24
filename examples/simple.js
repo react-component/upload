@@ -1,4 +1,3 @@
-/** @jsx React.DOM */
 // use jsx to render html, do not modify simple.html
 var React = require('react');
 var Upload = require('rc-upload');
