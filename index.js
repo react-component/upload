@@ -1,1 +1,2 @@
-module.exports = require('./src/Upload');
+// do not modify this file
+module.exports = require('./src/');

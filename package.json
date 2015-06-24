@@ -18,23 +18,18 @@
     "url": "http://github.com/react-component/upload/issues"
   },
   "licenses": "MIT",
-  "spm": {
-    "dependencies": {
-      "react": "*"
-    }
-  },
+  "main":"./lib/index",
   "config": {
     "port": 8000
   },
   "scripts": {
     "build": "rc-tools run build",
+    "precommit": "rc-tools run precommit",
     "less": "rc-tools run less",
     "gh-pages": "rc-tools run gh-pages",
-    "history": "rc-tools run history",
-    "start": "node-dev --harmony ./tests/starter.js",
-    "publish": "spm publish && rc-tools run tag",
+    "start": "node --harmony node_modules/.bin/rc-server",
+    "publish": "rc-tools run tag",
     "lint": "rc-tools run lint",
-    "test": "",
     "saucelabs": "node --harmony node_modules/.bin/rc-tools run saucelabs",
     "browser-test": "node --harmony node_modules/.bin/rc-tools run browser-test",
     "browser-test-cover": "node --harmony node_modules/.bin/rc-tools run browser-test-cover"
@@ -49,20 +44,8 @@
     "react": "0.13.x"
   },
   "precommit": [
-    "lint",
-    "less"
+    "precommit"
   ],
-  "browserify": {
-    "transform": [
-      [
-        "reactify",
-        {
-          "es6": true
-        }
-      ],
-      "envify"
-    ]
-  },
   "dependencies": {
     "object-assign": "~2.0.0",
     "superagent": "~1.2.0"
