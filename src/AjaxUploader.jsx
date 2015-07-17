@@ -53,11 +53,22 @@ var AjaxUploader = React.createClass({
     });
   },
 
-  render: function() {
+  _onFileDrop(e) {
+    if (e.type === 'dragover') {
+      return e.preventDefault();
+    }
+
+    var files = e.dataTransfer.files;
+    this._uploadFiles(files);
+
+    e.preventDefault();
+  },
+
+  render() {
     var hidden = {display: 'none'};
     var props = this.props;
     return (
-      <span onClick={this._onClick}>
+      <span onClick={this._onClick} onDrop={this._onFileDrop} onDragOver={this._onFileDrop}>
         <input type="file"
         ref="file" style={hidden}
         accept={props.accept} onChange={this._onChange}/>
