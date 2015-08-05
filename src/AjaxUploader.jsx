@@ -2,6 +2,10 @@
 var React = require('react');
 var request = require('superagent');
 
+function uid() {
+  return Math.random().toString().slice(2);
+}
+
 var AjaxUploader = React.createClass({
 
   _onChange: function(e) {
@@ -30,7 +34,9 @@ var AjaxUploader = React.createClass({
 
   _post: function(file) {
 
+    file.uid = uid();
     var props = this.props;
+    props.onStart(file);
     var req = request
       .post(props.action)
       .attach(props.name, file, file.name);
@@ -39,10 +45,14 @@ var AjaxUploader = React.createClass({
       req.field(key, props.data[key]);
     }
 
-    req.on('progress', props.onProgress);
+    var progress = function(e) {
+      props.onProgress(e, file);
+    };
+
+    req.on('progress', progress);
 
     req.end(function(err, ret) {
-      req.off('progress', props.onProgress);
+      req.off('progress', progress);
       if (err || ret.status !== 200) {
         var message = err ? err.message : ret.text;
         props.onError(message, file);

@@ -14,6 +14,7 @@ var Upload = React.createClass({
     onError: PropTypes.func,
     onSuccess: PropTypes.func,
     onProgress: PropTypes.func,
+    onStart: PropTypes.func,
     data: PropTypes.object,
     accept: PropTypes.string
   },
@@ -24,6 +25,7 @@ var Upload = React.createClass({
       name: 'file',
       multipart: false,
       onProgress: empty,
+      onStart: empty,
       onError: empty,
       onSuccess: empty
     };
