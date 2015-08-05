@@ -46,7 +46,6 @@
     "precommit"
   ],
   "dependencies": {
-    "object-assign": "~2.0.0",
     "superagent": "~1.2.0"
   }
 }

@@ -4,11 +4,14 @@ var Upload = require('rc-upload');
 var props = {
   action: '/upload.do',
   data: {a: 1, b: 2},
+  onStart: function(file){
+    console.log('onStart',file.name || file.value);
+  },
   onSuccess: function(ret) {
-    console.log(ret);
+    console.log('onSuccess',ret);
   },
   onProgress: function(step) {
-    console.log(step);
+    console.log('onProgress',step);
   }
 };
 
