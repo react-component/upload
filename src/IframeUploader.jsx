@@ -79,7 +79,7 @@ var IframeUploader = React.createClass({
 
   _onChange: function(e) {
     this.startUpload = true;
-    this.file = e.target.files[0];
+    this.file = (e.target.files && e.target.files[0]) || e.target;
     this.props.onStart(this.file);
     React.findDOMNode(this.refs.form).submit();
   },
