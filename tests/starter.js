@@ -8,7 +8,11 @@ app.use(function*() {
     });
     var files = [];
     var part = yield parts;
-    files.push(part.filename);
+    if (part) {
+      files.push(part.filename);
+    } else {
+      files.push('foo.png');
+    }
     this.status = 200;
     this.set('Content-Type', 'text/html');
     this.res.end(JSON.stringify(files));
