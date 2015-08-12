@@ -56,6 +56,17 @@ React.render(<Upload />, container);
 | onSuccess | function | | success callback |
 | onProgress | function || progress callback, only for modern browsers|
 
+#### onError arguments
+
+1. `err`: request error message
+2. `responce`: request responce, not support on iframeUpload
+3. `file`: upload file object
+
+### onSuccess arguments
+
+1. `result`: request body
+2. `file`: upload file
+
 ## License
 
 rc-upload is released under the MIT license.
