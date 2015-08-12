@@ -54,8 +54,7 @@ var AjaxUploader = React.createClass({
     req.end(function(err, ret) {
       req.off('progress', progress);
       if (err || ret.status !== 200) {
-        var message = err ? err.message : ret.text;
-        props.onError(message, file);
+        props.onError(err, ret, file);
         return;
       }
 

@@ -1,3 +1,7 @@
+### 1.3.0 2015-08-12
+
+- onError arguments change to `err, responce, file`
+
 ### 1.2.3 2015-07-17
 
 - support file drop

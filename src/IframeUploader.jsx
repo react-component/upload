@@ -53,7 +53,7 @@ var IframeUploader = React.createClass({
       props.onSuccess(response, this.file);
     } catch (err) {
       response = 'cross-domain';
-      props.onError(err);
+      props.onError(err, null, this.file);
     }
 
     this.startUpload = false;
