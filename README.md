@@ -51,6 +51,7 @@ React.render(<Upload />, container);
 |action| string | | from action url |
 |data| object | | other data object to post |
 |accept | string | | input accept attribute |
+| multiple | boolean | false | only support ie10+|
 |onStart | function| | start upload file |
 |onError| function| | error callback |
 | onSuccess | function | | success callback |

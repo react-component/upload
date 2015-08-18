@@ -16,7 +16,8 @@ var Upload = React.createClass({
     onProgress: PropTypes.func,
     onStart: PropTypes.func,
     data: PropTypes.object,
-    accept: PropTypes.string
+    accept: PropTypes.string,
+    multiple: PropTypes.bool
   },
 
   getDefaultProps: function() {
@@ -27,7 +28,8 @@ var Upload = React.createClass({
       onProgress: empty,
       onStart: empty,
       onError: empty,
-      onSuccess: empty
+      onSuccess: empty,
+      multiple: false
     };
   },
 

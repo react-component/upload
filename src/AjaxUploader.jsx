@@ -79,8 +79,11 @@ var AjaxUploader = React.createClass({
     return (
       <span onClick={this._onClick} onDrop={this._onFileDrop} onDragOver={this._onFileDrop}>
         <input type="file"
-        ref="file" style={hidden}
-        accept={props.accept} onChange={this._onChange}/>
+        ref="file"
+        style={hidden}
+        accept={props.accept}
+        multiple={this.props.multiple}
+        onChange={this._onChange}/>
         {props.children}
       </span>
     );
