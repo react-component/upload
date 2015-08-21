@@ -83,6 +83,9 @@ var IframeUploader = React.createClass({
   _onChange: function(e) {
     this.startUpload = true;
     this.file = (e.target.files && e.target.files[0]) || e.target;
+    // ie8/9 don't support FileList Object
+    // http://stackoverflow.com/questions/12830058/ie8-input-type-file-get-files
+    this.file.name = this.file.name || e.target.value;
     this.props.onStart(this.file);
     React.findDOMNode(this.refs.form).submit();
   },
