@@ -29,10 +29,13 @@ var IframeUploader = React.createClass({
 
   componentDidMount: function() {
     var el = React.findDOMNode(this);
-    this.setState({
-      width: el.offsetWidth,
-      height: el.offsetHeight
-    });
+    // Fix render bug in IE
+    setTimeout(() => {
+      this.setState({
+        width: el.offsetWidth,
+        height: el.offsetHeight
+      });
+    }, 0);
   },
 
   _getName: function() {
