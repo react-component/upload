@@ -1,10 +1,7 @@
 'use strict';
 var React = require('react');
 var request = require('superagent');
-
-function uid() {
-  return Math.random().toString().slice(2);
-}
+var uid = require('./uid');
 
 var AjaxUploader = React.createClass({
 

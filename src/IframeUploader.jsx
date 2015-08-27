@@ -1,6 +1,7 @@
 'use strict';
 
 var React = require('react');
+var uid = require('./uid');
 
 var formStyle = {
   position: 'absolute',
@@ -21,13 +22,13 @@ var inputStyle = {
 
 var IframeUploader = React.createClass({
 
-  getInitialState: function() {
+  getInitialState: function () {
     return {
       width: 20, height: 12, uid: 1
     };
   },
 
-  componentDidMount: function() {
+  componentDidMount: function () {
     var el = React.findDOMNode(this);
     // Fix render bug in IE
     setTimeout(() => {
@@ -38,11 +39,11 @@ var IframeUploader = React.createClass({
     }, 0);
   },
 
-  _getName: function() {
+  _getName: function () {
     return 'iframe_uploader_' + this.state.uid;
   },
 
-  _onload: function(e) {
+  _onload: function (e) {
     // ie8里面render方法会执行onLoad，应该是bug
     if (!this.startUpload || !this.file) {
       return;
@@ -67,7 +68,7 @@ var IframeUploader = React.createClass({
     });
   },
 
-  _getIframe: function() {
+  _getIframe: function () {
     var name = this._getName();
     var hidden = {display: 'none'};
     return (
@@ -80,17 +81,18 @@ var IframeUploader = React.createClass({
     );
   },
 
-  _onChange: function(e) {
+  _onChange: function (e) {
     this.startUpload = true;
     this.file = (e.target.files && e.target.files[0]) || e.target;
     // ie8/9 don't support FileList Object
     // http://stackoverflow.com/questions/12830058/ie8-input-type-file-get-files
     this.file.name = this.file.name || e.target.value;
+    this.file.uid = uid();
     this.props.onStart(this.file);
     React.findDOMNode(this.refs.form).submit();
   },
 
-  render: function() {
+  render: function () {
     var props = this.props;
     var state = this.state;
     inputStyle.height = state.height;
@@ -104,15 +106,15 @@ var IframeUploader = React.createClass({
     return (
       <span style={boxStyle}>
         <form action={props.action}
-          target={iframeName}
-          encType="multipart/form-data"
-          ref="form"
-          method="post" style={formStyle}>
+              target={iframeName}
+              encType="multipart/form-data"
+              ref="form"
+              method="post" style={formStyle}>
           <input type="file"
-            style={inputStyle}
-            accept={props.accept}
-            onChange={this._onChange}
-          />
+                 style={inputStyle}
+                 accept={props.accept}
+                 onChange={this._onChange}
+            />
         </form>
         {iframe}
         {props.children}
