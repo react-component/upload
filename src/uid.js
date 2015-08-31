@@ -1,5 +1,3 @@
-var uid = 0;
 module.exports = function () {
-  uid++;
-  return uid;
+  return Math.random().toString().slice(2);
 };
