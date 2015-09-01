@@ -1,3 +1,5 @@
+var uuid = require('uuid');
+
 module.exports = function () {
-  return Math.random().toString().slice(2);
+  return uuid.v1();
 };
