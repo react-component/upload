@@ -1,5 +1,5 @@
 var uuid = require('uuid');
 
 module.exports = function () {
-  return uuid.v1();
+  return uuid.v4();
 };
