@@ -27,10 +27,10 @@ var AjaxUploader = React.createClass({
         file.uid = uid();
         this._post(file);
       }
-      if (files.length === 1) {
-        this.props.onStart(Array.prototype.slice.call(files)[0]);
-      } else {
+      if (this.props.multiple) {
         this.props.onStart(Array.prototype.slice.call(files));
+      } else {
+        this.props.onStart(Array.prototype.slice.call(files)[0]);
       }
     }
   },
