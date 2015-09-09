@@ -1,3 +1,7 @@
+### 1.4.0 2015-09-09
+
+- onStart file argument change to a array when multiple files uploaded
+
 ### 1.3.0 2015-08-12
 
 - onError arguments change to `err, responce, file`

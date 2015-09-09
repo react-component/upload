@@ -24,16 +24,19 @@ var AjaxUploader = React.createClass({
     if (len > 0) {
       for (var i = 0; i < len; i++) {
         var file = files.item(i);
+        file.uid = uid();
         this._post(file);
+      }
+      if (files.length === 1) {
+        this.props.onStart(Array.prototype.slice.call(files)[0]);
+      } else {
+        this.props.onStart(Array.prototype.slice.call(files));
       }
     }
   },
 
   _post: function(file) {
-
-    file.uid = uid();
     var props = this.props;
-    props.onStart(file);
     var req = request
       .post(props.action)
       .attach(props.name, file, file.name);
