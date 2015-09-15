@@ -77,9 +77,11 @@ const AjaxUploader = React.createClass({
       }
     }
 
-    req.on('progress', ()=> {
+    function progress(e) {
       props.onProgress(e, file);
-    });
+    }
+
+    req.on('progress', progress);
 
     req.end((err, ret) => {
       req.off('progress', progress);
