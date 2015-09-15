@@ -5,16 +5,19 @@ var props = {
   action: '/upload.do',
   data: {a: 1, b: 2},
   multiple: true,
-  onStart: function(file) {
+  onStart(file) {
     console.log('onStart', file.name || file.value);
   },
-  onSuccess: function(ret) {
+  onSuccess(ret) {
     console.log('onSuccess', ret);
   },
-  onProgress: function(step, file) {
+  onProgress(step, file) {
     console.log('onProgress', step, file);
+  },
+  onError(err){
+    console.log('onError', err);
   }
 };
 
 React.render(<Upload {...props}><a href="#nowhere">开始上传</a></Upload>,
-    document.getElementById('__react-content'));
+  document.getElementById('__react-content'));

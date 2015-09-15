@@ -1,45 +1,109 @@
 const React = require('react');
 const uid = require('./uid');
+const Align = require('rc-align');
+const getComputedStyle = require('./getComputedStyle');
 
-const formStyle = {
-  position: 'absolute',
-  overflow: 'hidden',
-  top: 0,
-};
-const boxStyle = {
-  position: 'relative',
-};
-const inputStyle = {
-  position: 'absolute',
-  filter: 'alpha(opacity=0)',
-  outline: 0,
-  right: 0,
-  top: 0,
-  fontSize: 100,
-};
+function findZIndex(n) {
+  let node = n;
+  let zIndex = 0;
+  while (node.nodeName.toLowerCase() !== 'body') {
+    if (getComputedStyle(node, 'position') !== 'static') {
+      zIndex = parseInt(getComputedStyle(node, 'zIndex'), 10) || zIndex;
+    }
+    node = node.parentNode;
+  }
+  return zIndex;
+}
 
 const IframeUploader = React.createClass({
   propTypes: {
     onStart: React.PropTypes.func,
+    children: React.PropTypes.any,
   },
 
   getInitialState() {
     return {
-      width: 20,
-      height: 12,
       uid: 1,
     };
   },
 
+  getFormContainer() {
+    if (this.formContainer) {
+      return this.formContainer;
+    }
+    this.formContainer = document.createElement('div');
+    document.body.appendChild(this.formContainer);
+    return this.formContainer;
+  },
+
+  getFormElement() {
+    const props = this.props;
+    const trigger = React.findDOMNode(this);
+    const width = trigger.offsetWidth;
+    const height = trigger.offsetHeight;
+    const iframeName = this.getIframeName();
+    const iframe = this.getIframe();
+    const formStyle = {
+      position: 'absolute',
+      overflow: 'hidden',
+      width: width,
+      height: height,
+      cursor: 'pointer',
+      opacity: 0,
+      filter: 'alpha(opacity=0)',
+      zIndex: findZIndex(trigger) + 1,
+    };
+    const inputStyle = {
+      position: 'absolute',
+      top: 0,
+      right: 0,
+      opacity: 0,
+      filter: 'alpha(opacity=0)',
+      outline: 0,
+      cursor: 'pointer',
+      height: height,
+      fontSize: Math.max(64, height * 5),
+    };
+    return (<Align monitorWindowResize={true} align={{
+      points: ['tl', 'tl'],
+    }} target={this.getDOMNode}>
+      <form action={props.action}
+            target={iframeName}
+            encType="multipart/form-data"
+            method="post" style={formStyle}>
+        <input type="file"
+               hideFocus="true"
+               style={inputStyle}
+               accept={props.accept}
+               onChange={this.onChange}
+          />
+        {iframe}
+      </form>
+    </Align>);
+  },
+
   componentDidMount() {
-    const el = React.findDOMNode(this);
-    // Fix render bug in IE
-    setTimeout(() => {
-      this.setState({
-        width: el.offsetWidth,
-        height: el.offsetHeight,
+    const component = this;
+    React.render(this.getFormElement(), this.getFormContainer(), function save() {
+      component.formInstance = this;
+    });
+  },
+
+  componentDidUpdate(prevProps, prevState) {
+    if (prevState.uid !== this.state.uid) {
+      const component = this;
+      React.render(this.getFormElement(), this.getFormContainer(), function save() {
+        component.formInstance = this;
       });
-    }, 0);
+    }
+  },
+
+  componentWillUnmount() {
+    if (this.formContainer) {
+      React.unmountComponentAtNode(this.formContainer);
+      document.body.removeChild(this.formContainer);
+      this.formContainer = null;
+    }
   },
 
   onLoad(e) {
@@ -75,54 +139,27 @@ const IframeUploader = React.createClass({
     this.file.name = this.file.name || e.target.value;
     this.file.uid = uid();
     this.props.onStart(this.file);
-    React.findDOMNode(this.refs.form).submit();
+    React.findDOMNode(this.formInstance).submit();
   },
 
   getIframe() {
-    const name = this.getName();
-    const hidden = {display: 'none'};
+    const name = this.getIframeName();
     return (
       <iframe
         key={name}
         onLoad={this.onLoad}
-        style={hidden}
+        style={{display: 'none'}}
         name={name}>
       </iframe>
     );
   },
 
-  getName() {
+  getIframeName() {
     return 'iframe_uploader_' + this.state.uid;
   },
 
   render() {
-    const props = this.props;
-    const state = this.state;
-    inputStyle.height = state.height;
-    inputStyle.fontSize = Math.max(64, state.height * 5);
-    formStyle.width = state.width;
-    formStyle.height = state.height;
-
-    const iframeName = this.getName();
-    const iframe = this.getIframe();
-
-    return (
-      <span style={boxStyle}>
-        <form action={props.action}
-              target={iframeName}
-              encType="multipart/form-data"
-              ref="form"
-              method="post" style={formStyle}>
-          <input type="file"
-                 style={inputStyle}
-                 accept={props.accept}
-                 onChange={this.onChange}
-            />
-        </form>
-        {iframe}
-        {props.children}
-      </span>
-    );
+    return this.props.children;
   },
 });
 
