@@ -207,9 +207,11 @@ webpackJsonp([0,1],[
 	      }
 	    }
 	
-	    req.on('progress', function () {
+	    function progress(e) {
 	      props.onProgress(e, file);
-	    });
+	    }
+	
+	    req.on('progress', progress);
 	
 	    req.end(function (err, ret) {
 	      req.off('progress', progress);
@@ -240,14 +242,9 @@ webpackJsonp([0,1],[
 	 * Root reference for iframes.
 	 */
 	
-	var root;
-	if (typeof window !== 'undefined') { // Browser window
-	  root = window;
-	} else if (typeof self !== 'undefined') { // Web Worker
-	  root = self;
-	} else { // Other environments
-	  root = this;
-	}
+	var root = 'undefined' == typeof window
+	  ? (this || self)
+	  : window;
 	
 	/**
 	 * Noop.
@@ -583,20 +580,6 @@ webpackJsonp([0,1],[
 	};
 	
 	/**
-	 * Force given parser
-	 * 
-	 * Sets the body parser no matter type.
-	 * 
-	 * @param {Function}
-	 * @api public
-	 */
-	
-	Response.prototype.parse = function(fn){
-	  this.parser = fn;
-	  return this;
-	};
-	
-	/**
 	 * Parse the given body `str`.
 	 *
 	 * Used for auto-parsing of bodies. Parsers
@@ -608,7 +591,7 @@ webpackJsonp([0,1],[
 	 */
 	
 	Response.prototype.parseBody = function(str){
-	  var parse = this.parser || request.parse[this.type];
+	  var parse = request.parse[this.type];
 	  return parse && str && (str.length || str instanceof Object)
 	    ? parse(str)
 	    : null;
@@ -644,7 +627,7 @@ webpackJsonp([0,1],[
 	  var type = status / 100 | 0;
 	
 	  // status / class
-	  this.status = this.statusCode = status;
+	  this.status = status;
 	  this.statusType = type;
 	
 	  // basics
@@ -737,7 +720,7 @@ webpackJsonp([0,1],[
 	    new_err.response = res;
 	    new_err.status = res.status;
 	
-	    self.callback(new_err, res);
+	    self.callback(err || new_err, res);
 	  });
 	}
 	
@@ -1210,8 +1193,7 @@ webpackJsonp([0,1],[
 	  // body
 	  if ('GET' != this.method && 'HEAD' != this.method && 'string' != typeof data && !isHost(data)) {
 	    // serialize stuff
-	    var contentType = this.getHeader('Content-Type');
-	    var serialize = request.serialize[contentType ? contentType.split(';')[0] : ''];
+	    var serialize = request.serialize[this.getHeader('Content-Type')];
 	    if (serialize) data = serialize(data);
 	  }
 	
@@ -1226,20 +1208,6 @@ webpackJsonp([0,1],[
 	  xhr.send(data);
 	  return this;
 	};
-	
-	/**
-	 * Faux promise support
-	 *
-	 * @param {Function} fulfill
-	 * @param {Function} reject
-	 * @return {Request}
-	 */
-	
-	Request.prototype.then = function (fulfill, reject) {
-	  return this.end(function(err, res) {
-	    err ? reject(err) : fulfill(res);
-	  });
-	}
 	
 	/**
 	 * Expose `Request`.
