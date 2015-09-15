@@ -1,3 +1,11 @@
+### 1.4.4 2015-09-16
+
+- feat: Added aria role and keyboard navigation, pr[#9](https://github.com/react-component/upload/pull/9)
+
+### 1.4.2 2015-09-15
+
+- fix: IframeUpload move form to body [#8](https://github.com/react-component/upload/pull/8)
+
 ### 1.4.0 2015-09-09
 
 - onStart file argument change to a array when multiple files uploaded
