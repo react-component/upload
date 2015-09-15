@@ -1,17 +1,20 @@
-'use strict';
-var React = require('react');
-var request = require('superagent');
-var uid = require('./uid');
+const React = require('react');
+const request = require('superagent');
+const uid = require('./uid');
 
-var AjaxUploader = React.createClass({
-
-  _onChange: function(e) {
-    var files = e.target.files;
-    this._uploadFiles(files);
+const AjaxUploader = React.createClass({
+  propTypes: {
+    multiple: React.PropTypes.bool,
+    onStart: React.PropTypes.func,
   },
 
-  _onClick: function() {
-    var el = React.findDOMNode(this.refs.file);
+  onChange(e) {
+    const files = e.target.files;
+    this.uploadFiles(files);
+  },
+
+  onClick() {
+    const el = React.findDOMNode(this.refs.file);
     if (!el) {
       return;
     }
@@ -19,13 +22,40 @@ var AjaxUploader = React.createClass({
     el.value = '';
   },
 
-  _uploadFiles: function(files) {
-    var len = files.length;
+  onFileDrop(e) {
+    if (e.type === 'dragover') {
+      return e.preventDefault();
+    }
+
+    const files = e.dataTransfer.files;
+    this.uploadFiles(files);
+
+    e.preventDefault();
+  },
+
+  render() {
+    const hidden = {display: 'none'};
+    const props = this.props;
+    return (
+      <span onClick={this.onClick} onDrop={this.onFileDrop} onDragOver={this.onFileDrop}>
+        <input type="file"
+               ref="file"
+               style={hidden}
+               accept={props.accept}
+               multiple={this.props.multiple}
+               onChange={this.onChange}/>
+        {props.children}
+      </span>
+    );
+  },
+
+  uploadFiles(files) {
+    const len = files.length;
     if (len > 0) {
-      for (var i = 0; i < len; i++) {
-        var file = files.item(i);
+      for (let i = 0; i < len; i++) {
+        const file = files.item(i);
         file.uid = uid();
-        this._post(file);
+        this.post(file);
       }
       if (this.props.multiple) {
         this.props.onStart(Array.prototype.slice.call(files));
@@ -35,23 +65,23 @@ var AjaxUploader = React.createClass({
     }
   },
 
-  _post: function(file) {
-    var props = this.props;
-    var req = request
+  post(file) {
+    const props = this.props;
+    const req = request
       .post(props.action)
       .attach(props.name, file, file.name);
 
-    for (var key in props.data) {
-      req.field(key, props.data[key]);
+    for (const key in props.data) {
+      if (props.data.hasOwnProperty(key)) {
+        req.field(key, props.data[key]);
+      }
     }
 
-    var progress = function(e) {
+    req.on('progress', ()=> {
       props.onProgress(e, file);
-    };
+    });
 
-    req.on('progress', progress);
-
-    req.end(function(err, ret) {
+    req.end((err, ret) => {
       req.off('progress', progress);
       if (err || ret.status !== 200) {
         props.onError(err, ret, file);
@@ -61,33 +91,6 @@ var AjaxUploader = React.createClass({
       props.onSuccess(ret.body || ret.text, file);
     });
   },
-
-  _onFileDrop(e) {
-    if (e.type === 'dragover') {
-      return e.preventDefault();
-    }
-
-    var files = e.dataTransfer.files;
-    this._uploadFiles(files);
-
-    e.preventDefault();
-  },
-
-  render() {
-    var hidden = {display: 'none'};
-    var props = this.props;
-    return (
-      <span onClick={this._onClick} onDrop={this._onFileDrop} onDragOver={this._onFileDrop}>
-        <input type="file"
-        ref="file"
-        style={hidden}
-        accept={props.accept}
-        multiple={this.props.multiple}
-        onChange={this._onChange}/>
-        {props.children}
-      </span>
-    );
-  }
 });
 
 module.exports = AjaxUploader;

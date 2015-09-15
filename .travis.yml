@@ -28,4 +28,7 @@ env:
   - TEST_TYPE=lint
   - TEST_TYPE=browser-test
   - TEST_TYPE=browser-test-cover
-  - TEST_TYPE=saucelabs
+
+matrix:
+  allow_failures:
+  - env: "TEST_TYPE=saucelabs"

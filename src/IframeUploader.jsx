@@ -1,57 +1,56 @@
-'use strict';
+const React = require('react');
+const uid = require('./uid');
 
-var React = require('react');
-var uid = require('./uid');
-
-var formStyle = {
+const formStyle = {
   position: 'absolute',
   overflow: 'hidden',
-  top: 0
+  top: 0,
 };
-var boxStyle = {
-  position: 'relative'
+const boxStyle = {
+  position: 'relative',
 };
-var inputStyle = {
+const inputStyle = {
   position: 'absolute',
   filter: 'alpha(opacity=0)',
   outline: 0,
   right: 0,
   top: 0,
-  fontSize: 100
+  fontSize: 100,
 };
 
-var IframeUploader = React.createClass({
+const IframeUploader = React.createClass({
+  propTypes: {
+    onStart: React.PropTypes.func,
+  },
 
-  getInitialState: function () {
+  getInitialState() {
     return {
-      width: 20, height: 12, uid: 1
+      width: 20,
+      height: 12,
+      uid: 1,
     };
   },
 
-  componentDidMount: function () {
-    var el = React.findDOMNode(this);
+  componentDidMount() {
+    const el = React.findDOMNode(this);
     // Fix render bug in IE
     setTimeout(() => {
       this.setState({
         width: el.offsetWidth,
-        height: el.offsetHeight
+        height: el.offsetHeight,
       });
     }, 0);
   },
 
-  _getName: function () {
-    return 'iframe_uploader_' + this.state.uid;
-  },
-
-  _onload: function (e) {
+  onLoad(e) {
     // ie8里面render方法会执行onLoad，应该是bug
     if (!this.startUpload || !this.file) {
       return;
     }
 
-    var iframe = e.target;
-    var props = this.props;
-    var response;
+    const iframe = e.target;
+    const props = this.props;
+    let response;
     try {
       response = iframe.contentDocument.body.innerHTML;
       props.onSuccess(response, this.file);
@@ -64,24 +63,11 @@ var IframeUploader = React.createClass({
     this.file = null;
 
     this.setState({
-      uid: this.state.uid + 1
+      uid: this.state.uid + 1,
     });
   },
 
-  _getIframe: function () {
-    var name = this._getName();
-    var hidden = {display: 'none'};
-    return (
-      <iframe
-        key={name}
-        onLoad={this._onload}
-        style={hidden}
-        name={name}>
-      </iframe>
-    );
-  },
-
-  _onChange: function (e) {
+  onChange(e) {
     this.startUpload = true;
     this.file = (e.target.files && e.target.files[0]) || e.target;
     // ie8/9 don't support FileList Object
@@ -92,16 +78,33 @@ var IframeUploader = React.createClass({
     React.findDOMNode(this.refs.form).submit();
   },
 
-  render: function () {
-    var props = this.props;
-    var state = this.state;
+  getIframe() {
+    const name = this.getName();
+    const hidden = {display: 'none'};
+    return (
+      <iframe
+        key={name}
+        onLoad={this.onLoad}
+        style={hidden}
+        name={name}>
+      </iframe>
+    );
+  },
+
+  getName() {
+    return 'iframe_uploader_' + this.state.uid;
+  },
+
+  render() {
+    const props = this.props;
+    const state = this.state;
     inputStyle.height = state.height;
     inputStyle.fontSize = Math.max(64, state.height * 5);
     formStyle.width = state.width;
     formStyle.height = state.height;
 
-    var iframeName = this._getName();
-    var iframe = this._getIframe();
+    const iframeName = this.getName();
+    const iframe = this.getIframe();
 
     return (
       <span style={boxStyle}>
@@ -113,14 +116,14 @@ var IframeUploader = React.createClass({
           <input type="file"
                  style={inputStyle}
                  accept={props.accept}
-                 onChange={this._onChange}
+                 onChange={this.onChange}
             />
         </form>
         {iframe}
         {props.children}
       </span>
     );
-  }
+  },
 });
 
 module.exports = IframeUploader;

@@ -1,11 +1,12 @@
-'use strict';
-var React = require('react');
-var PropTypes = React.PropTypes;
-var AjaxUpload = require('./AjaxUploader');
-var IframeUpload = require('./IframeUploader');
-var empty = function() {};
+const React = require('react');
+const PropTypes = React.PropTypes;
+const AjaxUpload = require('./AjaxUploader');
+const IframeUpload = require('./IframeUploader');
 
-var Upload = React.createClass({
+function empty() {
+}
+
+const Upload = React.createClass({
 
   propTypes: {
     action: PropTypes.string,
@@ -17,10 +18,10 @@ var Upload = React.createClass({
     onStart: PropTypes.func,
     data: PropTypes.object,
     accept: PropTypes.string,
-    multiple: PropTypes.bool
+    multiple: PropTypes.bool,
   },
 
-  getDefaultProps: function() {
+  getDefaultProps() {
     return {
       data: {},
       name: 'file',
@@ -29,20 +30,20 @@ var Upload = React.createClass({
       onStart: empty,
       onError: empty,
       onSuccess: empty,
-      multiple: false
+      multiple: false,
     };
   },
 
-  render: function() {
-    var props = this.props;
-    var isNode = typeof window === 'undefined';
+  render() {
+    const props = this.props;
+    const isNode = typeof window === 'undefined';
     // node环境或者支持FormData的情况使用AjaxUpload
     if (isNode || typeof FormData !== 'undefined') {
       return <AjaxUpload {...props} />;
     }
 
     return <IframeUpload {...props} />;
-  }
+  },
 });
 
 module.exports = Upload;

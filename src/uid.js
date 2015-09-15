@@ -1,5 +1,6 @@
-var uuid = require('uuid');
+const now = +(new Date());
+let index = 0;
 
-module.exports = function () {
-  return uuid.v4();
+module.exports = function uid() {
+  return 'rc-upload-' + now + '-' + (++index);
 };
