@@ -1,25 +1,13 @@
 const React = require('react');
 const uid = require('./uid');
 const Align = require('rc-align');
-const getComputedStyle = require('./getComputedStyle');
-
-function findZIndex(n) {
-  let node = n;
-  let zIndex = 0;
-  while (node.nodeName.toLowerCase() !== 'body') {
-    if (getComputedStyle(node, 'position') !== 'static') {
-      zIndex = parseInt(getComputedStyle(node, 'zIndex'), 10) || zIndex;
-    }
-    node = node.parentNode;
-  }
-  return zIndex;
-}
 
 const IframeUploader = React.createClass({
   propTypes: {
     onStart: React.PropTypes.func,
     getFormContainer: React.PropTypes.func,
     children: React.PropTypes.any,
+    formZIndex: 99,
   },
 
   getInitialState() {
@@ -58,7 +46,7 @@ const IframeUploader = React.createClass({
       cursor,
       opacity: 0,
       filter: 'alpha(opacity=0)',
-      zIndex: findZIndex(trigger) + 1,
+      zIndex: props.formZIndex,
     };
     const inputStyle = {
       position: 'absolute',
