@@ -6,6 +6,7 @@ const AjaxUploader = React.createClass({
   propTypes: {
     multiple: React.PropTypes.bool,
     onStart: React.PropTypes.func,
+    data: React.PropTypes.object,
   },
 
   onChange(e) {
@@ -43,7 +44,8 @@ const AjaxUploader = React.createClass({
     const hidden = {display: 'none'};
     const props = this.props;
     return (
-      <span onClick={this.onClick} onKeyDown={this.onKeyDown} onDrop={this.onFileDrop} onDragOver={this.onFileDrop} role="button" tabIndex="0">
+      <span onClick={this.onClick} onKeyDown={this.onKeyDown} onDrop={this.onFileDrop} onDragOver={this.onFileDrop}
+            role="button" tabIndex="0">
         <input type="file"
                ref="file"
                style={hidden}
@@ -76,10 +78,14 @@ const AjaxUploader = React.createClass({
     const req = request
       .post(props.action)
       .attach(props.name, file, file.name);
+    let data = props.data;
+    if (typeof data === 'function') {
+      data = data();
+    }
 
-    for (const key in props.data) {
-      if (props.data.hasOwnProperty(key)) {
-        req.field(key, props.data[key]);
+    for (const key in data) {
+      if (data.hasOwnProperty(key)) {
+        req.field(key, data[key]);
       }
     }
 

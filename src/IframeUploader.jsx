@@ -7,7 +7,8 @@ const IframeUploader = React.createClass({
     onStart: React.PropTypes.func,
     getFormContainer: React.PropTypes.func,
     children: React.PropTypes.any,
-    formZIndex: 99,
+    formZIndex: React.PropTypes.number,
+    data: React.PropTypes.object,
   },
 
   getInitialState() {
@@ -72,7 +73,7 @@ const IframeUploader = React.createClass({
                style={inputStyle}
                accept={props.accept}
                onChange={this.onChange}
-          />
+          /><span />
         {iframe}
       </form>
     </Align>);
@@ -147,7 +148,22 @@ const IframeUploader = React.createClass({
       }
     }
     this.props.onStart(this.file);
-    React.findDOMNode(this.formInstance).submit();
+    const formNode = React.findDOMNode(this.formInstance);
+    const dataSpan = formNode.childNodes[1];
+    dataSpan.innerHTML = '';
+    let data = this.props.data;
+    if (typeof data === 'function') {
+      data = data();
+    }
+    const inputs = [];
+    for (const key in data) {
+      if (data.hasOwnProperty(key)) {
+        inputs.push(`<input name="${key}" value="${data[key]}"/>`);
+      }
+    }
+    dataSpan.innerHTML = inputs.join('');
+    formNode.submit();
+    dataSpan.innerHTML = '';
   },
 
   getIframe() {
