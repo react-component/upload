@@ -49,12 +49,13 @@ const IframeUploader = React.createClass({
     const height = trigger.offsetHeight;
     const iframeName = this.getIframeName();
     const iframe = this.getIframe();
+    const cursor = this.state.loading ? 'default' : 'pointer';
     const formStyle = {
       position: 'absolute',
       overflow: 'hidden',
       width: width,
       height: height,
-      cursor: 'pointer',
+      cursor,
       opacity: 0,
       filter: 'alpha(opacity=0)',
       zIndex: findZIndex(trigger) + 1,
@@ -66,7 +67,7 @@ const IframeUploader = React.createClass({
       opacity: 0,
       filter: 'alpha(opacity=0)',
       outline: 0,
-      cursor: 'pointer',
+      cursor,
       height: height,
       fontSize: Math.max(64, height * 5),
     };
@@ -134,6 +135,8 @@ const IframeUploader = React.createClass({
 
     this.file = null;
 
+    React.findDOMNode(this.formInstance).reset();
+
     this.setState({
       uid: this.state.uid + 1,
       loading: false,
@@ -147,8 +150,14 @@ const IframeUploader = React.createClass({
     this.file = (e.target.files && e.target.files[0]) || e.target;
     // ie8/9 don't support FileList Object
     // http://stackoverflow.com/questions/12830058/ie8-input-type-file-get-files
-    this.file.name = this.file.name || e.target.value;
-    this.file.uid = uid();
+    try {
+      this.file.name = this.file.name || e.target.value;
+      this.file.uid = uid();
+    } catch (ex) {
+      if (typeof console !== 'undefined') {
+        console.error(ex);
+      }
+    }
     this.props.onStart(this.file);
     React.findDOMNode(this.formInstance).submit();
   },
@@ -160,7 +169,7 @@ const IframeUploader = React.createClass({
         key={name}
         onLoad={this.onLoad}
         style={{display: 'none'}}
-        name={name} />
+        name={name}/>
     );
   },
 
