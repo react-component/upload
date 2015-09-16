@@ -9,8 +9,9 @@ webpackJsonp([0,1],[
 /* 1 */
 /***/ function(module, exports, __webpack_require__) {
 
-	// use jsx to render html, do not modify simple.html
 	'use strict';
+	
+	var _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; };
 	
 	var React = __webpack_require__(2);
 	var Upload = __webpack_require__(3);
@@ -32,15 +33,83 @@ webpackJsonp([0,1],[
 	  }
 	};
 	
-	React.render(React.createElement(
-	  Upload,
-	  props,
-	  React.createElement(
-	    'a',
-	    { href: '#nowhere' },
-	    '开始上传'
-	  )
-	), document.getElementById('__react-content'));
+	var Test = React.createClass({
+	  displayName: 'Test',
+	
+	  getInitialState: function getInitialState() {
+	    return {
+	      destroyed: false
+	    };
+	  },
+	
+	  destroy: function destroy() {
+	    this.setState({
+	      destroyed: true
+	    });
+	  },
+	
+	  getFormContainer: function getFormContainer() {
+	    return document.getElementById('container');
+	  },
+	
+	  render: function render() {
+	    if (this.state.destroyed) {
+	      return null;
+	    }
+	    return React.createElement(
+	      'div',
+	      null,
+	      React.createElement(
+	        'h2',
+	        null,
+	        '固定位置'
+	      ),
+	      React.createElement(
+	        'div',
+	        null,
+	        React.createElement(
+	          Upload,
+	          props,
+	          React.createElement(
+	            'a',
+	            { href: '#nowhere' },
+	            '开始上传'
+	          )
+	        )
+	      ),
+	      React.createElement(
+	        'h2',
+	        null,
+	        '滚动'
+	      ),
+	      React.createElement(
+	        'div',
+	        { style: { height: 200, overflow: 'auto', border: '1px solid red' } },
+	        React.createElement(
+	          'div',
+	          { style: { height: 500, position: 'relative' } },
+	          React.createElement('div', { id: 'container' }),
+	          React.createElement(
+	            Upload,
+	            _extends({}, props, { getFormContainer: this.getFormContainer }),
+	            React.createElement(
+	              'a',
+	              { href: '#nowhere' },
+	              '开始上传2'
+	            )
+	          )
+	        )
+	      ),
+	      React.createElement(
+	        'button',
+	        { onClick: this.destroy },
+	        'destroy'
+	      )
+	    );
+	  }
+	});
+	
+	React.render(React.createElement(Test, null), document.getElementById('__react-content'));
 
 /***/ },
 /* 2 */
@@ -83,6 +152,7 @@ webpackJsonp([0,1],[
 	  displayName: 'Upload',
 	
 	  propTypes: {
+	    forceAjax: PropTypes.bool,
 	    action: PropTypes.string,
 	    name: PropTypes.string,
 	    multipart: PropTypes.bool,
@@ -99,6 +169,7 @@ webpackJsonp([0,1],[
 	    return {
 	      data: {},
 	      name: 'file',
+	      forceAjax: false,
 	      multipart: false,
 	      onProgress: empty,
 	      onStart: empty,
@@ -110,9 +181,8 @@ webpackJsonp([0,1],[
 	
 	  render: function render() {
 	    var props = this.props;
-	    var isNode = typeof window === 'undefined';
-	    // node环境或者支持FormData的情况使用AjaxUpload
-	    if (isNode || typeof FormData !== 'undefined') {
+	    // node 渲染根据 ua 强制设置 forceAjax 或者支持FormData的情况使用AjaxUpload
+	    if (props.forceAjax || typeof FormData !== 'undefined') {
 	      return React.createElement(AjaxUpload, props);
 	    }
 	
@@ -137,7 +207,8 @@ webpackJsonp([0,1],[
 	
 	  propTypes: {
 	    multiple: React.PropTypes.bool,
-	    onStart: React.PropTypes.func
+	    onStart: React.PropTypes.func,
+	    data: React.PropTypes.object
 	  },
 	
 	  onChange: function onChange(e) {
@@ -152,6 +223,12 @@ webpackJsonp([0,1],[
 	    }
 	    el.click();
 	    el.value = '';
+	  },
+	
+	  onKeyDown: function onKeyDown(e) {
+	    if (e.key === 'Enter') {
+	      this._onClick();
+	    }
 	  },
 	
 	  onFileDrop: function onFileDrop(e) {
@@ -170,7 +247,8 @@ webpackJsonp([0,1],[
 	    var props = this.props;
 	    return React.createElement(
 	      'span',
-	      { onClick: this.onClick, onDrop: this.onFileDrop, onDragOver: this.onFileDrop },
+	      { onClick: this.onClick, onKeyDown: this.onKeyDown, onDrop: this.onFileDrop, onDragOver: this.onFileDrop,
+	        role: 'button', tabIndex: '0' },
 	      React.createElement('input', { type: 'file',
 	        ref: 'file',
 	        style: hidden,
@@ -200,10 +278,14 @@ webpackJsonp([0,1],[
 	  post: function post(file) {
 	    var props = this.props;
 	    var req = request.post(props.action).attach(props.name, file, file.name);
+	    var data = props.data;
+	    if (typeof data === 'function') {
+	      data = data();
+	    }
 	
-	    for (var key in props.data) {
-	      if (props.data.hasOwnProperty(key)) {
-	        req.field(key, props.data[key]);
+	    for (var key in data) {
+	      if (data.hasOwnProperty(key)) {
+	        req.field(key, data[key]);
 	      }
 	    }
 	
@@ -1577,35 +1659,30 @@ webpackJsonp([0,1],[
 	var React = __webpack_require__(2);
 	var uid = __webpack_require__(10);
 	var Align = __webpack_require__(12);
-	var getComputedStyle = __webpack_require__(28);
-	
-	function findZIndex(n) {
-	  var node = n;
-	  var zIndex = 0;
-	  while (node.nodeName.toLowerCase() !== 'body') {
-	    if (getComputedStyle(node, 'position') !== 'static') {
-	      zIndex = parseInt(getComputedStyle(node, 'zIndex'), 10) || zIndex;
-	    }
-	    node = node.parentNode;
-	  }
-	  return zIndex;
-	}
 	
 	var IframeUploader = React.createClass({
 	  displayName: 'IframeUploader',
 	
 	  propTypes: {
 	    onStart: React.PropTypes.func,
-	    children: React.PropTypes.any
+	    getFormContainer: React.PropTypes.func,
+	    children: React.PropTypes.any,
+	    formZIndex: React.PropTypes.number,
+	    data: React.PropTypes.object
 	  },
 	
 	  getInitialState: function getInitialState() {
 	    return {
-	      uid: 1
+	      uid: 1,
+	      loading: false
 	    };
 	  },
 	
 	  getFormContainer: function getFormContainer() {
+	    var props = this.props;
+	    if (props.getFormContainer) {
+	      return props.getFormContainer();
+	    }
 	    if (this.formContainer) {
 	      return this.formContainer;
 	    }
@@ -1621,15 +1698,16 @@ webpackJsonp([0,1],[
 	    var height = trigger.offsetHeight;
 	    var iframeName = this.getIframeName();
 	    var iframe = this.getIframe();
+	    var cursor = this.state.loading ? 'default' : 'pointer';
 	    var formStyle = {
 	      position: 'absolute',
 	      overflow: 'hidden',
 	      width: width,
 	      height: height,
-	      cursor: 'pointer',
+	      cursor: cursor,
 	      opacity: 0,
 	      filter: 'alpha(opacity=0)',
-	      zIndex: findZIndex(trigger) + 1
+	      zIndex: props.formZIndex
 	    };
 	    var inputStyle = {
 	      position: 'absolute',
@@ -1638,7 +1716,7 @@ webpackJsonp([0,1],[
 	      opacity: 0,
 	      filter: 'alpha(opacity=0)',
 	      outline: 0,
-	      cursor: 'pointer',
+	      cursor: cursor,
 	      height: height,
 	      fontSize: Math.max(64, height * 5)
 	    };
@@ -1654,11 +1732,13 @@ webpackJsonp([0,1],[
 	          encType: 'multipart/form-data',
 	          method: 'post', style: formStyle },
 	        React.createElement('input', { type: 'file',
+	          disabled: this.state.loading,
 	          hideFocus: 'true',
 	          style: inputStyle,
 	          accept: props.accept,
 	          onChange: this.onChange
 	        }),
+	        React.createElement('span', null),
 	        iframe
 	      )
 	    );
@@ -1674,7 +1754,7 @@ webpackJsonp([0,1],[
 	  componentDidUpdate: function componentDidUpdate(prevProps, prevState) {
 	    var _this = this;
 	
-	    if (prevState.uid !== this.state.uid) {
+	    if (prevState.uid !== this.state.uid || prevState.loading !== this.state.loading) {
 	      (function () {
 	        var component = _this;
 	        React.render(_this.getFormElement(), _this.getFormContainer(), function save() {
@@ -1689,12 +1769,14 @@ webpackJsonp([0,1],[
 	      React.unmountComponentAtNode(this.formContainer);
 	      document.body.removeChild(this.formContainer);
 	      this.formContainer = null;
+	    } else if (this.getFormContainer) {
+	      React.unmountComponentAtNode(this.getFormContainer());
 	    }
 	  },
 	
 	  onLoad: function onLoad(e) {
 	    // ie8里面render方法会执行onLoad，应该是bug
-	    if (!this.startUpload || !this.file) {
+	    if (!this.state.loading || !this.file) {
 	      return;
 	    }
 	
@@ -1709,23 +1791,48 @@ webpackJsonp([0,1],[
 	      props.onError(err, null, this.file);
 	    }
 	
-	    this.startUpload = false;
 	    this.file = null;
 	
+	    React.findDOMNode(this.formInstance).reset();
+	
 	    this.setState({
-	      uid: this.state.uid + 1
+	      uid: this.state.uid + 1,
+	      loading: false
 	    });
 	  },
 	
 	  onChange: function onChange(e) {
-	    this.startUpload = true;
+	    this.setState({
+	      loading: true
+	    });
 	    this.file = e.target.files && e.target.files[0] || e.target;
 	    // ie8/9 don't support FileList Object
 	    // http://stackoverflow.com/questions/12830058/ie8-input-type-file-get-files
-	    this.file.name = this.file.name || e.target.value;
-	    this.file.uid = uid();
+	    try {
+	      this.file.name = this.file.name || e.target.value;
+	      this.file.uid = uid();
+	    } catch (ex) {
+	      if (typeof console !== 'undefined') {
+	        console.error(ex);
+	      }
+	    }
 	    this.props.onStart(this.file);
-	    React.findDOMNode(this.formInstance).submit();
+	    var formNode = React.findDOMNode(this.formInstance);
+	    var dataSpan = formNode.childNodes[1];
+	    dataSpan.innerHTML = '';
+	    var data = this.props.data;
+	    if (typeof data === 'function') {
+	      data = data();
+	    }
+	    var inputs = [];
+	    for (var key in data) {
+	      if (data.hasOwnProperty(key)) {
+	        inputs.push('<input name="' + key + '" value="' + data[key] + '"/>');
+	      }
+	    }
+	    dataSpan.innerHTML = inputs.join('');
+	    formNode.submit();
+	    dataSpan.innerHTML = '';
 	  },
 	
 	  getIframe: function getIframe() {
@@ -3618,40 +3725,6 @@ webpackJsonp([0,1],[
 	  return React.Children.map(children, mirror);
 	};
 
-
-/***/ },
-/* 28 */
-/***/ function(module, exports) {
-
-	'use strict';
-	
-	Object.defineProperty(exports, '__esModule', {
-	  value: true
-	});
-	var getComputedStyleX = undefined;
-	
-	function _getComputedStyle(elem, name, cs) {
-	  var computedStyle = cs;
-	  var val = '';
-	  var d = elem.ownerDocument;
-	  if (computedStyle = computedStyle || d.defaultView.getComputedStyle(elem, null)) {
-	    val = computedStyle.getPropertyValue(name) || computedStyle[name];
-	  }
-	
-	  return val;
-	}
-	
-	function _getComputedStyleIE(elem, name) {
-	  var ret = elem.currentStyle && elem.currentStyle[name];
-	  return ret === '' ? 'auto' : ret;
-	}
-	
-	if (typeof window !== 'undefined') {
-	  getComputedStyleX = window.getComputedStyle ? _getComputedStyle : _getComputedStyleIE;
-	}
-	
-	exports['default'] = getComputedStyleX;
-	module.exports = exports['default'];
 
 /***/ }
 ]);
