@@ -9,6 +9,7 @@ function empty() {
 const Upload = React.createClass({
 
   propTypes: {
+    forceAjax: PropTypes.bool,
     action: PropTypes.string,
     name: PropTypes.string,
     multipart: PropTypes.bool,
@@ -25,6 +26,7 @@ const Upload = React.createClass({
     return {
       data: {},
       name: 'file',
+      forceAjax: false,
       multipart: false,
       onProgress: empty,
       onStart: empty,
@@ -36,9 +38,8 @@ const Upload = React.createClass({
 
   render() {
     const props = this.props;
-    const isNode = typeof window === 'undefined';
-    // node环境或者支持FormData的情况使用AjaxUpload
-    if (isNode || typeof FormData !== 'undefined') {
+    // node 渲染根据 ua 强制设置 forceAjax 或者支持FormData的情况使用AjaxUpload
+    if (props.forceAjax || typeof FormData !== 'undefined') {
       return <AjaxUpload {...props} />;
     }
 

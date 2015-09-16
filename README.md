@@ -51,11 +51,13 @@ React.render(<Upload />, container);
 |action| string | | from action url |
 |data| object | | other data object to post |
 |accept | string | | input accept attribute |
-| multiple | boolean | false | only support ie10+|
+|forceAjax | bool | | force to use ajax render. used for server render |
+|getFormContainer| function(): HTMLElement| | used for iframe upload for ie8/9. get the container for form to be inserted |
+|multiple | boolean | false | only support ie10+|
 |onStart | function| | start upload file |
 |onError| function| | error callback |
-| onSuccess | function | | success callback |
-| onProgress | function || progress callback, only for modern browsers|
+|onSuccess | function | | success callback |
+|onProgress | function || progress callback, only for modern browsers|
 
 #### onError arguments
 
