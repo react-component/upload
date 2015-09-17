@@ -25,7 +25,7 @@ const AjaxUploader = React.createClass({
 
   onKeyDown(e) {
     if (e.key === 'Enter') {
-      this._onClick();
+      this.onClick();
     }
   },
 
