@@ -68,6 +68,7 @@ const IframeUploader = React.createClass({
             encType="multipart/form-data"
             method="post" style={formStyle}>
         <input type="file"
+               name={props.name}
                disabled={this.state.loading}
                hideFocus="true"
                style={inputStyle}
@@ -150,7 +151,6 @@ const IframeUploader = React.createClass({
     this.props.onStart(this.file);
     const formNode = React.findDOMNode(this.formInstance);
     const dataSpan = formNode.childNodes[1];
-    dataSpan.innerHTML = '';
     let data = this.props.data;
     if (typeof data === 'function') {
       data = data();
