@@ -1,6 +1,6 @@
 var app = require('rc-server')();
 var parse = require('co-busboy');
-
+var fs=require('fs');
 function wait(time) {
   return function (callback) {
     setTimeout(callback, time);
@@ -9,15 +9,14 @@ function wait(time) {
 
 app.post('/upload.do', function*() {
   var parts = parse(this, {
-    autoFields: true // saves the fields to parts.field(s)
+    autoFields: true
   });
-  var files = [];
-  var part = yield parts;
-  if (part) {
+  var part,files=[];
+  while (part = yield parts) {
     files.push(part.filename);
-  } else {
-    files.push('foo.png');
+    part.resume();
   }
+  console.log(parts.fields)
   this.status = 200;
   this.set('Content-Type', 'text/html');
   yield wait(2000);

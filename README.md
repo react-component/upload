@@ -52,7 +52,6 @@ React.render(<Upload />, container);
 |data| object | | other data object to post |
 |accept | string | | input accept attribute |
 |forceAjax | bool | | force to use ajax render. used for server render |
-|getFormContainer| function(): HTMLElement| | used for iframe upload for ie8/9. get the container for form to be inserted |
 |multiple | boolean | false | only support ie10+|
 |onStart | function| | start upload file |
 |onError| function| | error callback |

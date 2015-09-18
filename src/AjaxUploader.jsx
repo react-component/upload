@@ -1,12 +1,12 @@
-const React = require('react');
-const request = require('superagent');
-const uid = require('./uid');
+import request from 'superagent';
+import React, {PropTypes} from 'react';
+import uid from './uid';
 
 const AjaxUploader = React.createClass({
   propTypes: {
-    multiple: React.PropTypes.bool,
-    onStart: React.PropTypes.func,
-    data: React.PropTypes.object,
+    multiple: PropTypes.bool,
+    onStart: PropTypes.func,
+    data: PropTypes.object,
   },
 
   onChange(e) {
@@ -107,4 +107,4 @@ const AjaxUploader = React.createClass({
   },
 });
 
-module.exports = AjaxUploader;
+export default AjaxUploader;

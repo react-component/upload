@@ -1,6 +1,6 @@
 {
   "name": "rc-upload",
-  "version": "1.5.6",
+  "version": "1.6.0",
   "description": "upload ui component for react",
   "keywords": [
     "react",
@@ -9,7 +9,10 @@
     "upload"
   ],
   "homepage": "http://github.com/react-component/upload",
-  "author": "eward.song@gmail.com",
+  "maintainers": [
+    "eward.song@gmail.com",
+    "yiminghe@gmail.com"
+  ],
   "repository": {
     "type": "git",
     "url": "git@github.com:react-component/upload.git"
@@ -48,7 +51,6 @@
     "lint"
   ],
   "dependencies": {
-    "rc-align": "1.x",
     "superagent": "1.x"
   }
 }

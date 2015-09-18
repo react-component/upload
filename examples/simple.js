@@ -5,7 +5,7 @@ var props = {
   data: {a: 1, b: 2},
   multiple: true,
   onStart(file) {
-    console.log('onStart', file.name || file.value);
+    console.log('onStart', file.name);
   },
   onSuccess(ret) {
     console.log('onSuccess', ret);
@@ -35,7 +35,7 @@ const Test = React.createClass({
     if (this.state.destroyed) {
       return null;
     }
-    return (<div>
+    return (<div style={{margin:100}}>
       <h2>固定位置</h2>
 
       <div>
@@ -46,7 +46,6 @@ const Test = React.createClass({
 
       <div style={{height:200,overflow:'auto',border:'1px solid red'}}>
         <div style={{height:500}}>
-          <div id="container"></div>
           <Upload {...props}><a href="#nowhere">开始上传2</a></Upload>
         </div>
       </div>

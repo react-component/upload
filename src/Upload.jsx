@@ -1,13 +1,11 @@
-const React = require('react');
-const PropTypes = React.PropTypes;
-const AjaxUpload = require('./AjaxUploader');
-const IframeUpload = require('./IframeUploader');
+import React, {PropTypes} from 'react';
+import AjaxUpload from './AjaxUploader';
+import IframeUpload from './IframeUploader';
 
 function empty() {
 }
 
 const Upload = React.createClass({
-
   propTypes: {
     forceAjax: PropTypes.bool,
     action: PropTypes.string,
@@ -47,4 +45,4 @@ const Upload = React.createClass({
   },
 });
 
-module.exports = Upload;
+export default Upload;
