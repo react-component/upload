@@ -1,3 +1,7 @@
+### 1.5.2 2015-09-18
+
+- fix: Fixed bug calling wrong method name [#13](https://github.com/react-component/upload/pull/13)
+
 ### 1.5.0 2015-09-16
 
 - feat: add getFormContainer prop to decide container where form to be inserted.
