@@ -31,10 +31,6 @@ const Test = React.createClass({
     });
   },
 
-  getFormContainer(){
-    return document.getElementById('container');
-  },
-
   render() {
     if (this.state.destroyed) {
       return null;
@@ -49,9 +45,9 @@ const Test = React.createClass({
       <h2>滚动</h2>
 
       <div style={{height:200,overflow:'auto',border:'1px solid red'}}>
-        <div style={{height:500,position:'relative'}}>
+        <div style={{height:500}}>
           <div id="container"></div>
-          <Upload {...props} getFormContainer={this.getFormContainer}><a href="#nowhere">开始上传2</a></Upload>
+          <Upload {...props}><a href="#nowhere">开始上传2</a></Upload>
         </div>
       </div>
 

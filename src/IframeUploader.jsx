@@ -80,19 +80,20 @@ const IframeUploader = React.createClass({
     </Align>);
   },
 
-  componentDidMount() {
+  updateForm() {
     const component = this;
     React.render(this.getFormElement(), this.getFormContainer(), function save() {
       component.formInstance = this;
     });
   },
 
+  componentDidMount() {
+    this.updateForm();
+  },
+
   componentDidUpdate(prevProps, prevState) {
     if (prevState.uid !== this.state.uid || prevState.loading !== this.state.loading) {
-      const component = this;
-      React.render(this.getFormElement(), this.getFormContainer(), function save() {
-        component.formInstance = this;
-      });
+      this.updateForm();
     }
   },
 
@@ -182,7 +183,11 @@ const IframeUploader = React.createClass({
   },
 
   render() {
-    return this.props.children;
+    return (
+      <div onMouseEnter={this.updateForm}>
+        {this.props.children}
+      </div>
+    );
   },
 });
 
