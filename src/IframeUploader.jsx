@@ -12,6 +12,7 @@ const iframeStyle = {
 const IframeUploader = React.createClass({
   propTypes: {
     onStart: PropTypes.func,
+    multiple: PropTypes.bool,
     children: PropTypes.any,
     data: PropTypes.object,
     action: PropTypes.string,
@@ -33,16 +34,18 @@ const IframeUploader = React.createClass({
     }
     const props = this.props;
     let response;
+    const eventFile = this.file;
     try {
       response = this.getIframeDocument().body.innerHTML;
-      props.onSuccess(response, this.file);
+      props.onSuccess(response, eventFile);
     } catch (err) {
       response = 'cross-domain';
-      props.onError(err, null, this.file);
+      props.onError(err, null, eventFile);
     }
     this.enableIframe();
     this.initIframe();
   },
+
 
   onChange() {
     const target = this.getFormInputNode();
@@ -52,7 +55,7 @@ const IframeUploader = React.createClass({
       uid: uid(),
       name: target.value,
     };
-    this.props.onStart(file);
+    this.props.onStart(this.getFileForMultiple(file));
     const formNode = this.getFormNode();
     const dataSpan = this.getFormDataNode();
     let data = this.props.data;
@@ -89,6 +92,10 @@ const IframeUploader = React.createClass({
 
   getFormDataNode() {
     return this.getIframeDocument().getElementById('data');
+  },
+
+  getFileForMultiple(file) {
+    return this.props.multiple ? [file] : file;
   },
 
   getIframeHTML() {

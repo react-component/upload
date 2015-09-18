@@ -4,8 +4,9 @@ var props = {
   action: '/upload.do',
   data: {a: 1, b: 2},
   multiple: true,
-  onStart(file) {
-    console.log('onStart', file.name);
+  onStart(files) {
+    const file=files[0];
+    console.log('onStart',file, file.name);
   },
   onSuccess(ret) {
     console.log('onSuccess', ret);
