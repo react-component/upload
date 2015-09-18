@@ -227,7 +227,7 @@ webpackJsonp([0,1],[
 	
 	  onKeyDown: function onKeyDown(e) {
 	    if (e.key === 'Enter') {
-	      this._onClick();
+	      this.onClick();
 	    }
 	  },
 	
@@ -1732,6 +1732,7 @@ webpackJsonp([0,1],[
 	          encType: 'multipart/form-data',
 	          method: 'post', style: formStyle },
 	        React.createElement('input', { type: 'file',
+	          name: props.name,
 	          disabled: this.state.loading,
 	          hideFocus: 'true',
 	          style: inputStyle,
@@ -1819,7 +1820,6 @@ webpackJsonp([0,1],[
 	    this.props.onStart(this.file);
 	    var formNode = React.findDOMNode(this.formInstance);
 	    var dataSpan = formNode.childNodes[1];
-	    dataSpan.innerHTML = '';
 	    var data = this.props.data;
 	    if (typeof data === 'function') {
 	      data = data();
