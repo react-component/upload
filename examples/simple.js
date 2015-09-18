@@ -1745,27 +1745,38 @@ webpackJsonp([0,1],[
 	    );
 	  },
 	
+	  clearRenderTimeout: function clearRenderTimeout() {
+	    if (this.timeout) {
+	      clearTimeout(this.timeout);
+	      this.timeout = null;
+	    }
+	  },
+	
+	  delayRender: function delayRender() {
+	    var _this = this;
+	
+	    this.clearRenderTimeout();
+	    // hack to wait layout update
+	    this.timeout = setTimeout(function () {
+	      var component = _this;
+	      React.render(_this.getFormElement(), _this.getFormContainer(), function save() {
+	        component.formInstance = this;
+	      });
+	    }, 0);
+	  },
+	
 	  componentDidMount: function componentDidMount() {
-	    var component = this;
-	    React.render(this.getFormElement(), this.getFormContainer(), function save() {
-	      component.formInstance = this;
-	    });
+	    this.delayRender();
 	  },
 	
 	  componentDidUpdate: function componentDidUpdate(prevProps, prevState) {
-	    var _this = this;
-	
 	    if (prevState.uid !== this.state.uid || prevState.loading !== this.state.loading) {
-	      (function () {
-	        var component = _this;
-	        React.render(_this.getFormElement(), _this.getFormContainer(), function save() {
-	          component.formInstance = this;
-	        });
-	      })();
+	      this.delayRender();
 	    }
 	  },
 	
 	  componentWillUnmount: function componentWillUnmount() {
+	    this.clearRenderTimeout();
 	    if (this.formContainer) {
 	      React.unmountComponentAtNode(this.formContainer);
 	      document.body.removeChild(this.formContainer);
