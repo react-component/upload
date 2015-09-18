@@ -224,15 +224,18 @@
 // targeted script loaders such as Browserify or Webpack where the only way to
 // get to the global object is via `window`.
 </script>
-<script src="https://a.alipayobjects.com/??es5-shim/4.0.5/es5-shim.js,es5-shim/4.0.5/es5-sham.js,html5shiv/3.7.2/src/html5shiv.js"></script>
+<script src="//cdnjs.cloudflare.com/ajax/libs/es5-shim/4.1.0/es5-shim.js"></script>
+<script src="//cdnjs.cloudflare.com/ajax/libs/es5-shim/4.1.0/es5-sham.js"></script>
+<script src="//cdnjs.cloudflare.com/ajax/libs/html5shiv/3.7.2/html5shiv.js"></script>
 <![endif]-->
+    <script src="//cdnjs.cloudflare.com/ajax/libs/react/0.13.3/react.js"></script>
   
 </head>
 
 <body>
     <div class="container">
         <div class="header">
-            <h1>rc-upload@1.5.6</h1>
+            <h1>rc-upload@1.6.0</h1>
             <p>upload ui component for react</p>
         </div>
         <div class="example" id="__react-content"></div>
@@ -244,8 +247,9 @@ var props = {
   action: '/upload.do',
   data: {a: <span class="hljs-number">1</span>, b: <span class="hljs-number">2</span>},
   multiple: true,
-  <span class="hljs-keyword">on</span>Start(file) {
-    console.<span class="hljs-keyword">log</span>('<span class="hljs-keyword">on</span>Start', file.name || file.value);
+  <span class="hljs-keyword">on</span>Start(files) {
+    const file=files[<span class="hljs-number">0</span>];
+    console.<span class="hljs-keyword">log</span>('<span class="hljs-keyword">on</span>Start',file, file.name);
   },
   <span class="hljs-keyword">on</span>Success(ret) {
     console.<span class="hljs-keyword">log</span>('<span class="hljs-keyword">on</span>Success', ret);
@@ -275,7 +279,7 @@ const Test = React.createClass({
     if (this.<span class="hljs-keyword">state</span>.destroyed) {
       return null;
     }
-    return (<span class="hljs-variable">&lt;div&gt;</span>
+    return (<span class="hljs-variable">&lt;div style={{margin:100}}&gt;</span>
       <span class="hljs-variable">&lt;h2&gt;</span>固定位置<span class="hljs-variable">&lt;/h2&gt;</span>
 
       <span class="hljs-variable">&lt;div&gt;</span>
@@ -286,7 +290,6 @@ const Test = React.createClass({
 
       <span class="hljs-variable">&lt;div style={{height:200,overflow:'auto',border:'1px solid red'}}&gt;</span>
         <span class="hljs-variable">&lt;div style={{height:500}}&gt;</span>
-          <span class="hljs-variable">&lt;div id="container"&gt;</span><span class="hljs-variable">&lt;/div&gt;</span>
           <span class="hljs-variable">&lt;Upload {...props}&gt;</span><span class="hljs-variable">&lt;a href="#nowhere"&gt;</span>开始上传<span class="hljs-number">2</span><span class="hljs-variable">&lt;/a&gt;</span><span class="hljs-variable">&lt;/Upload&gt;</span>
         <span class="hljs-variable">&lt;/div&gt;</span>
       <span class="hljs-variable">&lt;/div&gt;</span>
