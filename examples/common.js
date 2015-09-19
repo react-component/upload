@@ -22125,6 +22125,9 @@
 	
 	  componentDidUpdate: function componentDidUpdate() {
 	    this.updateIframeWH();
+	    if (this.state.parentSetDomain) {
+	      this.initIframe();
+	    }
 	  },
 	
 	  onLoad: function onLoad() {
