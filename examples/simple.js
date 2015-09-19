@@ -22244,7 +22244,7 @@ webpackJsonp([0,1],[
 	  initIframe: function initIframe() {
 	    var iframeNode = this.getIframeNode();
 	    try {
-	      var tryVisit = iframeNode.contentWindow;
+	      var tryVisit = iframeNode.contentWindow.document;
 	    } catch (e) {
 	      this.setState({
 	        parentSetDomain: true
