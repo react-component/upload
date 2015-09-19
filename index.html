@@ -7,7 +7,7 @@
   <meta charset="utf-8"/>
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <link href="//cdnjs.cloudflare.com/ajax/libs/normalize/3.0.3/normalize.css" rel="stylesheet"/>
-  <title>rc-upload@1.6.2 - upload ui component for react</title>
+  <title>rc-upload@1.5.7 - upload ui component for react</title>
   <style>
     @font-face {
       font-family: octicons-anchor;
@@ -737,14 +737,12 @@
 
 <body>
 <div class="header">
-  <h1>rc-upload@1.6.2</h1>
+  <h1>rc-upload@1.5.7</h1>
 </div>
 <div class="examples">
   <h3>EXAMPLES</h3>
   <div class="examples-body">
     <ul>
-      
-      <li><a href="examples/domain.html">domain</a></li>
       
       <li><a href="examples/simple.html">simple</a></li>
       
@@ -806,6 +804,12 @@ React.render(<span class="xml"><span class="hljs-tag">&lt;<span class="hljs-titl
 <td>bool</td>
 <td></td>
 <td>force to use ajax render. used for server render</td>
+</tr>
+<tr>
+<td>getFormContainer</td>
+<td>function(): HTMLElement</td>
+<td></td>
+<td>used for iframe upload for ie8/9. get the container for form to be inserted</td>
 </tr>
 <tr>
 <td>multiple</td>
