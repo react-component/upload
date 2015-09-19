@@ -22226,12 +22226,14 @@ webpackJsonp([0,1],[
 	  },
 	
 	  initIframe: function initIframe() {
-	    var iframeNode = this.getIframeNode();
-	    var win = iframeNode.contentWindow;
-	    var doc = win.document;
+	    console.log(111);
 	    console.log(document.domain);
 	    doc.domain = document.domain;
 	    console.log(doc.domain);
+	    var iframeNode = this.getIframeNode();
+	    var win = iframeNode.contentWindow;
+	    var doc = win.document;
+	    doc.domain = document.domain;
 	    doc.open('text/html', 'replace');
 	    doc.write(this.getIframeHTML());
 	    doc.close();
