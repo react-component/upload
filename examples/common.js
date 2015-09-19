@@ -22225,13 +22225,15 @@
 	
 	  initIframe: function initIframe() {
 	    var iframeNode = this.getIframeNode();
-	    try {
-	      var tryVisit = iframeNode.contentWindow.document;
-	    } catch (e) {
-	      this.setState({
-	        parentSetDomain: true
-	      });
-	      return;
+	    if (!this.state.parentSetDomain) {
+	      try {
+	        var tryVisit = iframeNode.contentWindow.document;
+	      } catch (e) {
+	        this.setState({
+	          parentSetDomain: true
+	        });
+	        return;
+	      }
 	    }
 	    var win = iframeNode.contentWindow;
 	    var doc = win.document;
