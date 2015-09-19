@@ -237,67 +237,76 @@
         </div>
         <div class="example" id="__react-content"></div>
         <script src="common.js?nowrap"></script>
-        <script src="simple.js?nowrap"></script>
-        <div class="highlight"><pre><code>var React = require('react');
-var Upload = require('rc-upload');
+        <script src="domain.js?nowrap"></script>
+        <div class="highlight"><pre><code><span class="hljs-keyword">var</span> React = <span class="hljs-built_in">require</span>(<span class="hljs-string">'react'</span>);
+<span class="hljs-keyword">var</span> Upload = <span class="hljs-built_in">require</span>(<span class="hljs-string">'rc-upload'</span>);
 
-var props = {
-  action: '/upload.do',
-  data: {a: <span class="hljs-number">1</span>, b: <span class="hljs-number">2</span>},
-  multiple: true,
-  <span class="hljs-keyword">on</span>Start(files) {
-    const file=files[<span class="hljs-number">0</span>];
-    console.<span class="hljs-keyword">log</span>('<span class="hljs-keyword">on</span>Start',file, file.name);
+<span class="hljs-keyword">try</span> {
+  <span class="hljs-keyword">var</span> aDomain = <span class="hljs-built_in">document</span>.domain.split(<span class="hljs-string">"."</span>)
+  <span class="hljs-keyword">if</span> (aDomain.length &gt; <span class="hljs-number">1</span>) {
+    <span class="hljs-keyword">var</span> sDomain = aDomain[aDomain.length - <span class="hljs-number">2</span>] + <span class="hljs-string">"."</span> + aDomain[aDomain.length - <span class="hljs-number">1</span>]
+    <span class="hljs-built_in">document</span>.domain = sDomain
+  }
+} <span class="hljs-keyword">catch</span> (err) {
+}
+
+<span class="hljs-keyword">var</span> props = {
+  <span class="hljs-attribute">action</span>: <span class="hljs-string">'/upload.do'</span>,
+  <span class="hljs-attribute">data</span>: {<span class="hljs-attribute">a</span>: <span class="hljs-number">1</span>, <span class="hljs-attribute">b</span>: <span class="hljs-number">2</span>},
+  <span class="hljs-attribute">multiple</span>: <span class="hljs-literal">true</span>,
+  onStart(files) {
+    <span class="hljs-keyword">const</span> file=files[<span class="hljs-number">0</span>];
+    <span class="hljs-built_in">console</span>.log(<span class="hljs-string">'onStart'</span>,file, file.name);
   },
-  <span class="hljs-keyword">on</span>Success(ret) {
-    console.<span class="hljs-keyword">log</span>('<span class="hljs-keyword">on</span>Success', ret);
+  onSuccess(ret) {
+    <span class="hljs-built_in">console</span>.log(<span class="hljs-string">'onSuccess'</span>, ret);
   },
-  <span class="hljs-keyword">on</span>Progress(step, file) {
-    console.<span class="hljs-keyword">log</span>('<span class="hljs-keyword">on</span>Progress', step, file);
+  onProgress(step, file) {
+    <span class="hljs-built_in">console</span>.log(<span class="hljs-string">'onProgress'</span>, step, file);
   },
-  <span class="hljs-keyword">on</span>Error(err){
-    console.<span class="hljs-keyword">log</span>('<span class="hljs-keyword">on</span>Error', err);
+  onError(err){
+    <span class="hljs-built_in">console</span>.log(<span class="hljs-string">'onError'</span>, err);
   }
 };
 
-const Test = React.createClass({
+<span class="hljs-keyword">const</span> Test = React.createClass({
   getInitialState(){
-    return {
-      destroyed: false,
+    <span class="hljs-keyword">return</span> {
+      <span class="hljs-attribute">destroyed</span>: <span class="hljs-literal">false</span>,
     };
   },
 
   destroy() {
-    this.<span class="hljs-built_in">set</span>State({
-      destroyed: true,
+    <span class="hljs-keyword">this</span>.setState({
+      <span class="hljs-attribute">destroyed</span>: <span class="hljs-literal">true</span>,
     });
   },
 
   render() {
-    if (this.<span class="hljs-keyword">state</span>.destroyed) {
-      return null;
+    <span class="hljs-keyword">if</span> (<span class="hljs-keyword">this</span>.state.destroyed) {
+      <span class="hljs-keyword">return</span> <span class="hljs-literal">null</span>;
     }
-    return (<span class="hljs-variable">&lt;div style={{margin:100}}&gt;</span>
-      <span class="hljs-variable">&lt;h2&gt;</span>固定位置<span class="hljs-variable">&lt;/h2&gt;</span>
+    <span class="hljs-keyword">return</span> (&lt;div style={{<span class="hljs-attribute">margin</span>:<span class="hljs-number">100</span>}}&gt;
+      &lt;h2&gt;固定位置&lt;/h2&gt;
 
-      <span class="hljs-variable">&lt;div&gt;</span>
-        <span class="hljs-variable">&lt;Upload {...props}&gt;</span><span class="hljs-variable">&lt;a href="#nowhere"&gt;</span>开始上传<span class="hljs-variable">&lt;/a&gt;</span><span class="hljs-variable">&lt;/Upload&gt;</span>
-      <span class="hljs-variable">&lt;/div&gt;</span>
+      &lt;div&gt;
+        &lt;Upload {...props}&gt;&lt;a href=<span class="hljs-string">"<span class="hljs-subst">#nowhere</span>"</span>&gt;开始上传&lt;/a&gt;&lt;/Upload&gt;
+      &lt;/div&gt;
 
-      <span class="hljs-variable">&lt;h2&gt;</span>滚动<span class="hljs-variable">&lt;/h2&gt;</span>
+      &lt;h2&gt;滚动&lt;/h2&gt;
 
-      <span class="hljs-variable">&lt;div style={{height:200,overflow:'auto',border:'1px solid red'}}&gt;</span>
-        <span class="hljs-variable">&lt;div style={{height:500}}&gt;</span>
-          <span class="hljs-variable">&lt;Upload {...props}&gt;</span><span class="hljs-variable">&lt;a href="#nowhere"&gt;</span>开始上传<span class="hljs-number">2</span><span class="hljs-variable">&lt;/a&gt;</span><span class="hljs-variable">&lt;/Upload&gt;</span>
-        <span class="hljs-variable">&lt;/div&gt;</span>
-      <span class="hljs-variable">&lt;/div&gt;</span>
+      &lt;div style={{<span class="hljs-attribute">height</span>:<span class="hljs-number">200</span>,<span class="hljs-attribute">overflow</span>:<span class="hljs-string">'auto'</span>,<span class="hljs-attribute">border</span>:<span class="hljs-string">'1px solid red'</span>}}&gt;
+        &lt;div style={{<span class="hljs-attribute">height</span>:<span class="hljs-number">500</span>}}&gt;
+          &lt;Upload {...props}&gt;&lt;a href=<span class="hljs-string">"<span class="hljs-subst">#nowhere</span>"</span>&gt;开始上传<span class="hljs-number">2</span>&lt;/a&gt;&lt;/Upload&gt;
+        &lt;/div&gt;
+      &lt;/div&gt;
 
-      <span class="hljs-variable">&lt;button onClick={this.destroy}&gt;</span>destroy<span class="hljs-variable">&lt;/button&gt;</span>
-    <span class="hljs-variable">&lt;/div&gt;</span>);
+      &lt;button onClick={<span class="hljs-keyword">this</span>.destroy}&gt;destroy&lt;/button&gt;
+    &lt;/div&gt;);
   }
 });
 
-React.render(<span class="hljs-variable">&lt;Test/&gt;</span>, document.getElementById('__react-content'));
+React.render(&lt;Test/&gt;, <span class="hljs-built_in">document</span>.getElementById(<span class="hljs-string">'__react-content'</span>));
 </code></pre></div>
     </div>
     <a href="http://github.com/react-component/upload"><img style="position: absolute; top: 0; right: 0; border: 0;" src="https://camo.githubusercontent.com/38ef81f8aca64bb9a64448d0d70f1308ef5341ab/68747470733a2f2f73332e616d617a6f6e6177732e636f6d2f6769746875622f726962626f6e732f666f726b6d655f72696768745f6461726b626c75655f3132313632312e706e67" alt="Fork me on GitHub" data-canonical-src="https://s3.amazonaws.com/github/ribbons/forkme_right_darkblue_121621.png"></a>

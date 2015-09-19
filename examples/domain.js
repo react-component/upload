@@ -1,20 +1,26 @@
-webpackJsonp([1],{
-
-/***/ 0:
+webpackJsonp([0],[
+/* 0 */
 /***/ function(module, exports, __webpack_require__) {
 
-	module.exports = __webpack_require__(167);
+	module.exports = __webpack_require__(1);
 
 
 /***/ },
-
-/***/ 167:
+/* 1 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 	
 	var React = __webpack_require__(2);
 	var Upload = __webpack_require__(158);
+	
+	try {
+	  var aDomain = document.domain.split(".");
+	  if (aDomain.length > 1) {
+	    var sDomain = aDomain[aDomain.length - 2] + "." + aDomain[aDomain.length - 1];
+	    document.domain = sDomain;
+	  }
+	} catch (err) {}
 	
 	var props = {
 	  action: '/upload.do',
@@ -109,6 +115,5 @@ webpackJsonp([1],{
 	React.render(React.createElement(Test, null), document.getElementById('__react-content'));
 
 /***/ }
-
-});
-//# sourceMappingURL=simple.js.map
+]);
+//# sourceMappingURL=domain.js.map
