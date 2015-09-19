@@ -22229,6 +22229,9 @@ webpackJsonp([0,1],[
 	    var iframeNode = this.getIframeNode();
 	    var win = iframeNode.contentWindow;
 	    var doc = win.document;
+	    console.log(document.domain);
+	    doc.domain = document.domain;
+	    console.log(doc.domain);
 	    doc.open('text/html', 'replace');
 	    doc.write(this.getIframeHTML());
 	    doc.close();
