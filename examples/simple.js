@@ -20528,7 +20528,7 @@ webpackJsonp([0,1],[
 	
 	var _AjaxUploader2 = _interopRequireDefault(_AjaxUploader);
 	
-	var _IframeUploader = __webpack_require__(!(function webpackMissingModule() { var e = new Error("Cannot find module \"./IframeUploader\""); e.code = 'MODULE_NOT_FOUND'; throw e; }()));
+	var _IframeUploader = __webpack_require__(166);
 	
 	var _IframeUploader2 = _interopRequireDefault(_IframeUploader);
 	
@@ -22090,6 +22090,194 @@ webpackJsonp([0,1],[
 	  return 'rc-upload-' + now + '-' + ++index;
 	}
 	
+	module.exports = exports['default'];
+
+/***/ },
+/* 166 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+	
+	Object.defineProperty(exports, '__esModule', {
+	  value: true
+	});
+	
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
+	
+	var _react = __webpack_require__(2);
+	
+	var _react2 = _interopRequireDefault(_react);
+	
+	var _uid = __webpack_require__(165);
+	
+	var _uid2 = _interopRequireDefault(_uid);
+	
+	var iframeStyle = {
+	  position: 'absolute',
+	  top: 0,
+	  opacity: 0,
+	  filter: 'alpha(opacity=0)',
+	  left: 0,
+	  zIndex: 9999
+	};
+	
+	var IframeUploader = _react2['default'].createClass({
+	  displayName: 'IframeUploader',
+	
+	  propTypes: {
+	    onStart: _react.PropTypes.func,
+	    multiple: _react.PropTypes.bool,
+	    children: _react.PropTypes.any,
+	    data: _react.PropTypes.object,
+	    action: _react.PropTypes.string,
+	    name: _react.PropTypes.string
+	  },
+	
+	  getInitialState: function getInitialState() {
+	    return {
+	      parentSetDomain: false
+	    };
+	  },
+	
+	  componentDidMount: function componentDidMount() {
+	    this.updateIframeWH();
+	    this.initIframe();
+	  },
+	
+	  componentDidUpdate: function componentDidUpdate() {
+	    this.updateIframeWH();
+	  },
+	
+	  onLoad: function onLoad() {
+	    if (!this.loading) {
+	      return;
+	    }
+	    var props = this.props;
+	    var response = undefined;
+	    var eventFile = this.file;
+	    try {
+	      response = this.getIframeDocument().body.innerHTML;
+	      props.onSuccess(response, eventFile);
+	    } catch (err) {
+	      response = 'cross-domain';
+	      props.onError(err, null, eventFile);
+	    }
+	    this.enableIframe();
+	    this.initIframe();
+	  },
+	
+	  onChange: function onChange() {
+	    var target = this.getFormInputNode();
+	    // ie8/9 don't support FileList Object
+	    // http://stackoverflow.com/questions/12830058/ie8-input-type-file-get-files
+	    var file = this.file = {
+	      uid: (0, _uid2['default'])(),
+	      name: target.value
+	    };
+	    this.props.onStart(this.getFileForMultiple(file));
+	    var formNode = this.getFormNode();
+	    var dataSpan = this.getFormDataNode();
+	    var data = this.props.data;
+	    if (typeof data === 'function') {
+	      data = data();
+	    }
+	    var inputs = [];
+	    for (var key in data) {
+	      if (data.hasOwnProperty(key)) {
+	        inputs.push('<input name="' + key + '" value="' + data[key] + '"/>');
+	      }
+	    }
+	    dataSpan.innerHTML = inputs.join('');
+	    formNode.submit();
+	    dataSpan.innerHTML = '';
+	    this.disabledIframe();
+	  },
+	
+	  getIframeNode: function getIframeNode() {
+	    return _react2['default'].findDOMNode(this.refs.iframe);
+	  },
+	
+	  getIframeDocument: function getIframeDocument() {
+	    return this.getIframeNode().contentDocument;
+	  },
+	
+	  getFormNode: function getFormNode() {
+	    return this.getIframeDocument().getElementById('form');
+	  },
+	
+	  getFormInputNode: function getFormInputNode() {
+	    return this.getIframeDocument().getElementById('input');
+	  },
+	
+	  getFormDataNode: function getFormDataNode() {
+	    return this.getIframeDocument().getElementById('data');
+	  },
+	
+	  getFileForMultiple: function getFileForMultiple(file) {
+	    return this.props.multiple ? [file] : file;
+	  },
+	
+	  getIframeHTML: function getIframeHTML() {
+	    return '\n    <!DOCTYPE html>\n    <html>\n    <head>\n    <meta http-equiv="X-UA-Compatible" content="IE=edge" />\n    <style>\n    body,html {padding:0;margin:0;border:0;overflow:hidden;}\n    </style>\n    </head>\n    <body>\n    <form method="post"\n    encType="multipart/form-data"\n    action="' + this.props.action + '" id="form" style="display:block;height:9999px;position:relative;overflow:hidden;">\n    <input id="input" type="file"\n     name="' + this.props.name + '"\n     style="position:absolute;top:0;right:0;height:9999px;font-size:9999px;cursor:pointer;"/>\n    <span id="data"></span>\n    </form>\n    </body>\n    </html>\n    ';
+	  },
+	
+	  render: function render() {
+	    var iframe = undefined;
+	    if (this.state.parentSetDomain) {
+	      iframe = _react2['default'].createElement('iframe', { ref: 'iframe',
+	        src: "javascript:void((function(){var d=document;d.open();d.domain='" + document.domain + "';d.write('');d.close()})())",
+	        onLoad: this.onLoad,
+	        style: iframeStyle });
+	    } else {
+	      iframe = _react2['default'].createElement('iframe', { ref: 'iframe',
+	        onLoad: this.onLoad,
+	        style: iframeStyle });
+	    }
+	    return _react2['default'].createElement(
+	      'span',
+	      { style: { position: 'relative', zIndex: 0 } },
+	      iframe,
+	      this.props.children
+	    );
+	  },
+	
+	  initIframe: function initIframe() {
+	    var iframeNode = this.getIframeNode();
+	    try {
+	      var tryVisit = iframeNode.contentWindow;
+	    } catch (e) {
+	      this.setState({
+	        parentSetDomain: true
+	      });
+	      return;
+	    }
+	    var win = iframeNode.contentWindow;
+	    var doc = win.document;
+	    doc.open('text/html', 'replace');
+	    doc.write(this.getIframeHTML());
+	    doc.close();
+	    this.getFormInputNode().onchange = this.onChange;
+	  },
+	
+	  enableIframe: function enableIframe() {
+	    this.loading = false;
+	    this.getIframeNode().style.display = '';
+	  },
+	
+	  disabledIframe: function disabledIframe() {
+	    this.loading = true;
+	    this.getIframeNode().style.display = 'none';
+	  },
+	
+	  updateIframeWH: function updateIframeWH() {
+	    var rootNode = _react2['default'].findDOMNode(this);
+	    var iframeNode = this.getIframeNode();
+	    iframeNode.style.height = rootNode.offsetHeight + 'px';
+	    iframeNode.style.width = rootNode.offsetWidth + 'px';
+	  }
+	});
+	
+	exports['default'] = IframeUploader;
 	module.exports = exports['default'];
 
 /***/ }
