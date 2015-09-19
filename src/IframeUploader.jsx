@@ -1,6 +1,7 @@
 const React = require('react');
 const uid = require('./uid');
 const Align = require('rc-align');
+let iframeCount = 0;
 
 const IframeUploader = React.createClass({
   propTypes: {
@@ -12,6 +13,7 @@ const IframeUploader = React.createClass({
   },
 
   getInitialState() {
+    this.iframeCount = iframeCount++;
     return {
       uid: 1,
       loading: false,
@@ -142,7 +144,7 @@ const IframeUploader = React.createClass({
     // ie8/9 don't support FileList Object
     // http://stackoverflow.com/questions/12830058/ie8-input-type-file-get-files
     try {
-      this.file.name = this.file.name || e.target.value;
+      this.file.name = e.target.value;
       this.file.uid = uid();
     } catch (ex) {
       if (typeof console !== 'undefined') {
@@ -179,7 +181,7 @@ const IframeUploader = React.createClass({
   },
 
   getIframeName() {
-    return 'iframe_uploader_' + this.state.uid;
+    return 'iframe_uploader_' + this.iframeCount + '_' + this.state.uid;
   },
 
   render() {
