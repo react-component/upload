@@ -22210,7 +22210,7 @@ webpackJsonp([0,1],[
 	    // ie8/9 don't support FileList Object
 	    // http://stackoverflow.com/questions/12830058/ie8-input-type-file-get-files
 	    try {
-	      this.file.name = e.target.value;
+	      this.file.filename = e.target.value;
 	      this.file.uid = uid();
 	    } catch (ex) {
 	      if (typeof console !== 'undefined') {
