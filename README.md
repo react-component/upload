@@ -69,6 +69,19 @@ React.render(<Upload />, container);
 1. `result`: request body
 2. `file`: upload file
 
+
+### Note
+
+if run at ie and set document.domain, then server should output document.domain according to _documentDomain parameter
+
+```js
+var ret = '';
+if(postData._documentDomain){
+  ret+='<script>document.domain="'+postData._documentDomain+'";</script>'
+}
+this.body = ret +'{"url":"xx.jpq"}';
+```
+
 ## License
 
 rc-upload is released under the MIT license.
