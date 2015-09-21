@@ -79,7 +79,7 @@ const IframeUploader = React.createClass({
   },
 
   getIframeNode() {
-    return React.findDOMNode(this).firstChild;
+    return React.findDOMNode(this.refs.iframe);
   },
 
   getIframeDocument() {
