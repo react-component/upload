@@ -7,7 +7,7 @@
   <meta charset="utf-8"/>
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <link href="//cdnjs.cloudflare.com/ajax/libs/normalize/3.0.3/normalize.css" rel="stylesheet"/>
-  <title>rc-upload@1.6.3 - upload ui component for react</title>
+  <title>rc-upload@1.6.1 - upload ui component for react</title>
   <style>
     @font-face {
       font-family: octicons-anchor;
@@ -737,7 +737,7 @@
 
 <body>
 <div class="header">
-  <h1>rc-upload@1.6.3</h1>
+  <h1>rc-upload@1.6.1</h1>
 </div>
 <div class="examples">
   <h3>EXAMPLES</h3>
@@ -846,7 +846,12 @@ React.render(<span class="xml"><span class="hljs-tag">&lt;<span class="hljs-titl
 <li><code>result</code>: request body</li>
 <li><code>file</code>: upload file</li>
 </ol>
-<h2>License<a id="user-content-license" name="license" class="anchor" aria-hidden="true" href="#license"><span class="octicon octicon-link"></span></a></h2><p>rc-upload is released under the MIT license.</p>
+<h3>Note<a id="user-content-note" name="note" class="anchor" aria-hidden="true" href="#note"><span class="octicon octicon-link"></span></a></h3><p>if run at ie and set document.domain, then server should output document.domain according to _documentDomain parameter</p>
+<div class="highlight"><pre class="hljs"><code class="js"><span class="hljs-keyword">var</span> ret = <span class="hljs-string">''</span>;
+<span class="hljs-keyword">if</span>(postData._documentDomain){
+  ret+=<span class="hljs-string">'&lt;script&gt;document.domain="'</span>+postData._documentDomain+<span class="hljs-string">'";&lt;/script&gt;'</span>
+}
+<span class="hljs-keyword">this</span>.body = ret +<span class="hljs-string">'{"url":"xx.jpq"}'</span>;</code></pre></div><h2>License<a id="user-content-license" name="license" class="anchor" aria-hidden="true" href="#license"><span class="octicon octicon-link"></span></a></h2><p>rc-upload is released under the MIT license.</p>
 
   </div>
 </div>
