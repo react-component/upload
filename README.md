@@ -70,16 +70,18 @@ React.render(<Upload />, container);
 2. `file`: upload file
 
 
-### Note
+### IE8/9 Note
 
-if run at ie and set document.domain, then server should output document.domain according to _documentDomain parameter
+In iframe uploader way, the content-type of response should be `plain/text` or `text/html`.[referense](https://github.com/blueimp/jQuery-File-Upload/wiki/Setup#content-type-negotiation)
+
+If the Page set document.domain, then server should output document.domain according to _documentDomain parameter.
 
 ```js
 var ret = '';
-if(postData._documentDomain){
-  ret+='<script>document.domain="'+postData._documentDomain+'";</script>'
+if (postData._documentDomain) {
+  ret += '<script>document.domain="'+postData._documentDomain+'";</script>';
 }
-this.body = ret +'{"url":"xx.jpq"}';
+this.body = ret + '{"url":"xx.jpq"}';
 ```
 
 ## License
