@@ -44,7 +44,7 @@ const IframeUploader = React.createClass({
       response = doc.body.innerHTML;
       props.onSuccess(response, eventFile);
     } catch (err) {
-      warning(false, 'cross domain error for Upload. Maybe server should return domain.domain script. see Note from https://github.com/react-component/upload');
+      warning(false, 'cross domain error for Upload. Maybe server should return document.domain script. see Note from https://github.com/react-component/upload');
       response = 'cross-domain';
       props.onError(err, null, eventFile);
     }
