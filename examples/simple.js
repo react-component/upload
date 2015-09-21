@@ -5,8 +5,8 @@ var props = {
   data: {a: 1, b: 2},
   multiple: true,
   onStart(files) {
-    const file=files[0];
-    console.log('onStart',file, file.name);
+    const file = files[0];
+    console.log('onStart', file, file.name);
   },
   onSuccess(ret) {
     console.log('onSuccess', ret);
@@ -18,6 +18,8 @@ var props = {
     console.log('onError', err);
   }
 };
+
+// document.domain = 'alipay.net';
 
 const Test = React.createClass({
   getInitialState(){

@@ -36,7 +36,12 @@ const IframeUploader = React.createClass({
     let response;
     const eventFile = this.file;
     try {
-      response = this.getIframeDocument().body.innerHTML;
+      const doc = this.getIframeDocument();
+      const script = doc.getElementsByTagName('script')[0];
+      if (script && script.parentNode === doc.body) {
+        doc.body.removeChild(script);
+      }
+      response = doc.body.innerHTML;
       props.onSuccess(response, eventFile);
     } catch (err) {
       response = 'cross-domain';
@@ -45,7 +50,6 @@ const IframeUploader = React.createClass({
     this.enableIframe();
     this.initIframe();
   },
-
 
   onChange() {
     const target = this.getFormInputNode();
@@ -75,7 +79,7 @@ const IframeUploader = React.createClass({
   },
 
   getIframeNode() {
-    return React.findDOMNode(this.refs.iframe);
+    return React.findDOMNode(this).firstChild;
   },
 
   getIframeDocument() {
@@ -98,7 +102,13 @@ const IframeUploader = React.createClass({
     return this.props.multiple ? [file] : file;
   },
 
-  getIframeHTML() {
+  getIframeHTML(domain) {
+    let domainScript = '';
+    let domainInput = '';
+    if (domain) {
+      domainScript = `<script>document.domain="${domain}";</script>`;
+      domainInput = `<input name="_documentDomain" value="${domain}" />`;
+    }
     return `
     <!DOCTYPE html>
     <html>
@@ -107,6 +117,7 @@ const IframeUploader = React.createClass({
     <style>
     body,html {padding:0;margin:0;border:0;overflow:hidden;}
     </style>
+    ${domainScript}
     </head>
     <body>
     <form method="post"
@@ -115,6 +126,7 @@ const IframeUploader = React.createClass({
     <input id="input" type="file"
      name="${this.props.name}"
      style="position:absolute;top:0;right:0;height:9999px;font-size:9999px;cursor:pointer;"/>
+    ${domainInput}
     <span id="data"></span>
     </form>
     </body>
@@ -133,12 +145,34 @@ const IframeUploader = React.createClass({
     );
   },
 
+  initIframeSrc() {
+    if (this.domain) {
+      this.getIframeNode().src = `javascript:void((function(){
+        var d = document;
+        d.open();
+        d.domain='${this.domain}';
+        d.write('');
+        d.close();
+      })())`;
+    }
+  },
+
   initIframe() {
     const iframeNode = this.getIframeNode();
-    const win = iframeNode.contentWindow;
-    const doc = win.document;
+    let win = iframeNode.contentWindow;
+    let doc;
+    this.domain = this.domain || '';
+    this.initIframeSrc();
+    try {
+      doc = win.document;
+    } catch (e) {
+      this.domain = document.domain;
+      this.initIframeSrc();
+      win = iframeNode.contentWindow;
+      doc = win.document;
+    }
     doc.open('text/html', 'replace');
-    doc.write(this.getIframeHTML());
+    doc.write(this.getIframeHTML(this.domain));
     doc.close();
     this.getFormInputNode().onchange = this.onChange;
   },
