@@ -1,5 +1,6 @@
 import React, {PropTypes} from 'react';
 import uid from './uid';
+import warning from 'warning';
 const iframeStyle = {
   position: 'absolute',
   top: 0,
@@ -8,7 +9,6 @@ const iframeStyle = {
   left: 0,
   zIndex: 9999,
 };
-
 const IframeUploader = React.createClass({
   propTypes: {
     onStart: PropTypes.func,
@@ -44,6 +44,7 @@ const IframeUploader = React.createClass({
       response = doc.body.innerHTML;
       props.onSuccess(response, eventFile);
     } catch (err) {
+      warning(false, 'cross domain error for Upload. Maybe server should return domain.domain script. see Note from https://github.com/react-component/upload');
       response = 'cross-domain';
       props.onError(err, null, eventFile);
     }

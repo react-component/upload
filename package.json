@@ -1,6 +1,6 @@
 {
   "name": "rc-upload",
-  "version": "1.6.4",
+  "version": "1.6.5",
   "description": "upload ui component for react",
   "keywords": [
     "react",
@@ -51,6 +51,7 @@
     "lint"
   ],
   "dependencies": {
-    "superagent": "1.x"
+    "superagent": "1.x",
+    "warning": "~2.0.0"
   }
 }
