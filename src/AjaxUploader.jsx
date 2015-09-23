@@ -5,13 +5,20 @@ import uid from './uid';
 const AjaxUploader = React.createClass({
   propTypes: {
     multiple: PropTypes.bool,
+    beforeStart: PropTypes.func,
     onStart: PropTypes.func,
     data: PropTypes.object,
   },
 
   onChange(e) {
     const files = e.target.files;
-    this.uploadFiles(files);
+
+    const argFiles = this.props.multiple ? Array.prototype.slice.call(files) : Array.prototype.slice.call(files)[0];
+    const startResult = this.props.beforeStart(argFiles, this);
+    // 返回值为false则意味着截断上传过程
+    if (startResult !== false) {
+      this.uploadFiles(files);
+    }
   },
 
   onClick() {
@@ -61,7 +68,7 @@ const AjaxUploader = React.createClass({
     const len = files.length;
     if (len > 0) {
       for (let i = 0; i < len; i++) {
-        const file = files.item(i);
+        const file = files[i];
         file.uid = uid();
         this.post(file);
       }
