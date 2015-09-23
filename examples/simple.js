@@ -4,6 +4,20 @@ var props = {
   action: '/upload.do',
   data: {a: 1, b: 2},
   multiple: true,
+  beforeStart(files,loader) {
+    const file = files[0];
+    console.log('beforeStart', file, file.name);
+
+    //模拟异步校验
+    setTimeout(function () {
+      console.log('在这里可以进行异步校验，甚至自行更改要上传的files');
+      //截断上传过程后必须自己手工提交
+      loader.uploadFiles(files);
+    },3000);
+
+    //截断上传过程
+    return false;
+  },
   onStart(files) {
     const file = files[0];
     console.log('onStart', file, file.name);

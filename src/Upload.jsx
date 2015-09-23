@@ -27,6 +27,7 @@ const Upload = React.createClass({
       forceAjax: false,
       multipart: false,
       onProgress: empty,
+      beforeStart: empty,
       onStart: empty,
       onError: empty,
       onSuccess: empty,
