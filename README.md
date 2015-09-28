@@ -57,7 +57,7 @@ React.render(<Upload />, container);
 |onError| function| | error callback |
 |onSuccess | function | | success callback |
 |onProgress | function || progress callback, only for modern browsers|
-|beforeStart| function |null| before upload check, return a Promise, only for modern browsers|
+|beforeUpload| function |null| before upload check, return a Promise, only for modern browsers|
 
 #### onError arguments
 

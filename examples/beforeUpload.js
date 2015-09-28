@@ -11,7 +11,7 @@ var props = {
   onError(err){
     console.log('onError', err);
   },
-  beforeStart(file) {
+  beforeUpload(file) {
     return new Promise(function(resolve) {
       console.log('start check');
       setTimeout(function() {

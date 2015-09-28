@@ -7,7 +7,7 @@ const AjaxUploader = React.createClass({
     multiple: PropTypes.bool,
     onStart: PropTypes.func,
     data: PropTypes.object,
-    beforeStart: PropTypes.func,
+    beforeUpload: PropTypes.func,
   },
 
   onChange(e) {
@@ -76,8 +76,8 @@ const AjaxUploader = React.createClass({
 
   upload(file) {
     const props = this.props;
-    if (props.beforeStart) {
-      const before = props.beforeStart(file);
+    if (props.beforeUpload) {
+      const before = props.beforeUpload(file);
       before.then && before.then(() => {
         this.post(file);
       });
