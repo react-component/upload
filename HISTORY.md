@@ -1,3 +1,7 @@
+### 1.6.6 2015-09-29
+
+- feat: add beforeUpload support, [#19](https://github.com/react-component/upload/pull/19)
+
 ### 1.5.2 2015-09-18
 
 - fix: Fixed bug calling wrong method name [#13](https://github.com/react-component/upload/pull/13)
