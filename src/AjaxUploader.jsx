@@ -7,6 +7,7 @@ const AjaxUploader = React.createClass({
     multiple: PropTypes.bool,
     onStart: PropTypes.func,
     data: PropTypes.object,
+    beforeUpload: PropTypes.func,
   },
 
   onChange(e) {
@@ -63,13 +64,29 @@ const AjaxUploader = React.createClass({
       for (let i = 0; i < len; i++) {
         const file = files.item(i);
         file.uid = uid();
-        this.post(file);
+        this.upload(file);
       }
       if (this.props.multiple) {
         this.props.onStart(Array.prototype.slice.call(files));
       } else {
         this.props.onStart(Array.prototype.slice.call(files)[0]);
       }
+    }
+  },
+
+  upload(file) {
+    const props = this.props;
+    if (!props.beforeUpload) {
+      return this.post(file);
+    }
+
+    const before = props.beforeUpload(file);
+    if (before && before.then) {
+      before.then(() => {
+        this.post(file);
+      });
+    } else if (before !== false) {
+      this.post(file);
     }
   },
 

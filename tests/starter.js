@@ -21,7 +21,7 @@ app.post('/upload.do', function*() {
   this.status = 200;
   this.set('Content-Type', 'text/html');
   yield wait(2000);
-  if (parts.fields[0][0] === '_documentDomain') {
+  if (parts.fields[0] && parts.fields[0][0] === '_documentDomain') {
     ret += '<script>document.domain="' + parts.fields[0][1] + '";</script>';
   }
   ret += JSON.stringify(files);
