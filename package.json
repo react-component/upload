@@ -51,7 +51,6 @@
     "lint"
   ],
   "dependencies": {
-    "superagent": "1.x",
     "warning": "~2.0.0"
   }
 }

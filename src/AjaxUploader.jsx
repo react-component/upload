@@ -1,4 +1,4 @@
-import request from 'superagent';
+import request from './request';
 import React, {PropTypes} from 'react';
 import uid from './uid';
 
@@ -92,34 +92,25 @@ const AjaxUploader = React.createClass({
 
   post(file) {
     const props = this.props;
-    const req = request
-      .post(props.action)
-      .attach(props.name, file, file.name);
     let data = props.data;
     if (typeof data === 'function') {
       data = data();
     }
 
-    for (const key in data) {
-      if (data.hasOwnProperty(key)) {
-        req.field(key, data[key]);
-      }
-    }
-
-    function progress(e) {
-      props.onProgress(e, file);
-    }
-
-    req.on('progress', progress);
-
-    req.end((err, ret) => {
-      req.off('progress', progress);
-      if (err || ret.status !== 200) {
+    request({
+      action: props.action,
+      filename: props.name,
+      file: file,
+      data: data,
+      onProgress: e => {
+        props.onProgress(e, file);
+      },
+      onSuccess: ret => {
+        props.onSuccess(ret, file);
+      },
+      onError: (err, ret) => {
         props.onError(err, ret, file);
-        return;
-      }
-
-      props.onSuccess(ret.body || ret.text, file);
+      },
     });
   },
 });
