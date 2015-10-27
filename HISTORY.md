@@ -1,3 +1,8 @@
+### 1.7.0 2015-10-27
+
+- react 0.14 support
+- remove superagent
+
 ### 1.6.6 2015-09-29
 
 - feat: add beforeUpload support, [#19](https://github.com/react-component/upload/pull/19)

@@ -1,4 +1,5 @@
 import React, {PropTypes} from 'react';
+import ReactDOM from 'react-dom';
 import uid from './uid';
 import warning from 'warning';
 const iframeStyle = {
@@ -80,7 +81,7 @@ const IframeUploader = React.createClass({
   },
 
   getIframeNode() {
-    return React.findDOMNode(this.refs.iframe);
+    return this.refs.iframe;
   },
 
   getIframeDocument() {
@@ -135,17 +136,6 @@ const IframeUploader = React.createClass({
     `;
   },
 
-  render() {
-    return (
-      <span style={{position: 'relative', zIndex: 0}}>
-        <iframe ref="iframe"
-                onLoad={this.onLoad}
-                style={iframeStyle}/>
-        {this.props.children}
-      </span>
-    );
-  },
-
   initIframeSrc() {
     if (this.domain) {
       this.getIframeNode().src = `javascript:void((function(){
@@ -189,10 +179,21 @@ const IframeUploader = React.createClass({
   },
 
   updateIframeWH() {
-    const rootNode = React.findDOMNode(this);
+    const rootNode = ReactDOM.findDOMNode(this);
     const iframeNode = this.getIframeNode();
     iframeNode.style.height = rootNode.offsetHeight + 'px';
     iframeNode.style.width = rootNode.offsetWidth + 'px';
+  },
+
+  render() {
+    return (
+      <span style={{position: 'relative', zIndex: 0}}>
+        <iframe ref="iframe"
+                onLoad={this.onLoad}
+                style={iframeStyle}/>
+        {this.props.children}
+      </span>
+    );
   },
 });
 

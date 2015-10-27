@@ -1,4 +1,5 @@
 var React = require('react');
+var ReactDOM = require('react-dom');
 var Upload = require('rc-upload');
 var props = {
   action: '/upload.do',
@@ -32,4 +33,4 @@ const Test = React.createClass({
   }
 });
 
-React.render(<Test/>, document.getElementById('__react-content'));
+ReactDOM.render(<Test/>, document.getElementById('__react-content'));

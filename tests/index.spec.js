@@ -6,8 +6,9 @@
 
 import expect from 'expect.js';
 import Uploader from '../index';
-import React from 'react/addons';
-const TestUtils = React.addons.TestUtils;
+var React = require('react');
+var ReactDOM = require('react-dom');
+var TestUtils = require('react-addons-test-utils');
 const Simulate = TestUtils.Simulate;
 const findDOMNode = TestUtils.scryRenderedDOMComponentsWithClass;
 
@@ -47,14 +48,14 @@ describe('uploader', function() {
       node = document.createElement('div');
       document.body.appendChild(node);
 
-      React.render(<Uploader {...props} />, node, function() {
+      ReactDOM.render(<Uploader {...props} />, node, function() {
         uploader = this;
         done();
       });
     });
 
     afterEach(function() {
-      React.unmountComponentAtNode(node);
+      ReactDOM.unmountComponentAtNode(node);
     });
 
     it('create works', function() {
