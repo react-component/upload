@@ -1,3 +1,109 @@
 /**
  * only require other specs here
  */
+'use strict';
+
+
+import expect from 'expect.js';
+import Uploader from '../index';
+import React from 'react/addons';
+const TestUtils = React.addons.TestUtils;
+const Simulate = TestUtils.Simulate;
+const findDOMNode = TestUtils.scryRenderedDOMComponentsWithClass;
+
+describe('uploader', function() {
+  describe('ajax uploader', function() {
+    if (typeof FormData === 'undefined') {
+      return;
+    }
+
+    var node;
+    var uploader;
+    var handlers = {};
+
+    var props = {
+      action: '/test',
+      data: {a: 1, b: 2},
+      multiple: true,
+      onStart(files) {
+        const file = files[0];
+        console.log('onStart', file, file.name);
+        if (handlers.onStart) { handlers.onStart(files); }
+      },
+      onSuccess(ret, file) {
+        console.log('onSuccess', ret);
+        if (handlers.onSuccess) { handlers.onSuccess(ret, file); }
+      },
+      onProgress(step, file) {
+        console.log('onProgress', step, file);
+      },
+      onError(err, result, file) {
+        console.log('onError', err);
+        if (handlers.onError) { handlers.onError(err, result, file); }
+      }
+    };
+
+    beforeEach(function(done) {
+      node = document.createElement('div');
+      document.body.appendChild(node);
+
+      React.render(<Uploader {...props} />, node, function() {
+        uploader = this;
+        done();
+      });
+    });
+
+    afterEach(function() {
+      React.unmountComponentAtNode(node);
+    });
+
+    it('create works', function() {
+      expect(TestUtils.scryRenderedDOMComponentsWithTag(uploader, 'span').length).to.be(1);
+    });
+
+    it('upload success', function(done) {
+      const input = TestUtils.findRenderedDOMComponentWithTag(uploader, 'input');
+
+      const files = [{
+        name: 'success.png',
+        toString() {
+          return this.name;
+        }
+      }];
+      files.item = (i) => files[i];
+
+      Simulate.change(input, { target: { files } });
+
+      handlers.onSuccess = function(ret, file) {
+        expect(ret[1]).to.eql(file.name);
+        expect(file).to.have.property('uid');
+        done();
+      }
+
+      handlers.onError = function(err) {
+        done(err);
+      };
+    });
+
+    it('upload error', function(done) {
+      const input = TestUtils.findRenderedDOMComponentWithTag(uploader, 'input');
+
+      const files = [{
+        name: 'error.png',
+        toString() {
+          return this.name;
+        }
+      }];
+      files.item = (i) => files[i];
+
+      Simulate.change(input, { target: { files } });
+
+      handlers.onError = function(err, ret) {
+        expect(err instanceof Error).to.equal(true);
+        expect(err.status).to.equal(400);
+        expect(ret).to.equal('error 400');
+        done();
+      };
+    });
+  });
+});
