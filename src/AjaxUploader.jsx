@@ -45,8 +45,14 @@ const AjaxUploader = React.createClass({
     const hidden = {display: 'none'};
     const props = this.props;
     return (
-      <span onClick={this.onClick} onKeyDown={this.onKeyDown} onDrop={this.onFileDrop} onDragOver={this.onFileDrop}
-            role="button" tabIndex="0">
+      <span
+        onClick={this.onClick}
+        onKeyDown={this.onKeyDown}
+        onDrop={this.onFileDrop}
+        onDragOver={this.onFileDrop}
+        role="button"
+        tabIndex="0"
+      >
         <input type="file"
                ref="file"
                style={hidden}
