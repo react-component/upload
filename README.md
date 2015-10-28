@@ -4,12 +4,18 @@
 upload ui component for react
 
 [![NPM version][npm-image]][npm-url]
+[![build status][travis-image]][travis-url]
+[![Test coverage][coveralls-image]][coveralls-url]
 [![npm download][download-image]][download-url]
 
 [npm-image]: http://img.shields.io/npm/v/rc-upload.svg?style=flat-square
 [npm-url]: http://npmjs.org/package/rc-upload
 [download-image]: https://img.shields.io/npm/dm/rc-upload.svg?style=flat-square
 [download-url]: https://npmjs.org/package/rc-upload
+[travis-image]: https://img.shields.io/travis/react-component/upload.svg?style=flat-square
+[travis-url]: https://travis-ci.org/react-component/upload
+[coveralls-image]: https://img.shields.io/coveralls/react-component/upload.svg?style=flat-square
+[coveralls-url]: https://coveralls.io/r/react-component/upload?branch=master
 
 ## Development
 
