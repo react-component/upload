@@ -43,6 +43,9 @@ const IframeUploader = React.createClass({
         doc.body.removeChild(script);
       }
       response = doc.body.innerHTML;
+      if (response.slice(0, 5).toLowerCase()  == "<pre>") { // Some browsers return result in a <pre> tag.
+        response = JSON.parse(doc.body.firstChild.firstChild.nodeValue);
+      }
       props.onSuccess(response, eventFile);
     } catch (err) {
       warning(false, 'cross domain error for Upload. Maybe server should return document.domain script. see Note from https://github.com/react-component/upload');
