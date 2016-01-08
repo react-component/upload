@@ -12,8 +12,8 @@ webpackJsonp([0],[
 	'use strict';
 	
 	var React = __webpack_require__(2);
-	var ReactDOM = __webpack_require__(158);
-	var Upload = __webpack_require__(159);
+	var ReactDOM = __webpack_require__(159);
+	var Upload = __webpack_require__(160);
 	var props = {
 	  action: '/upload.do',
 	  onStart: function onStart(file) {
@@ -42,7 +42,9 @@ webpackJsonp([0],[
 	  render: function render() {
 	    return React.createElement(
 	      'div',
-	      { style: { margin: 100 } },
+	      { style: {
+	          margin: 100
+	        } },
 	      React.createElement(
 	        'div',
 	        null,

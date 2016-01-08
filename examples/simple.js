@@ -3,19 +3,19 @@ webpackJsonp([1],{
 /***/ 0:
 /***/ function(module, exports, __webpack_require__) {
 
-	module.exports = __webpack_require__(167);
+	module.exports = __webpack_require__(168);
 
 
 /***/ },
 
-/***/ 167:
+/***/ 168:
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 	
 	var React = __webpack_require__(2);
-	var ReactDOM = __webpack_require__(158);
-	var Upload = __webpack_require__(159);
+	var ReactDOM = __webpack_require__(159);
+	var Upload = __webpack_require__(160);
 	var props = {
 	  action: '/upload.do',
 	  data: { a: 1, b: 2 },
@@ -58,7 +58,9 @@ webpackJsonp([1],{
 	    }
 	    return React.createElement(
 	      'div',
-	      { style: { margin: 100 } },
+	      { style: {
+	          margin: 100
+	        } },
 	      React.createElement(
 	        'h2',
 	        null,
@@ -84,10 +86,16 @@ webpackJsonp([1],{
 	      ),
 	      React.createElement(
 	        'div',
-	        { style: { height: 200, overflow: 'auto', border: '1px solid red' } },
+	        { style: {
+	            height: 200,
+	            overflow: 'auto',
+	            border: '1px solid red'
+	          } },
 	        React.createElement(
 	          'div',
-	          { style: { height: 500 } },
+	          { style: {
+	              height: 500
+	            } },
 	          React.createElement(
 	            Upload,
 	            props,
