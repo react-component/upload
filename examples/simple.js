@@ -1,7 +1,7 @@
-var React = require('react');
-var ReactDOM = require('react-dom');
-var Upload = require('rc-upload');
-var props = {
+const React = require('react');
+const ReactDOM = require('react-dom');
+const Upload = require('rc-upload');
+const props = {
   action: '/upload.do',
   data: {a: 1, b: 2},
   multiple: true,
@@ -15,15 +15,15 @@ var props = {
   onProgress(step, file) {
     console.log('onProgress', step, file);
   },
-  onError(err){
+  onError(err) {
     console.log('onError', err);
-  }
+  },
 };
 
 // document.domain = 'alipay.net';
 
 const Test = React.createClass({
-  getInitialState(){
+  getInitialState() {
     return {
       destroyed: false,
     };
@@ -39,7 +39,9 @@ const Test = React.createClass({
     if (this.state.destroyed) {
       return null;
     }
-    return (<div style={{margin:100}}>
+    return (<div style={{
+      margin: 100,
+    }}>
       <h2>固定位置</h2>
 
       <div>
@@ -48,15 +50,21 @@ const Test = React.createClass({
 
       <h2>滚动</h2>
 
-      <div style={{height:200,overflow:'auto',border:'1px solid red'}}>
-        <div style={{height:500}}>
+      <div style={{
+        height: 200,
+        overflow: 'auto',
+        border: '1px solid red',
+      }}>
+        <div style={{
+          height: 500,
+        }}>
           <Upload {...props}><a href="#nowhere">开始上传2</a></Upload>
         </div>
       </div>
 
       <button onClick={this.destroy}>destroy</button>
     </div>);
-  }
+  },
 });
 
 ReactDOM.render(<Test/>, document.getElementById('__react-content'));

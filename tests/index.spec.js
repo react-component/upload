@@ -1,16 +1,13 @@
 /**
  * only require other specs here
  */
-'use strict';
-
 
 import expect from 'expect.js';
 import Uploader from '../index';
-var React = require('react');
-var ReactDOM = require('react-dom');
-var TestUtils = require('react-addons-test-utils');
+const React = require('react');
+const ReactDOM = require('react-dom');
+const TestUtils = require('react-addons-test-utils');
 const Simulate = TestUtils.Simulate;
-const findDOMNode = TestUtils.scryRenderedDOMComponentsWithClass;
 
 describe('uploader', function() {
   describe('ajax uploader', function() {
@@ -18,11 +15,11 @@ describe('uploader', function() {
       return;
     }
 
-    var node;
-    var uploader;
-    var handlers = {};
+    let node;
+    let uploader;
+    const handlers = {};
 
-    var props = {
+    const props = {
       action: '/test',
       data: {a: 1, b: 2},
       multiple: true,
@@ -41,7 +38,7 @@ describe('uploader', function() {
       onError(err, result, file) {
         console.log('onError', err);
         if (handlers.onError) { handlers.onError(err, result, file); }
-      }
+      },
     };
 
     beforeEach(function(done) {
@@ -69,7 +66,7 @@ describe('uploader', function() {
         name: 'success.png',
         toString() {
           return this.name;
-        }
+        },
       }];
       files.item = (i) => files[i];
 
@@ -79,7 +76,7 @@ describe('uploader', function() {
         expect(ret[1]).to.eql(file.name);
         expect(file).to.have.property('uid');
         done();
-      }
+      };
 
       handlers.onError = function(err) {
         done(err);
@@ -93,7 +90,7 @@ describe('uploader', function() {
         name: 'error.png',
         toString() {
           return this.name;
-        }
+        },
       }];
       files.item = (i) => files[i];
 
