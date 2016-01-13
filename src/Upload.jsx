@@ -19,6 +19,7 @@ const Upload = React.createClass({
     accept: PropTypes.string,
     multiple: PropTypes.bool,
     beforeUpload: PropTypes.func,
+    withCredentials: PropTypes.bool,
   },
 
   getDefaultProps() {
@@ -33,6 +34,7 @@ const Upload = React.createClass({
       onSuccess: empty,
       multiple: false,
       beforeUpload: null,
+      withCredentials: false,
     };
   },
 

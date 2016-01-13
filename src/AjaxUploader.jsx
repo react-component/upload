@@ -8,6 +8,7 @@ const AjaxUploader = React.createClass({
     onStart: PropTypes.func,
     data: PropTypes.object,
     beforeUpload: PropTypes.func,
+    withCredentials: PropTypes.bool,
   },
 
   onChange(e) {
@@ -85,6 +86,7 @@ const AjaxUploader = React.createClass({
       filename: props.name,
       file: file,
       data: data,
+      withCredentials: props.withCredentials,
       onProgress: e => {
         props.onProgress(e, file);
       },
