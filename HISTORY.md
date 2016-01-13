@@ -1,3 +1,7 @@
+### 1.7.2 2016-01-13
+
+- add prop withCredentials config
+
 ### 1.7.0 2015-10-27
 
 - react 0.14 support
