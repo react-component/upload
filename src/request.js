@@ -55,7 +55,7 @@ export default function upload(option) {
     option.onSuccess(getBody(xhr));
   };
 
-  if ('withCredentials' in xhr) {
+  if (option.withCredentials && 'withCredentials' in xhr) {
     xhr.withCredentials = true;
   }
 

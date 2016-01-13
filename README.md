@@ -64,6 +64,7 @@ React.render(<Upload />, container);
 |onSuccess | function | | success callback |
 |onProgress | function || progress callback, only for modern browsers|
 |beforeUpload| function |null| before upload check, return false or a rejected Promise will stop upload, only for modern browsers|
+| withCredentials | boolean | false | ajax upload with cookie send |
 
 #### onError arguments
 
