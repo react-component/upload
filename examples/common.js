@@ -19747,7 +19747,8 @@
 	    data: _react.PropTypes.object,
 	    accept: _react.PropTypes.string,
 	    multiple: _react.PropTypes.bool,
-	    beforeUpload: _react.PropTypes.func
+	    beforeUpload: _react.PropTypes.func,
+	    withCredentials: _react.PropTypes.bool
 	  },
 	
 	  getDefaultProps: function getDefaultProps() {
@@ -19761,7 +19762,8 @@
 	      onError: empty,
 	      onSuccess: empty,
 	      multiple: false,
-	      beforeUpload: null
+	      beforeUpload: null,
+	      withCredentials: false
 	    };
 	  },
 	
@@ -19810,7 +19812,8 @@
 	    multiple: _react.PropTypes.bool,
 	    onStart: _react.PropTypes.func,
 	    data: _react.PropTypes.object,
-	    beforeUpload: _react.PropTypes.func
+	    beforeUpload: _react.PropTypes.func,
+	    withCredentials: _react.PropTypes.bool
 	  },
 	
 	  onChange: function onChange(e) {
@@ -19890,6 +19893,7 @@
 	      filename: props.name,
 	      file: file,
 	      data: data,
+	      withCredentials: props.withCredentials,
 	      onProgress: function onProgress(e) {
 	        props.onProgress(e, file);
 	      },
@@ -19996,7 +20000,7 @@
 	    option.onSuccess(getBody(xhr));
 	  };
 	
-	  if ('withCredentials' in xhr) {
+	  if (option.withCredentials && 'withCredentials' in xhr) {
 	    xhr.withCredentials = true;
 	  }
 	
