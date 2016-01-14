@@ -1,3 +1,7 @@
+### 1.8.0 2015-01-14
+
+- support custom XHR headers
+
 ### 1.7.2 2016-01-13
 
 - add prop withCredentials config
