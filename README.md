@@ -56,6 +56,7 @@ React.render(<Upload />, container);
 |name | string | file| file param post to server |
 |action| string | | from action url |
 |data| object | | other data object to post |
+|headers| object | {} | http headers to post, available in modern browsers |
 |accept | string | | input accept attribute |
 |forceAjax | bool | | force to use ajax render. used for server render |
 |multiple | boolean | false | only support ie10+|

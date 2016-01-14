@@ -16,6 +16,7 @@ const Upload = React.createClass({
     onProgress: PropTypes.func,
     onStart: PropTypes.func,
     data: PropTypes.object,
+    headers: PropTypes.object,
     accept: PropTypes.string,
     multiple: PropTypes.bool,
     beforeUpload: PropTypes.func,
@@ -25,6 +26,7 @@ const Upload = React.createClass({
   getDefaultProps() {
     return {
       data: {},
+      headers: {},
       name: 'file',
       forceAjax: false,
       multipart: false,

@@ -4,6 +4,9 @@ const Upload = require('rc-upload');
 const props = {
   action: '/upload.do',
   data: {a: 1, b: 2},
+  headers: {
+    Authorization: 'xxxxxxx',
+  },
   multiple: true,
   onStart(files) {
     const file = files[0];
