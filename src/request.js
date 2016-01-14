@@ -61,5 +61,11 @@ export default function upload(option) {
 
   xhr.open('post', option.action, true);
   xhr.setRequestHeader('X-Requested-With', 'XMLHttpRequest');
+  const headers = option.headers || {};
+  for (const h in headers) {
+    if (headers.hasOwnProperty(h)) {
+      xhr.setRequestHeader(h, headers[h]);
+    }
+  }
   xhr.send(formData);
 }
