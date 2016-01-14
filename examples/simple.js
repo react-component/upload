@@ -19,6 +19,9 @@ webpackJsonp([1],{
 	var props = {
 	  action: '/upload.do',
 	  data: { a: 1, b: 2 },
+	  headers: {
+	    Authorization: 'xxxxxxx'
+	  },
 	  multiple: true,
 	  onStart: function onStart(files) {
 	    var file = files[0];

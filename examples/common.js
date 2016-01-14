@@ -19745,6 +19745,7 @@
 	    onProgress: _react.PropTypes.func,
 	    onStart: _react.PropTypes.func,
 	    data: _react.PropTypes.object,
+	    headers: _react.PropTypes.object,
 	    accept: _react.PropTypes.string,
 	    multiple: _react.PropTypes.bool,
 	    beforeUpload: _react.PropTypes.func,
@@ -19754,6 +19755,7 @@
 	  getDefaultProps: function getDefaultProps() {
 	    return {
 	      data: {},
+	      headers: {},
 	      name: 'file',
 	      forceAjax: false,
 	      multipart: false,
@@ -19812,6 +19814,7 @@
 	    multiple: _react.PropTypes.bool,
 	    onStart: _react.PropTypes.func,
 	    data: _react.PropTypes.object,
+	    headers: _react.PropTypes.object,
 	    beforeUpload: _react.PropTypes.func,
 	    withCredentials: _react.PropTypes.bool
 	  },
@@ -19893,6 +19896,7 @@
 	      filename: props.name,
 	      file: file,
 	      data: data,
+	      headers: props.headers,
 	      withCredentials: props.withCredentials,
 	      onProgress: function onProgress(e) {
 	        props.onProgress(e, file);
@@ -20006,6 +20010,12 @@
 	
 	  xhr.open('post', option.action, true);
 	  xhr.setRequestHeader('X-Requested-With', 'XMLHttpRequest');
+	  var headers = option.headers || {};
+	  for (var h in headers) {
+	    if (headers.hasOwnProperty(h)) {
+	      xhr.setRequestHeader(h, headers[h]);
+	    }
+	  }
 	  xhr.send(formData);
 	}
 	
