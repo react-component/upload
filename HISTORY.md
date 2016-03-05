@@ -1,4 +1,4 @@
-### 1.8.0 2015-01-14
+### 1.8.0 2016-01-14
 
 - support custom XHR headers
 
