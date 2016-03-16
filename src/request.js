@@ -36,12 +36,14 @@ export default function upload(option) {
   }
 
   const formData = new FormData();
-  formData.append(option.filename, option.file);
+
   if (option.data) {
     Object.keys(option.data).map(key => {
       formData.append(key, option.data[key]);
     });
   }
+
+  formData.append(option.filename, option.file);
 
   xhr.onerror = function error(e) {
     option.onError(e);
