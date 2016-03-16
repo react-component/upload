@@ -57,11 +57,14 @@ export default function upload(option) {
     option.onSuccess(getBody(xhr));
   };
 
+
+  xhr.open('post', option.action, true);
+
+  // Has to be after `.open()`. See https://github.com/enyo/dropzone/issues/179
   if (option.withCredentials && 'withCredentials' in xhr) {
     xhr.withCredentials = true;
   }
 
-  xhr.open('post', option.action, true);
   xhr.setRequestHeader('X-Requested-With', 'XMLHttpRequest');
   const headers = option.headers || {};
   for (const h in headers) {
