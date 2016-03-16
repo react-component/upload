@@ -1,3 +1,8 @@
+### 1.8.1 2016-03-16
+
+- fix InvalidStateError in IE 10
+- fix #30
+
 ### 1.8.0 2016-01-14
 
 - support custom XHR headers
