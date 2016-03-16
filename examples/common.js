@@ -19985,12 +19985,14 @@
 	  }
 	
 	  var formData = new FormData();
-	  formData.append(option.filename, option.file);
+	
 	  if (option.data) {
 	    Object.keys(option.data).map(function (key) {
 	      formData.append(key, option.data[key]);
 	    });
 	  }
+	
+	  formData.append(option.filename, option.file);
 	
 	  xhr.onerror = function error(e) {
 	    option.onError(e);
@@ -20004,11 +20006,13 @@
 	    option.onSuccess(getBody(xhr));
 	  };
 	
+	  xhr.open('post', option.action, true);
+	
+	  // Has to be after `.open()`. See https://github.com/enyo/dropzone/issues/179
 	  if (option.withCredentials && 'withCredentials' in xhr) {
 	    xhr.withCredentials = true;
 	  }
 	
-	  xhr.open('post', option.action, true);
 	  xhr.setRequestHeader('X-Requested-With', 'XMLHttpRequest');
 	  var headers = option.headers || {};
 	  for (var h in headers) {
