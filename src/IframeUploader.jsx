@@ -15,7 +15,10 @@ const IframeUploader = React.createClass({
     onStart: PropTypes.func,
     multiple: PropTypes.bool,
     children: PropTypes.any,
-    data: PropTypes.object,
+    data: PropTypes.oneOfType([
+      PropTypes.object,
+      PropTypes.func,
+    ]),
     action: PropTypes.string,
     name: PropTypes.string,
   },

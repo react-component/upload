@@ -15,7 +15,10 @@ const Upload = React.createClass({
     onSuccess: PropTypes.func,
     onProgress: PropTypes.func,
     onStart: PropTypes.func,
-    data: PropTypes.object,
+    data: PropTypes.oneOfType([
+      PropTypes.object,
+      PropTypes.func,
+    ]),
     headers: PropTypes.object,
     accept: PropTypes.string,
     multiple: PropTypes.bool,
