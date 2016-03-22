@@ -69,7 +69,7 @@ const IframeUploader = React.createClass({
     const dataSpan = this.getFormDataNode();
     let data = this.props.data;
     if (typeof data === 'function') {
-      data = data();
+      data = data(file);
     }
     const inputs = [];
     for (const key in data) {

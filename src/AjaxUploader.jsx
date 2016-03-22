@@ -82,7 +82,7 @@ const AjaxUploader = React.createClass({
     const props = this.props;
     let data = props.data;
     if (typeof data === 'function') {
-      data = data();
+      data = data(file);
     }
 
     request({
