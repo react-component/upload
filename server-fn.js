@@ -1,7 +1,7 @@
-module.exports=function(){
-  var app = require('rc-server')();
-  var parse = require('co-busboy');
-  var fs = require('fs');
+module.exports = function(){
+  const app = require('rc-server')();
+  const parse = require('co-busboy');
+  const fs = require('fs');
 
   function wait(time) {
     return function (callback) {
@@ -10,15 +10,15 @@ module.exports=function(){
   }
 
   app.post('/upload.do', function*() {
-    var parts = parse(this, {
+    const parts = parse(this, {
       autoFields: true
     });
-    var part, files = [];
+    const part, files = [];
     while (part = yield parts) {
       files.push(part.filename);
       part.resume();
     }
-    var ret = '';
+    const ret = '';
     this.status = 200;
     this.set('Content-Type', 'text/html');
     yield wait(2000);
@@ -32,7 +32,18 @@ module.exports=function(){
 
   app.post('/test', function*() {
     this.set('Content-Type', 'text/html');
-    var ret = yield parse(this);
+
+    const parts = parse(this, {
+      autoFields: true
+    });
+    const part, files = [];
+    while (part = yield parts) {
+      files.push(part.filename);
+      part.resume();
+    }
+
+    const ret = parts.fields[2];
+
     if (ret[1].indexOf('success') > -1) {
       this.status = 200;
       this.body = ret;
