@@ -7,7 +7,7 @@
   <meta charset="utf-8"/>
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <link href="//cdnjs.cloudflare.com/ajax/libs/normalize/3.0.3/normalize.css" rel="stylesheet"/>
-  <title>rc-upload@1.8.1 - upload ui component for react</title>
+  <title>rc-upload@1.9.0 - upload ui component for react</title>
   <style>
     @font-face {
       font-family: octicons-anchor;
@@ -737,7 +737,7 @@
 
 <body>
 <div class="header">
-  <h1>rc-upload@1.8.1</h1>
+  <h1>rc-upload@1.9.0</h1>
 </div>
 <div class="examples">
   <h3>EXAMPLES</h3>
@@ -755,7 +755,7 @@
   <h3>README.md</h3>
   <div class="markdown-body">
     <h1>rc-upload<a id="user-content-rc-upload" name="rc-upload" class="anchor" aria-hidden="true" href="#rc-upload"><span class="octicon octicon-link"></span></a></h1><hr>
-<p>upload ui component for react</p>
+<p>React Upload</p>
 <p><a href="http://npmjs.org/package/rc-upload" title="null"><img src="http://img.shields.io/npm/v/rc-upload.svg?style=flat-square" alt="NPM version"></a>
 <a href="https://travis-ci.org/react-component/upload" title="null"><img src="https://img.shields.io/travis/react-component/upload.svg?style=flat-square" alt="build status"></a>
 <a href="https://coveralls.io/r/react-component/upload?branch=master" title="null"><img src="https://img.shields.io/coveralls/react-component/upload.svg?style=flat-square" alt="Test coverage"></a>
@@ -793,9 +793,9 @@ React.render(<span class="xml"><span class="hljs-tag">&lt;<span class="hljs-titl
 </tr>
 <tr>
 <td>data</td>
-<td>object</td>
+<td>object/function(file)</td>
 <td></td>
-<td>other data object to post</td>
+<td>other data object to post or a function which returns a data object</td>
 </tr>
 <tr>
 <td>headers</td>
@@ -869,7 +869,7 @@ React.render(<span class="xml"><span class="hljs-tag">&lt;<span class="hljs-titl
 <li><code>file</code>: upload file</li>
 </ol>
 <h3>IE8/9 Note<a id="user-content-ie8/9-note" name="ie8/9-note" class="anchor" aria-hidden="true" href="#ie8/9-note"><span class="octicon octicon-link"></span></a></h3><p>In iframe uploader way, the content-type of response should be <code>text/plain</code> or <code>text/html</code>.<a href="https://github.com/blueimp/jQuery-File-Upload/wiki/Setup#content-type-negotiation" title="null">referense</a></p>
-<p>If the Page set document.domain, then server should output document.domain according to _documentDomain parameter.</p>
+<h3>Cross Domain Note<a id="user-content-cross-domain-note" name="cross-domain-note" class="anchor" aria-hidden="true" href="#cross-domain-note"><span class="octicon octicon-link"></span></a></h3><p>If the Page set document.domain, then server should output document.domain according to _documentDomain parameter.</p>
 <div class="highlight"><pre><code language="js"><span class="hljs-keyword">var</span> ret = <span class="hljs-string">''</span>;
 <span class="hljs-keyword">if</span> (postData._documentDomain) {
   ret += <span class="hljs-string">'&lt;script&gt;document.domain="'</span>+postData._documentDomain+<span class="hljs-string">'";&lt;/script&gt;'</span>;

@@ -3,19 +3,19 @@ webpackJsonp([1],{
 /***/ 0:
 /***/ function(module, exports, __webpack_require__) {
 
-	module.exports = __webpack_require__(168);
+	module.exports = __webpack_require__(167);
 
 
 /***/ },
 
-/***/ 168:
+/***/ 167:
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 	
 	var React = __webpack_require__(2);
-	var ReactDOM = __webpack_require__(159);
-	var Upload = __webpack_require__(160);
+	var ReactDOM = __webpack_require__(158);
+	var Upload = __webpack_require__(159);
 	var props = {
 	  action: '/upload.do',
 	  data: { a: 1, b: 2 },
