@@ -83,6 +83,8 @@ React.render(<Upload />, container);
 
 In iframe uploader way, the content-type of response should be `text/plain` or `text/html`.[referense](https://github.com/blueimp/jQuery-File-Upload/wiki/Setup#content-type-negotiation)
 
+### Cross Domain Note
+
 If the Page set document.domain, then server should output document.domain according to _documentDomain parameter.
 
 ```js
