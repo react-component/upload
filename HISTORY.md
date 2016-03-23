@@ -3,7 +3,7 @@
 
 ### 1.9.0 2016-03-23
 
-- support data as function
+- pass file to data if data's type is function
 
 ### 1.8.1 2016-03-16
 
