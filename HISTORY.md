@@ -1,3 +1,10 @@
+# History
+----
+
+### 1.9.0 2016-03-23
+
+- support data as function
+
 ### 1.8.1 2016-03-16
 
 - fix InvalidStateError in IE 10

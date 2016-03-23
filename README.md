@@ -1,7 +1,7 @@
 # rc-upload
 ---
 
-upload ui component for react
+React Upload
 
 [![NPM version][npm-image]][npm-url]
 [![build status][travis-image]][travis-url]
