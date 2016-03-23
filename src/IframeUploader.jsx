@@ -15,7 +15,10 @@ const IframeUploader = React.createClass({
     onStart: PropTypes.func,
     multiple: PropTypes.bool,
     children: PropTypes.any,
-    data: PropTypes.object,
+    data: PropTypes.oneOfType([
+      PropTypes.object,
+      PropTypes.func,
+    ]),
     action: PropTypes.string,
     name: PropTypes.string,
   },
@@ -66,7 +69,7 @@ const IframeUploader = React.createClass({
     const dataSpan = this.getFormDataNode();
     let data = this.props.data;
     if (typeof data === 'function') {
-      data = data();
+      data = data(file);
     }
     const inputs = [];
     for (const key in data) {

@@ -6,7 +6,10 @@ const AjaxUploader = React.createClass({
   propTypes: {
     multiple: PropTypes.bool,
     onStart: PropTypes.func,
-    data: PropTypes.object,
+    data: PropTypes.oneOfType([
+      PropTypes.object,
+      PropTypes.func,
+    ]),
     headers: PropTypes.object,
     beforeUpload: PropTypes.func,
     withCredentials: PropTypes.bool,
@@ -79,7 +82,7 @@ const AjaxUploader = React.createClass({
     const props = this.props;
     let data = props.data;
     if (typeof data === 'function') {
-      data = data();
+      data = data(file);
     }
 
     request({
