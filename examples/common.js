@@ -19721,14 +19721,26 @@
 	    };
 	  },
 	
-	  render: function render() {
-	    var props = this.props;
-	    // node 渲染根据 ua 强制设置 forceAjax 或者支持FormData的情况使用AjaxUpload
-	    if (props.forceAjax || typeof FormData !== 'undefined') {
-	      return _react2['default'].createElement(_AjaxUploader2['default'], props);
-	    }
+	  getInitialState: function getInitialState() {
+	    return {
+	      Component: null
+	    };
+	  },
 	
-	    return _react2['default'].createElement(_IframeUploader2['default'], props);
+	  componentDidMount: function componentDidMount() {
+	    /* eslint react/no-did-mount-set-state:0 */
+	    this.setState({
+	      Component: typeof FormData !== 'undefined' ? _AjaxUploader2['default'] : _IframeUploader2['default']
+	    });
+	  },
+	
+	  render: function render() {
+	    var Component = this.state.Component;
+	
+	    if (Component) {
+	      return _react2['default'].createElement(Component, this.props);
+	    }
+	    return null;
 	  }
 	});
 	
