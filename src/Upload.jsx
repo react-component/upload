@@ -7,7 +7,6 @@ function empty() {
 
 const Upload = React.createClass({
   propTypes: {
-    forceAjax: PropTypes.bool,
     action: PropTypes.string,
     name: PropTypes.string,
     multipart: PropTypes.bool,
@@ -31,7 +30,6 @@ const Upload = React.createClass({
       data: {},
       headers: {},
       name: 'file',
-      forceAjax: false,
       multipart: false,
       onProgress: empty,
       onStart: empty,

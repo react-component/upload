@@ -58,7 +58,6 @@ React.render(<Upload />, container);
 |data| object/function(file) | | other data object to post or a function which returns a data object |
 |headers| object | {} | http headers to post, available in modern browsers |
 |accept | string | | input accept attribute |
-|forceAjax | bool | | force to use ajax render. used for server render |
 |multiple | boolean | false | only support ie10+|
 |onStart | function| | start upload file |
 |onError| function| | error callback |
