@@ -1,3 +1,5 @@
+'use strict';
+
 module.exports = function(){
   const app = require('rc-server')();
   const parse = require('co-busboy');
@@ -13,12 +15,12 @@ module.exports = function(){
     const parts = parse(this, {
       autoFields: true
     });
-    const part, files = [];
+    let part, files = [];
     while (part = yield parts) {
       files.push(part.filename);
       part.resume();
     }
-    const ret = '';
+    let ret = '';
     this.status = 200;
     this.set('Content-Type', 'text/html');
     yield wait(2000);
@@ -36,7 +38,8 @@ module.exports = function(){
     const parts = parse(this, {
       autoFields: true
     });
-    const part, files = [];
+    let part;
+    const files = [];
     while (part = yield parts) {
       files.push(part.filename);
       part.resume();

@@ -1,4 +1,4 @@
-import React, {PropTypes} from 'react';
+import React, { PropTypes } from 'react';
 import AjaxUpload from './AjaxUploader';
 import IframeUpload from './IframeUploader';
 
@@ -43,14 +43,25 @@ const Upload = React.createClass({
     };
   },
 
-  render() {
-    const props = this.props;
-    // node 渲染根据 ua 强制设置 forceAjax 或者支持FormData的情况使用AjaxUpload
-    if (props.forceAjax || typeof FormData !== 'undefined') {
-      return <AjaxUpload {...props} />;
-    }
+  getInitialState() {
+    return {
+      Component: null,
+    };
+  },
 
-    return <IframeUpload {...props} />;
+  componentDidMount() {
+    /* eslint react/no-did-mount-set-state:0 */
+    this.setState({
+      Component: typeof FormData !== 'undefined' ? AjaxUpload : IframeUpload,
+    });
+  },
+
+  render() {
+    const { Component } = this.state;
+    if (Component) {
+      return <Component {...this.props} />;
+    }
+    return null;
   },
 });
 
