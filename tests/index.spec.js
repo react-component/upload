@@ -9,6 +9,8 @@ const ReactDOM = require('react-dom');
 const TestUtils = require('react-addons-test-utils');
 const Simulate = TestUtils.Simulate;
 
+import './request.spec';
+
 describe('uploader', function() {
   describe('ajax uploader', function() {
     if (typeof FormData === 'undefined') {

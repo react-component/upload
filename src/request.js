@@ -20,6 +20,17 @@ function getBody(xhr) {
   }
 }
 
+// option {
+//  onProgress: (event: { percent: number }): void,
+//  onError: (event: Error, body?: Object): void,
+//  onSuccess: (body: Object): void,
+//  data: Object,
+//  filename: String,
+//  file: File,
+//  withCredentials: Boolean,
+//  action: String,
+//  headers: Object,
+// }
 export default function upload(option) {
   if (typeof XMLHttpRequest === 'undefined') {
     return;
