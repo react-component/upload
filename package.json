@@ -20,7 +20,7 @@
   "bugs": {
     "url": "http://github.com/react-component/upload/issues"
   },
-  "licenses": "MIT",
+  "license": "MIT",
   "files": [
     "lib"
   ],
@@ -47,7 +47,8 @@
     "rc-tools": "4.x",
     "react": "0.14.x",
     "react-addons-test-utils": "~0.14.0",
-    "react-dom": "0.14.x"
+    "react-dom": "0.14.x",
+    "sinon": "^1.17.3"
   },
   "pre-commit": [
     "lint"
