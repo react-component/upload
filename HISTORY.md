@@ -1,6 +1,11 @@
 # History
 ----
 
+### 1.11.0 2016-05-03
+
+- Allow all 2xx status as success status, not only 200. fix #34
+- When `headers['X-Requested-With'] = null` , request do not set X-Requested-With as XMLHttpRequest , fix #33
+
 ### 1.9.0 2016-03-23
 
 - pass file to data if data's type is function
