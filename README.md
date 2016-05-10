@@ -54,6 +54,8 @@ React.render(<Upload />, container);
 |name|type|默认值| 说明|
 |-----|---|--------|----|
 |name | string | file| file param post to server |
+|supportServerRender | boolean | false| whether to support server render |
+|onReady | function | | only call when supportServerRender is true, upload is rendered completely |
 |action| string | | from action url |
 |data| object/function(file) | | other data object to post or a function which returns a data object |
 |headers| object | {} | http headers to post, available in modern browsers |

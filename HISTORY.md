@@ -1,6 +1,10 @@
 # History
 ----
 
+### 1.12.0 2016-05-10
+
+- add supportServerRender prop
+
 ### 1.11.0 2016-05-03
 
 - Allow all 2xx status as success status, not only 200. fix #34

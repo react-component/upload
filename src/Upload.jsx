@@ -22,7 +22,9 @@ const Upload = React.createClass({
     accept: PropTypes.string,
     multiple: PropTypes.bool,
     beforeUpload: PropTypes.func,
+    onReady: PropTypes.func,
     withCredentials: PropTypes.bool,
+    supportServerRender: PropTypes.bool,
   },
 
   getDefaultProps() {
@@ -32,9 +34,11 @@ const Upload = React.createClass({
       name: 'file',
       multipart: false,
       onProgress: empty,
+      onReady: empty,
       onStart: empty,
       onError: empty,
       onSuccess: empty,
+      supportServerRender: false,
       multiple: false,
       beforeUpload: null,
       withCredentials: false,
@@ -48,18 +52,27 @@ const Upload = React.createClass({
   },
 
   componentDidMount() {
-    /* eslint react/no-did-mount-set-state:0 */
-    this.setState({
-      Component: typeof FormData !== 'undefined' ? AjaxUpload : IframeUpload,
-    });
+    if (this.props.supportServerRender) {
+      /* eslint react/no-did-mount-set-state:0 */
+      this.setState({
+        Component: this.getComponent(),
+      }, this.props.onReady);
+    }
+  },
+  getComponent() {
+    return typeof FormData !== 'undefined' ? AjaxUpload : IframeUpload;
   },
 
   render() {
-    const { Component } = this.state;
-    if (Component) {
-      return <Component {...this.props} />;
+    if (this.props.supportServerRender) {
+      const { Component } = this.state;
+      if (Component) {
+        return <Component {...this.props} />;
+      }
+      return null;
     }
-    return null;
+    const Component = this.getComponent();
+    return <Component {...this.props} />;
   },
 });
 

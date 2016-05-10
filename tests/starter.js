@@ -1,4 +1,4 @@
 const app = require('../server-fn')();
-const port = 8000;
+const port = process.env.npm_package_config_port;
 app.listen(port);
-console.log('listen at 8000');
+console.log('listen at ' + port);
