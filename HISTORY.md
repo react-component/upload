@@ -1,6 +1,11 @@
 # History
 ----
 
+### 1.13.0 / 2016-06-02
+
+- add disabled state
+- https://github.com/react-component/upload/issues/37
+
 ### 1.12.0 2016-05-10
 
 - add supportServerRender prop

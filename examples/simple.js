@@ -3,7 +3,7 @@ const ReactDOM = require('react-dom');
 const Upload = require('rc-upload');
 const props = {
   action: '/upload.do',
-  data: {a: 1, b: 2},
+  data: { a: 1, b: 2 },
   headers: {
     Authorization: 'xxxxxxx',
   },
@@ -24,6 +24,11 @@ const props = {
 };
 
 // document.domain = 'alipay.net';
+
+const style = `
+        .rc-upload-disabled {
+           opacity:0.5;
+        `;
 
 const Test = React.createClass({
   getInitialState() {
@@ -46,6 +51,10 @@ const Test = React.createClass({
       margin: 100,
     }}>
       <h2>固定位置</h2>
+
+      <style>
+        {style}
+      </style>
 
       <div>
         <Upload {...props}><a href="#nowhere">开始上传</a></Upload>

@@ -1,4 +1,4 @@
-import React, {PropTypes} from 'react';
+import React, { PropTypes } from 'react';
 import ReactDOM from 'react-dom';
 import uid from './uid';
 import warning from 'warning';
@@ -12,6 +12,7 @@ const iframeStyle = {
 };
 const IframeUploader = React.createClass({
   propTypes: {
+    prefixCls: PropTypes.string,
     onStart: PropTypes.func,
     multiple: PropTypes.bool,
     children: PropTypes.any,
@@ -21,6 +22,10 @@ const IframeUploader = React.createClass({
     ]),
     action: PropTypes.string,
     name: PropTypes.string,
+  },
+
+  getInitialState() {
+    return { disabled: false };
   },
 
   componentDidMount() {
@@ -33,7 +38,7 @@ const IframeUploader = React.createClass({
   },
 
   onLoad() {
-    if (!this.loading) {
+    if (this.state.disabled) {
       return;
     }
     const props = this.props;
@@ -172,13 +177,19 @@ const IframeUploader = React.createClass({
   },
 
   enableIframe() {
-    this.loading = false;
-    this.getIframeNode().style.display = '';
+    if (this.state.disabled) {
+      this.setState({
+        disabled: false,
+      });
+    }
   },
 
   disabledIframe() {
-    this.loading = true;
-    this.getIframeNode().style.display = 'none';
+    if (!this.state.disabled) {
+      this.setState({
+        disabled: true,
+      });
+    }
   },
 
   updateIframeWH() {
@@ -189,11 +200,20 @@ const IframeUploader = React.createClass({
   },
 
   render() {
+    const style = {
+      ...iframeStyle,
+      display: this.state.disabled ? 'none' : '',
+    };
     return (
-      <span style={{position: 'relative', zIndex: 0}}>
-        <iframe ref="iframe"
-                onLoad={this.onLoad}
-                style={iframeStyle}/>
+      <span
+        className={this.state.disabled ? `${this.props.prefixCls} ${this.props.prefixCls}-disabled` : `${this.props.prefixCls}`}
+        style={{position: 'relative', zIndex: 0}}
+      >
+        <iframe
+          ref="iframe"
+          onLoad={this.onLoad}
+          style={style}
+        />
         {this.props.children}
       </span>
     );

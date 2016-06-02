@@ -7,6 +7,7 @@ function empty() {
 
 const Upload = React.createClass({
   propTypes: {
+    prefixCls: PropTypes.string,
     action: PropTypes.string,
     name: PropTypes.string,
     multipart: PropTypes.bool,
@@ -29,6 +30,7 @@ const Upload = React.createClass({
 
   getDefaultProps() {
     return {
+      prefixCls: 'rc-upload',
       data: {},
       headers: {},
       name: 'file',
