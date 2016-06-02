@@ -19688,6 +19688,7 @@
 	  displayName: 'Upload',
 	
 	  propTypes: {
+	    prefixCls: _react.PropTypes.string,
 	    action: _react.PropTypes.string,
 	    name: _react.PropTypes.string,
 	    multipart: _react.PropTypes.bool,
@@ -19707,6 +19708,7 @@
 	
 	  getDefaultProps: function getDefaultProps() {
 	    return {
+	      prefixCls: 'rc-upload',
 	      data: {},
 	      headers: {},
 	      name: 'file',
@@ -19782,10 +19784,15 @@
 	
 	var _uid2 = _interopRequireDefault(_uid);
 	
+	function preventDefault(e) {
+	  e.preventDefault();
+	}
+	
 	var AjaxUploader = _react2['default'].createClass({
 	  displayName: 'AjaxUploader',
 	
 	  propTypes: {
+	    prefixCls: _react.PropTypes.string,
 	    multiple: _react.PropTypes.bool,
 	    onStart: _react.PropTypes.func,
 	    data: _react.PropTypes.oneOfType([_react.PropTypes.object, _react.PropTypes.func]),
@@ -19794,7 +19801,17 @@
 	    withCredentials: _react.PropTypes.bool
 	  },
 	
+	  getInitialState: function getInitialState() {
+	    return { disabled: false };
+	  },
+	
 	  onChange: function onChange(e) {
+	    if (this.state.disabled) {
+	      return;
+	    }
+	    this.setState({
+	      disabled: true
+	    });
 	    var files = e.target.files;
 	    this.uploadFiles(files);
 	  },
@@ -19805,7 +19822,6 @@
 	      return;
 	    }
 	    el.click();
-	    el.value = '';
 	  },
 	
 	  onKeyDown: function onKeyDown(e) {
@@ -19816,7 +19832,12 @@
 	
 	  onFileDrop: function onFileDrop(e) {
 	    if (e.type === 'dragover') {
-	      return e.preventDefault();
+	      e.preventDefault();
+	      return;
+	    }
+	
+	    if (this.state.disabled) {
+	      return;
 	    }
 	
 	    var files = e.dataTransfer.files;
@@ -19860,6 +19881,8 @@
 	  },
 	
 	  post: function post(file) {
+	    var _this2 = this;
+	
 	    var props = this.props;
 	    var data = props.data;
 	    if (typeof data === 'function') {
@@ -19878,15 +19901,23 @@
 	      },
 	      onSuccess: function onSuccess(ret) {
 	        props.onSuccess(ret, file);
+	        _this2._reset();
 	      },
 	      onError: function onError(err, ret) {
 	        props.onError(err, ret, file);
+	        _this2._reset();
 	      }
 	    });
 	  },
 	
+	  _reset: function _reset() {
+	    this.refs.form.reset();
+	    this.setState({
+	      disabled: false
+	    });
+	  },
+	
 	  render: function render() {
-	    var hidden = { display: 'none' };
 	    var props = this.props;
 	    return _react2['default'].createElement(
 	      'span',
@@ -19896,14 +19927,22 @@
 	        onDrop: this.onFileDrop,
 	        onDragOver: this.onFileDrop,
 	        role: 'button',
-	        tabIndex: '0'
+	        tabIndex: '0',
+	        className: this.state.disabled ? this.props.prefixCls + ' ' + props.prefixCls + '-disabled' : '' + this.props.prefixCls
 	      },
-	      _react2['default'].createElement('input', { type: 'file',
-	        ref: 'file',
-	        style: hidden,
-	        accept: props.accept,
-	        multiple: this.props.multiple,
-	        onChange: this.onChange }),
+	      _react2['default'].createElement(
+	        'form',
+	        { ref: 'form', onSubmit: preventDefault },
+	        _react2['default'].createElement('input', {
+	          type: 'file',
+	          ref: 'file',
+	          disabled: this.state.disabled,
+	          style: { display: 'none' },
+	          accept: props.accept,
+	          multiple: this.props.multiple,
+	          onChange: this.onChange
+	        })
+	      ),
 	      props.children
 	    );
 	  }
@@ -20049,6 +20088,8 @@
 	  value: true
 	});
 	
+	var _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; };
+	
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
 	
 	var _react = __webpack_require__(2);
@@ -20079,12 +20120,17 @@
 	  displayName: 'IframeUploader',
 	
 	  propTypes: {
+	    prefixCls: _react.PropTypes.string,
 	    onStart: _react.PropTypes.func,
 	    multiple: _react.PropTypes.bool,
 	    children: _react.PropTypes.any,
 	    data: _react.PropTypes.oneOfType([_react.PropTypes.object, _react.PropTypes.func]),
 	    action: _react.PropTypes.string,
 	    name: _react.PropTypes.string
+	  },
+	
+	  getInitialState: function getInitialState() {
+	    return { disabled: false };
 	  },
 	
 	  componentDidMount: function componentDidMount() {
@@ -20097,7 +20143,7 @@
 	  },
 	
 	  onLoad: function onLoad() {
-	    if (!this.loading) {
+	    if (this.state.disabled) {
 	      return;
 	    }
 	    var props = this.props;
@@ -20208,13 +20254,19 @@
 	  },
 	
 	  enableIframe: function enableIframe() {
-	    this.loading = false;
-	    this.getIframeNode().style.display = '';
+	    if (this.state.disabled) {
+	      this.setState({
+	        disabled: false
+	      });
+	    }
 	  },
 	
 	  disabledIframe: function disabledIframe() {
-	    this.loading = true;
-	    this.getIframeNode().style.display = 'none';
+	    if (!this.state.disabled) {
+	      this.setState({
+	        disabled: true
+	      });
+	    }
 	  },
 	
 	  updateIframeWH: function updateIframeWH() {
@@ -20225,12 +20277,20 @@
 	  },
 	
 	  render: function render() {
+	    var style = _extends({}, iframeStyle, {
+	      display: this.state.disabled ? 'none' : ''
+	    });
 	    return _react2['default'].createElement(
 	      'span',
-	      { style: { position: 'relative', zIndex: 0 } },
-	      _react2['default'].createElement('iframe', { ref: 'iframe',
+	      {
+	        className: this.state.disabled ? this.props.prefixCls + ' ' + this.props.prefixCls + '-disabled' : '' + this.props.prefixCls,
+	        style: { position: 'relative', zIndex: 0 }
+	      },
+	      _react2['default'].createElement('iframe', {
+	        ref: 'iframe',
 	        onLoad: this.onLoad,
-	        style: iframeStyle }),
+	        style: style
+	      }),
 	      this.props.children
 	    );
 	  }

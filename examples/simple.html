@@ -2,7 +2,7 @@
 <html>
 
 <head>
-  <title>simple.js - example - rc-upload@1.12.0</title>
+  <title>simple.js - example - rc-upload@1.13.0</title>
   <meta name="viewport"
         content="width=device-width,initial-scale=1.0,minimum-scale=1.0,maximum-scale=1.0,user-scalable=no">
   <meta charset="utf-8"/>
@@ -257,7 +257,7 @@ Monokai Sublime style. Derived from Monokai by noformnocontent http://nn.mit-lic
 <body>
 <div class="container">
   <div class="header">
-    <h1>rc-upload@1.12.0</h1>
+    <h1>rc-upload@1.13.0</h1>
 
     <p>upload ui component for react</p>
   </div>
@@ -269,7 +269,7 @@ Monokai Sublime style. Derived from Monokai by noformnocontent http://nn.mit-lic
 <span class="hljs-keyword">const</span> Upload = <span class="hljs-built_in">require</span>(<span class="hljs-string">'rc-upload'</span>);
 <span class="hljs-keyword">const</span> props = {
   action: <span class="hljs-string">'/upload.do'</span>,
-  data: {a: <span class="hljs-number">1</span>, b: <span class="hljs-number">2</span>},
+  data: { a: <span class="hljs-number">1</span>, b: <span class="hljs-number">2</span> },
   headers: {
     Authorization: <span class="hljs-string">'xxxxxxx'</span>,
   },
@@ -290,6 +290,11 @@ Monokai Sublime style. Derived from Monokai by noformnocontent http://nn.mit-lic
 };
 
 <span class="hljs-comment">// document.domain = 'alipay.net';</span>
+
+<span class="hljs-keyword">const</span> style = <span class="hljs-string">`
+        .rc-upload-disabled {
+           opacity:0.5;
+        `</span>;
 
 <span class="hljs-keyword">const</span> Test = React.createClass({
   getInitialState() {
@@ -312,6 +317,10 @@ Monokai Sublime style. Derived from Monokai by noformnocontent http://nn.mit-lic
       <span class="hljs-attribute">margin:</span> <span class="hljs-attribute">100</span>,
     }}&gt;</span>
       <span class="hljs-tag">&lt;<span class="hljs-title">h2</span>&gt;</span>固定位置<span class="hljs-tag">&lt;/<span class="hljs-title">h2</span>&gt;</span>
+
+      <span class="hljs-tag">&lt;<span class="hljs-title">style</span>&gt;</span><span class="css">
+        <span class="hljs-rules">{style}</span>
+      </span><span class="hljs-tag">&lt;/<span class="hljs-title">style</span>&gt;</span>
 
       <span class="hljs-tag">&lt;<span class="hljs-title">div</span>&gt;</span>
         <span class="hljs-tag">&lt;<span class="hljs-title">Upload</span> {<span class="hljs-attribute">...props</span>}&gt;</span><span class="hljs-tag">&lt;<span class="hljs-title">a</span> <span class="hljs-attribute">href</span>=<span class="hljs-value">"#nowhere"</span>&gt;</span>开始上传<span class="hljs-tag">&lt;/<span class="hljs-title">a</span>&gt;</span><span class="hljs-tag">&lt;/<span class="hljs-title">Upload</span>&gt;</span>

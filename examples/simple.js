@@ -40,6 +40,8 @@ webpackJsonp([1],{
 	
 	// document.domain = 'alipay.net';
 	
+	var style = '\n        .rc-upload-disabled {\n           opacity:0.5;\n        ';
+	
 	var Test = React.createClass({
 	  displayName: 'Test',
 	
@@ -68,6 +70,11 @@ webpackJsonp([1],{
 	        'h2',
 	        null,
 	        '固定位置'
+	      ),
+	      React.createElement(
+	        'style',
+	        null,
+	        style
 	      ),
 	      React.createElement(
 	        'div',
