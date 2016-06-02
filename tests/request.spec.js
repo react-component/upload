@@ -42,6 +42,18 @@ describe('request', () => {
     requests[0].respond(200, {}, '{"success": true}');
   });
 
+  it.skip('40x code should be error', function(done) {
+    this.timeout(200000);
+    option.onError = e => {
+      expect(e.toString()).to.contain('404');
+      done();
+    };
+
+    option.onSuccess = () => done('404 should throw error');
+    request(option);
+    requests[0].respond(404, {}, 'Not found');
+  });
+
   it('2xx code should be success', done => {
     option.onError = done;
     option.onSuccess = ret => {
@@ -50,17 +62,6 @@ describe('request', () => {
     };
     request(option);
     requests[0].respond(204, {});
-  });
-
-  it('30x code should be error', done => {
-    option.onError = e => {
-      expect(e.toString()).to.contain('304');
-      done();
-    };
-
-    option.onSuccess = () => done('304 should throw error');
-    request(option);
-    requests[0].respond(304, {}, 'Not Modified');
   });
 
   it('get headers', () => {

@@ -2,23 +2,18 @@ import request from './request';
 import React, {PropTypes} from 'react';
 import uid from './uid';
 
-const AjaxUploader = React.createClass({
-  propTypes: {
-    multiple: PropTypes.bool,
-    onStart: PropTypes.func,
-    data: PropTypes.oneOfType([
-      PropTypes.object,
-      PropTypes.func,
-    ]),
-    headers: PropTypes.object,
-    beforeUpload: PropTypes.func,
-    withCredentials: PropTypes.bool,
-  },
+class AjaxUploader extends React.Component {
+
+  constructor(props) {
+    super(props);
+    ['onChange', 'onClick', 'onKeyDown', 'onFileDrop'].map(fn => this[fn] = this[fn].bind(this));
+    this.state = { inputKey: uid() };
+  }
 
   onChange(e) {
     const files = e.target.files;
     this.uploadFiles(files);
-  },
+  }
 
   onClick() {
     const el = this.refs.file;
@@ -26,14 +21,13 @@ const AjaxUploader = React.createClass({
       return;
     }
     el.click();
-    el.value = '';
-  },
+  }
 
   onKeyDown(e) {
     if (e.key === 'Enter') {
       this.onClick();
     }
-  },
+  }
 
   onFileDrop(e) {
     if (e.type === 'dragover') {
@@ -44,7 +38,7 @@ const AjaxUploader = React.createClass({
     this.uploadFiles(files);
 
     e.preventDefault();
-  },
+  }
 
   uploadFiles(files) {
     const len = files.length;
@@ -60,7 +54,7 @@ const AjaxUploader = React.createClass({
         this.props.onStart(Array.prototype.slice.call(files)[0]);
       }
     }
-  },
+  }
 
   upload(file) {
     const props = this.props;
@@ -76,7 +70,7 @@ const AjaxUploader = React.createClass({
     } else if (before !== false) {
       this.post(file);
     }
-  },
+  }
 
   post(file) {
     const props = this.props;
@@ -97,12 +91,20 @@ const AjaxUploader = React.createClass({
       },
       onSuccess: ret => {
         props.onSuccess(ret, file);
+        this._reset();
       },
       onError: (err, ret) => {
         props.onError(err, ret, file);
+        this._reset();
       },
     });
-  },
+  }
+
+  _reset() {
+    // reset dom, so can reset element value
+    // fix https://github.com/react-component/upload/issues/37
+    this.setState({ inputKey: uid() });
+  }
 
   render() {
     const hidden = {display: 'none'};
@@ -118,6 +120,7 @@ const AjaxUploader = React.createClass({
         >
         <input type="file"
                ref="file"
+               key={this.state.inputKey}
                style={hidden}
                accept={props.accept}
                multiple={this.props.multiple}
@@ -125,7 +128,19 @@ const AjaxUploader = React.createClass({
         {props.children}
       </span>
     );
-  },
-});
+  }
+}
+
+AjaxUploader.propTypes = {
+  multiple: PropTypes.bool,
+  onStart: PropTypes.func,
+  data: PropTypes.oneOfType([
+    PropTypes.object,
+    PropTypes.func,
+  ]),
+  headers: PropTypes.object,
+  beforeUpload: PropTypes.func,
+  withCredentials: PropTypes.bool,
+};
 
 export default AjaxUploader;
