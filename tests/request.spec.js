@@ -42,7 +42,8 @@ describe('request', () => {
     requests[0].respond(200, {}, '{"success": true}');
   });
 
-  it('40x code should be error', done => {
+  it('40x code should be error', function(done) {
+    this.timeout(200000);
     option.onError = e => {
       expect(e.toString()).to.contain('404');
       done();
