@@ -19784,10 +19784,6 @@
 	
 	var _uid2 = _interopRequireDefault(_uid);
 	
-	function preventDefault(e) {
-	  e.preventDefault();
-	}
-	
 	var AjaxUploader = _react2['default'].createClass({
 	  displayName: 'AjaxUploader',
 	
@@ -19802,7 +19798,10 @@
 	  },
 	
 	  getInitialState: function getInitialState() {
-	    return { disabled: false };
+	    return {
+	      disabled: false,
+	      uid: (0, _uid2['default'])()
+	    };
 	  },
 	
 	  onChange: function onChange(e) {
@@ -19911,9 +19910,9 @@
 	  },
 	
 	  _reset: function _reset() {
-	    this.refs.form.reset();
 	    this.setState({
-	      disabled: false
+	      disabled: false,
+	      uid: (0, _uid2['default'])()
 	    });
 	  },
 	
@@ -19930,19 +19929,16 @@
 	        tabIndex: '0',
 	        className: this.state.disabled ? this.props.prefixCls + ' ' + props.prefixCls + '-disabled' : '' + this.props.prefixCls
 	      },
-	      _react2['default'].createElement(
-	        'form',
-	        { ref: 'form', onSubmit: preventDefault },
-	        _react2['default'].createElement('input', {
-	          type: 'file',
-	          ref: 'file',
-	          disabled: this.state.disabled,
-	          style: { display: 'none' },
-	          accept: props.accept,
-	          multiple: this.props.multiple,
-	          onChange: this.onChange
-	        })
-	      ),
+	      _react2['default'].createElement('input', {
+	        type: 'file',
+	        ref: 'file',
+	        key: this.state.uid,
+	        disabled: this.state.disabled,
+	        style: { display: 'none' },
+	        accept: props.accept,
+	        multiple: this.props.multiple,
+	        onChange: this.onChange
+	      }),
 	      props.children
 	    );
 	  }
