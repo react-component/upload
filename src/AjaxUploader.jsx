@@ -2,10 +2,6 @@ import request from './request';
 import React, { PropTypes } from 'react';
 import uid from './uid';
 
-function preventDefault(e) {
-  e.preventDefault();
-}
-
 const AjaxUploader = React.createClass({
   propTypes: {
     prefixCls: PropTypes.string,
@@ -21,7 +17,10 @@ const AjaxUploader = React.createClass({
   },
 
   getInitialState() {
-    return { disabled: false };
+    return {
+      disabled: false,
+      uid: uid(),
+    };
   },
 
   onChange(e) {
@@ -126,9 +125,9 @@ const AjaxUploader = React.createClass({
   },
 
   _reset() {
-    this.refs.form.reset();
     this.setState({
       disabled: false,
+      uid: uid(),
     });
   },
 
@@ -144,17 +143,16 @@ const AjaxUploader = React.createClass({
         tabIndex="0"
         className={this.state.disabled ? `${this.props.prefixCls} ${props.prefixCls}-disabled` : `${this.props.prefixCls}`}
       >
-        <form ref="form" onSubmit={preventDefault}>
           <input
             type="file"
             ref="file"
+            key={this.state.uid}
             disabled={this.state.disabled}
             style={{ display: 'none' }}
             accept={props.accept}
             multiple={this.props.multiple}
             onChange={this.onChange}
           />
-        </form>
         {props.children}
       </span>
     );
