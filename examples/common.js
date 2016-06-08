@@ -19873,9 +19873,14 @@
 	    if (before && before.then) {
 	      before.then(function () {
 	        _this.post(file);
+	      }, function () {
+	        _this._reset();
 	      });
 	    } else if (before !== false) {
 	      this.post(file);
+	    } else {
+	      // fix https://github.com/ant-design/ant-design/issues/1989
+	      this._reset();
 	    }
 	  },
 	
