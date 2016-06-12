@@ -65,17 +65,21 @@ const AjaxUploader = React.createClass({
   },
 
   uploadFiles(files) {
-    const len = files.length;
+    let postFiles = Array.prototype.slice.call(files);
+    if (!this.props.multiple) {
+      postFiles = postFiles.slice(0, 1);
+    }
+    const len = postFiles.length;
     if (len > 0) {
       for (let i = 0; i < len; i++) {
-        const file = files.item(i);
+        const file = postFiles[i];
         file.uid = uid();
         this.upload(file);
       }
       if (this.props.multiple) {
-        this.props.onStart(Array.prototype.slice.call(files));
+        this.props.onStart(postFiles);
       } else {
-        this.props.onStart(Array.prototype.slice.call(files)[0]);
+        this.props.onStart(postFiles[0]);
       }
     }
   },
