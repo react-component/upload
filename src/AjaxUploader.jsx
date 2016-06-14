@@ -88,8 +88,12 @@ const AjaxUploader = React.createClass({
 
     const before = props.beforeUpload(file);
     if (before && before.then) {
-      before.then(() => {
-        this.post(file);
+      before.then((processedFile) => {
+        if (Object.prototype.toString.call(processedFile) === '[object File]') {
+          this.post(processedFile);
+        } else {
+          this.post(file);
+        }
       }, () => {
         this._reset();
       });
