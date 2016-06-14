@@ -19846,17 +19846,21 @@
 	  },
 	
 	  uploadFiles: function uploadFiles(files) {
-	    var len = files.length;
+	    var postFiles = Array.prototype.slice.call(files);
+	    if (!this.props.multiple) {
+	      postFiles = postFiles.slice(0, 1);
+	    }
+	    var len = postFiles.length;
 	    if (len > 0) {
 	      for (var i = 0; i < len; i++) {
-	        var file = files.item(i);
+	        var file = postFiles[i];
 	        file.uid = (0, _uid2['default'])();
 	        this.upload(file);
 	      }
 	      if (this.props.multiple) {
-	        this.props.onStart(Array.prototype.slice.call(files));
+	        this.props.onStart(postFiles);
 	      } else {
-	        this.props.onStart(Array.prototype.slice.call(files)[0]);
+	        this.props.onStart(postFiles[0]);
 	      }
 	    }
 	  },
@@ -19871,8 +19875,12 @@
 	
 	    var before = props.beforeUpload(file);
 	    if (before && before.then) {
-	      before.then(function () {
-	        _this.post(file);
+	      before.then(function (processedFile) {
+	        if (Object.prototype.toString.call(processedFile) === '[object File]') {
+	          _this.post(processedFile);
+	        } else {
+	          _this.post(file);
+	        }
 	      }, function () {
 	        _this._reset();
 	      });
