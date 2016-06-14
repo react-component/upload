@@ -1,6 +1,11 @@
 # History
 ----
 
+### 1.14.0 / 2016-06-14
+
+- https://github.com/react-component/upload/pull/41
+- https://github.com/react-component/upload/pull/40
+
 ### 1.13.0 / 2016-06-02
 
 - add disabled state
