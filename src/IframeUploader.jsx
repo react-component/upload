@@ -2,6 +2,7 @@ import React, { PropTypes } from 'react';
 import ReactDOM from 'react-dom';
 import uid from './uid';
 import warning from 'warning';
+
 const iframeStyle = {
   position: 'absolute',
   top: 0,
@@ -10,6 +11,7 @@ const iframeStyle = {
   left: 0,
   zIndex: 9999,
 };
+
 const IframeUploader = React.createClass({
   propTypes: {
     prefixCls: PropTypes.string,
@@ -38,7 +40,7 @@ const IframeUploader = React.createClass({
   },
 
   onLoad() {
-    if (this.state.disabled) {
+    if (!this.state.disabled) {
       return;
     }
     const props = this.props;
@@ -83,9 +85,9 @@ const IframeUploader = React.createClass({
       }
     }
     dataSpan.innerHTML = inputs.join('');
+    this.disabledIframe();
     formNode.submit();
     dataSpan.innerHTML = '';
-    this.disabledIframe();
   },
 
   getIframeNode() {
@@ -178,6 +180,8 @@ const IframeUploader = React.createClass({
 
   enableIframe() {
     if (this.state.disabled) {
+      // hack avoid batch
+      this.state.disabled = false;
       this.setState({
         disabled: false,
       });
@@ -186,6 +190,7 @@ const IframeUploader = React.createClass({
 
   disabledIframe() {
     if (!this.state.disabled) {
+      this.state.disabled = true;
       this.setState({
         disabled: true,
       });
