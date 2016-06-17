@@ -20125,6 +20125,7 @@
 	  left: 0,
 	  zIndex: 9999
 	};
+	
 	var IframeUploader = _react2['default'].createClass({
 	  displayName: 'IframeUploader',
 	
@@ -20152,7 +20153,7 @@
 	  },
 	
 	  onLoad: function onLoad() {
-	    if (this.state.disabled) {
+	    if (!this.state.disabled) {
 	      return;
 	    }
 	    var props = this.props;
@@ -20197,9 +20198,9 @@
 	      }
 	    }
 	    dataSpan.innerHTML = inputs.join('');
+	    this.disabledIframe();
 	    formNode.submit();
 	    dataSpan.innerHTML = '';
-	    this.disabledIframe();
 	  },
 	
 	  getIframeNode: function getIframeNode() {
@@ -20264,6 +20265,8 @@
 	
 	  enableIframe: function enableIframe() {
 	    if (this.state.disabled) {
+	      // hack avoid batch
+	      this.state.disabled = false;
 	      this.setState({
 	        disabled: false
 	      });
@@ -20272,6 +20275,7 @@
 	
 	  disabledIframe: function disabledIframe() {
 	    if (!this.state.disabled) {
+	      this.state.disabled = true;
 	      this.setState({
 	        disabled: true
 	      });
