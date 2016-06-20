@@ -51,7 +51,7 @@ React.render(<Upload />, container);
 
 ### props
 
-|name|type|默认值| 说明|
+|name|type|default| description|
 |-----|---|--------|----|
 |name | string | file| file param post to server |
 |supportServerRender | boolean | false| whether to support server render |
