@@ -19688,6 +19688,8 @@
 	  displayName: 'Upload',
 	
 	  propTypes: {
+	    component: _react.PropTypes.string,
+	    style: _react.PropTypes.object,
 	    prefixCls: _react.PropTypes.string,
 	    action: _react.PropTypes.string,
 	    name: _react.PropTypes.string,
@@ -19708,6 +19710,7 @@
 	
 	  getDefaultProps: function getDefaultProps() {
 	    return {
+	      component: 'span',
 	      prefixCls: 'rc-upload',
 	      data: {},
 	      headers: {},
@@ -19788,6 +19791,8 @@
 	  displayName: 'AjaxUploader',
 	
 	  propTypes: {
+	    component: _react.PropTypes.string,
+	    style: _react.PropTypes.object,
 	    prefixCls: _react.PropTypes.string,
 	    multiple: _react.PropTypes.bool,
 	    onStart: _react.PropTypes.func,
@@ -19931,8 +19936,9 @@
 	
 	  render: function render() {
 	    var props = this.props;
+	    var Tag = this.props.component;
 	    return _react2['default'].createElement(
-	      'span',
+	      Tag,
 	      {
 	        onClick: this.onClick,
 	        onKeyDown: this.onKeyDown,
@@ -19940,6 +19946,7 @@
 	        onDragOver: this.onFileDrop,
 	        role: 'button',
 	        tabIndex: '0',
+	        style: this.props.style,
 	        className: this.state.disabled ? this.props.prefixCls + ' ' + props.prefixCls + '-disabled' : '' + this.props.prefixCls
 	      },
 	      _react2['default'].createElement('input', {
@@ -20130,6 +20137,8 @@
 	  displayName: 'IframeUploader',
 	
 	  propTypes: {
+	    component: _react.PropTypes.string,
+	    style: _react.PropTypes.object,
 	    prefixCls: _react.PropTypes.string,
 	    onStart: _react.PropTypes.func,
 	    multiple: _react.PropTypes.bool,
@@ -20293,11 +20302,12 @@
 	    var style = _extends({}, iframeStyle, {
 	      display: this.state.disabled ? 'none' : ''
 	    });
+	    var Tag = this.props.component;
 	    return _react2['default'].createElement(
-	      'span',
+	      Tag,
 	      {
 	        className: this.state.disabled ? this.props.prefixCls + ' ' + this.props.prefixCls + '-disabled' : '' + this.props.prefixCls,
-	        style: { position: 'relative', zIndex: 0 }
+	        style: _extends({ position: 'relative', zIndex: 0 }, this.props.style)
 	      },
 	      _react2['default'].createElement('iframe', {
 	        ref: 'iframe',

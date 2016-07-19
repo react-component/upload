@@ -13,6 +13,8 @@ webpackJsonp([1],{
 
 	'use strict';
 	
+	var _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; };
+	
 	var React = __webpack_require__(2);
 	var ReactDOM = __webpack_require__(158);
 	var Upload = __webpack_require__(159);
@@ -108,7 +110,7 @@ webpackJsonp([1],{
 	            } },
 	          React.createElement(
 	            Upload,
-	            props,
+	            _extends({}, props, { component: 'div', style: { display: 'inline-block' } }),
 	            React.createElement(
 	              'a',
 	              { href: '#nowhere' },
