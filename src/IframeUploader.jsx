@@ -14,6 +14,8 @@ const iframeStyle = {
 
 const IframeUploader = React.createClass({
   propTypes: {
+    component: PropTypes.string,
+    style: PropTypes.object,
     prefixCls: PropTypes.string,
     onStart: PropTypes.func,
     multiple: PropTypes.bool,
@@ -209,10 +211,11 @@ const IframeUploader = React.createClass({
       ...iframeStyle,
       display: this.state.disabled ? 'none' : '',
     };
+    const Tag = this.props.component;
     return (
-      <span
+      <Tag
         className={this.state.disabled ? `${this.props.prefixCls} ${this.props.prefixCls}-disabled` : `${this.props.prefixCls}`}
-        style={{position: 'relative', zIndex: 0}}
+        style={{position: 'relative', zIndex: 0, ...this.props.style}}
       >
         <iframe
           ref="iframe"
@@ -220,7 +223,7 @@ const IframeUploader = React.createClass({
           style={style}
         />
         {this.props.children}
-      </span>
+      </Tag>
     );
   },
 });

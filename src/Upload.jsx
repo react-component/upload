@@ -7,6 +7,8 @@ function empty() {
 
 const Upload = React.createClass({
   propTypes: {
+    component: PropTypes.string,
+    style: PropTypes.object,
     prefixCls: PropTypes.string,
     action: PropTypes.string,
     name: PropTypes.string,
@@ -30,6 +32,7 @@ const Upload = React.createClass({
 
   getDefaultProps() {
     return {
+      component: 'span',
       prefixCls: 'rc-upload',
       data: {},
       headers: {},

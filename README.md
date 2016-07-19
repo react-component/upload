@@ -54,6 +54,8 @@ React.render(<Upload />, container);
 |name|type|default| description|
 |-----|---|--------|----|
 |name | string | file| file param post to server |
+|style | object | {}| root component inline style |
+|component | "div"|"span" | "span"| wrap component name |
 |supportServerRender | boolean | false| whether to support server render |
 |onReady | function | | only call when supportServerRender is true, upload is rendered completely |
 |action| string | | from action url |
@@ -66,7 +68,7 @@ React.render(<Upload />, container);
 |onSuccess | function | | success callback |
 |onProgress | function || progress callback, only for modern browsers|
 |beforeUpload| function |null| before upload check, return false or a rejected Promise will stop upload, only for modern browsers|
-| withCredentials | boolean | false | ajax upload with cookie send |
+|withCredentials | boolean | false | ajax upload with cookie send |
 
 #### onError arguments
 
