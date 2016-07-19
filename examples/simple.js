@@ -70,7 +70,7 @@ const Test = React.createClass({
         <div style={{
           height: 500,
         }}>
-          <Upload {...props}><a href="#nowhere">开始上传2</a></Upload>
+          <Upload {...props} component="div" style={{display: 'inline-block'}}><a href="#nowhere">开始上传2</a></Upload>
         </div>
       </div>
 

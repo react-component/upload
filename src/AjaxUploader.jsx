@@ -4,6 +4,8 @@ import uid from './uid';
 
 const AjaxUploader = React.createClass({
   propTypes: {
+    component: PropTypes.string,
+    style: PropTypes.object,
     prefixCls: PropTypes.string,
     multiple: PropTypes.bool,
     onStart: PropTypes.func,
@@ -146,14 +148,16 @@ const AjaxUploader = React.createClass({
 
   render() {
     const props = this.props;
+    const Tag = this.props.component;
     return (
-      <span
+      <Tag
         onClick={this.onClick}
         onKeyDown={this.onKeyDown}
         onDrop={this.onFileDrop}
         onDragOver={this.onFileDrop}
         role="button"
         tabIndex="0"
+        style={this.props.style}
         className={this.state.disabled ? `${this.props.prefixCls} ${props.prefixCls}-disabled` : `${this.props.prefixCls}`}
       >
           <input
@@ -167,7 +171,7 @@ const AjaxUploader = React.createClass({
             onChange={this.onChange}
           />
         {props.children}
-      </span>
+      </Tag>
     );
   },
 });

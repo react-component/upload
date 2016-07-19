@@ -1,6 +1,10 @@
 # History
 ----
 
+### 1.14.0 / 2016-07-19
+
+- add component/style prop
+
 ### 1.13.0 / 2016-06-02
 
 - add disabled state
