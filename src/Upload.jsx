@@ -28,6 +28,7 @@ const Upload = React.createClass({
     onReady: PropTypes.func,
     withCredentials: PropTypes.bool,
     supportServerRender: PropTypes.bool,
+    toggleToReset: PropTypes.bool,
   },
 
   getDefaultProps() {
