@@ -82,6 +82,11 @@ React.render(<Upload />, container);
 2. `file`: upload file
 
 
+### methods
+
+abort(file: File) => void: abort the uploading file
+
+
 ### IE8/9 Note
 
 #### Download Popup Problem

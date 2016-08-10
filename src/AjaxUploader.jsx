@@ -1,6 +1,6 @@
 import request from './request';
 import React, { PropTypes } from 'react';
-import uid from './uid';
+import getUid from './uid';
 
 const AjaxUploader = React.createClass({
   propTypes: {
@@ -19,21 +19,16 @@ const AjaxUploader = React.createClass({
   },
 
   getInitialState() {
+    this.reqs = {};
     return {
-      disabled: false,
-      uid: uid(),
+      uid: getUid(),
     };
   },
 
   onChange(e) {
-    if (this.state.disabled) {
-      return;
-    }
-    this.setState({
-      disabled: true,
-    });
     const files = e.target.files;
     this.uploadFiles(files);
+    this.reset();
   },
 
   onClick() {
@@ -56,10 +51,6 @@ const AjaxUploader = React.createClass({
       return;
     }
 
-    if (this.state.disabled) {
-      return;
-    }
-
     const files = e.dataTransfer.files;
     this.uploadFiles(files);
 
@@ -75,7 +66,7 @@ const AjaxUploader = React.createClass({
     if (len > 0) {
       for (let i = 0; i < len; i++) {
         const file = postFiles[i];
-        file.uid = uid();
+        file.uid = getUid();
         this.upload(file);
       }
       if (this.props.multiple) {
@@ -100,14 +91,9 @@ const AjaxUploader = React.createClass({
         } else {
           this.post(file);
         }
-      }, () => {
-        this._reset();
       });
     } else if (before !== false) {
       this.post(file);
-    } else {
-      // fix https://github.com/ant-design/ant-design/issues/1989
-      this._reset();
     }
   },
 
@@ -117,8 +103,8 @@ const AjaxUploader = React.createClass({
     if (typeof data === 'function') {
       data = data(file);
     }
-
-    request({
+    const { uid } = file;
+    this.reqs[uid] = request({
       action: props.action,
       filename: props.name,
       file: file,
@@ -129,21 +115,31 @@ const AjaxUploader = React.createClass({
         props.onProgress(e, file);
       },
       onSuccess: ret => {
+        delete this.reqs[uid];
         props.onSuccess(ret, file);
-        this._reset();
       },
       onError: (err, ret) => {
+        delete this.reqs[uid];
         props.onError(err, ret, file);
-        this._reset();
       },
     });
   },
 
-  _reset() {
+  reset() {
     this.setState({
-      disabled: false,
-      uid: uid(),
+      uid: getUid(),
     });
+  },
+
+  abort(file) {
+    let uid = file;
+    if (file && file.uid) {
+      uid = file.uid;
+    }
+    if (this.reqs[uid]) {
+      this.reqs[uid].abort();
+      delete this.reqs[uid];
+    }
   },
 
   render() {
@@ -158,18 +154,17 @@ const AjaxUploader = React.createClass({
         role="button"
         tabIndex="0"
         style={this.props.style}
-        className={this.state.disabled ? `${this.props.prefixCls} ${props.prefixCls}-disabled` : `${this.props.prefixCls}`}
+        className={`${this.props.prefixCls}`}
       >
-          <input
-            type="file"
-            ref="file"
-            key={this.state.uid}
-            disabled={this.state.disabled}
-            style={{ display: 'none' }}
-            accept={props.accept}
-            multiple={this.props.multiple}
-            onChange={this.onChange}
-          />
+        <input
+          type="file"
+          ref="file"
+          key={this.state.uid}
+          style={{ display: 'none' }}
+          accept={props.accept}
+          multiple={this.props.multiple}
+          onChange={this.onChange}
+        />
         {props.children}
       </Tag>
     );

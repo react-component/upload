@@ -68,16 +68,20 @@ const Upload = React.createClass({
     return typeof FormData !== 'undefined' ? AjaxUpload : IframeUpload;
   },
 
+  abort(file) {
+    this.refs.inner.abort(file);
+  },
+
   render() {
     if (this.props.supportServerRender) {
       const { Component } = this.state;
       if (Component) {
-        return <Component {...this.props} />;
+        return <Component {...this.props} ref="inner"/>;
       }
       return null;
     }
     const Component = this.getComponent();
-    return <Component {...this.props} />;
+    return <Component {...this.props} ref="inner"/>;
   },
 });
 

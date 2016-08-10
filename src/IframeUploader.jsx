@@ -206,6 +206,13 @@ const IframeUploader = React.createClass({
     iframeNode.style.width = rootNode.offsetWidth + 'px';
   },
 
+  abort() {
+    if (this.state.disabled) {
+      this.enableIframe();
+      this.initIframe();
+    }
+  },
+
   render() {
     const style = {
       ...iframeStyle,
@@ -215,7 +222,7 @@ const IframeUploader = React.createClass({
     return (
       <Tag
         className={this.state.disabled ? `${this.props.prefixCls} ${this.props.prefixCls}-disabled` : `${this.props.prefixCls}`}
-        style={{position: 'relative', zIndex: 0, ...this.props.style}}
+        style={{ position: 'relative', zIndex: 0, ...this.props.style }}
       >
         <iframe
           ref="iframe"

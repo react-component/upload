@@ -32,10 +32,6 @@ function getBody(xhr) {
 //  headers: Object,
 // }
 export default function upload(option) {
-  if (typeof XMLHttpRequest === 'undefined') {
-    return;
-  }
-
   const xhr = new XMLHttpRequest();
   if (xhr.upload) {
     xhr.upload.onprogress = function progress(e) {
@@ -92,4 +88,10 @@ export default function upload(option) {
     }
   }
   xhr.send(formData);
+
+  return {
+    abort() {
+      xhr.abort();
+    },
+  };
 }

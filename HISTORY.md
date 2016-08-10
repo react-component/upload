@@ -1,6 +1,14 @@
 # History
 ----
 
+### 1.15.0 / 2016-08-10
+
+- add abort api
+
+### 1.14.1 / 2016-07-19
+
+- fix ajax multiple load
+
 ### 1.14.0 / 2016-07-19
 
 - add component/style prop

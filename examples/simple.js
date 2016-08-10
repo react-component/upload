@@ -1,27 +1,6 @@
 const React = require('react');
 const ReactDOM = require('react-dom');
 const Upload = require('rc-upload');
-const props = {
-  action: '/upload.do',
-  data: { a: 1, b: 2 },
-  headers: {
-    Authorization: 'xxxxxxx',
-  },
-  multiple: true,
-  onStart(files) {
-    const file = files[0];
-    console.log('onStart', file, file.name);
-  },
-  onSuccess(ret) {
-    console.log('onSuccess', ret);
-  },
-  onProgress(step, file) {
-    console.log('onProgress', step, file);
-  },
-  onError(err) {
-    console.log('onError', err);
-  },
-};
 
 // document.domain = 'alipay.net';
 
@@ -32,6 +11,28 @@ const style = `
 
 const Test = React.createClass({
   getInitialState() {
+    this.uploaderProps = {
+      action: '/upload.do',
+      data: { a: 1, b: 2 },
+      headers: {
+        Authorization: 'xxxxxxx',
+      },
+      multiple: true,
+      onStart: (files) => {
+        const file = files[0];
+        console.log('onStart', file.name);
+        this.refs.inner.abort(file);
+      },
+      onSuccess(file) {
+        console.log('onSuccess', file);
+      },
+      onProgress(step, file) {
+        console.log('onProgress', file.name);
+      },
+      onError(err) {
+        console.log('onError', err);
+      },
+    };
     return {
       destroyed: false,
     };
@@ -57,7 +58,7 @@ const Test = React.createClass({
       </style>
 
       <div>
-        <Upload {...props}><a href="#nowhere">开始上传</a></Upload>
+        <Upload {...this.uploaderProps} ref="inner"><a href="#nowhere">开始上传</a></Upload>
       </div>
 
       <h2>滚动</h2>
@@ -70,7 +71,8 @@ const Test = React.createClass({
         <div style={{
           height: 500,
         }}>
-          <Upload {...props} component="div" style={{display: 'inline-block'}}><a href="#nowhere">开始上传2</a></Upload>
+          <Upload {...this.uploaderProps} component="div" style={{ display: 'inline-block' }}><a
+            href="#nowhere">开始上传2</a></Upload>
         </div>
       </div>
 
