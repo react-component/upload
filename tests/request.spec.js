@@ -1,3 +1,4 @@
+/* eslint no-console:0 */
 
 import expect from 'expect.js';
 import request from '../src/request';
@@ -6,7 +7,8 @@ import sinon from 'sinon';
 let xhr;
 let requests;
 
-const empty = () => {};
+const empty = () => {
+};
 const option = {
   onSuccess: empty,
   action: 'upload.do',
@@ -42,7 +44,7 @@ describe('request', () => {
     requests[0].respond(200, {}, '{"success": true}');
   });
 
-  it.skip('40x code should be error', function(done) {
+  it.skip('40x code should be error', function callback(done) {
     this.timeout(200000);
     option.onError = e => {
       expect(e.toString()).to.contain('404');

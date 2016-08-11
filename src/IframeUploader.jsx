@@ -86,7 +86,7 @@ const IframeUploader = React.createClass({
     if (before && before.then) {
       before.then(() => {
         this.post(file);
-      }, ()=> {
+      }, () => {
         this.endUpload();
       });
     } else if (before !== false) {
@@ -140,7 +140,8 @@ const IframeUploader = React.createClass({
     <body>
     <form method="post"
     encType="multipart/form-data"
-    action="${this.props.action}" id="form" style="display:block;height:9999px;position:relative;overflow:hidden;">
+    action="${this.props.action}" id="form"
+    style="display:block;height:9999px;position:relative;overflow:hidden;">
     <input id="input" type="file"
      name="${this.props.name}"
      style="position:absolute;top:0;right:0;height:9999px;font-size:9999px;cursor:pointer;"/>
@@ -208,8 +209,8 @@ const IframeUploader = React.createClass({
   updateIframeWH() {
     const rootNode = ReactDOM.findDOMNode(this);
     const iframeNode = this.getIframeNode();
-    iframeNode.style.height = rootNode.offsetHeight + 'px';
-    iframeNode.style.width = rootNode.offsetWidth + 'px';
+    iframeNode.style.height = `${rootNode.offsetHeight}px`;
+    iframeNode.style.width = `${rootNode.offsetWidth}px`;
   },
 
   abort(file) {

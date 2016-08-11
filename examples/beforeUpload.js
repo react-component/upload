@@ -1,3 +1,5 @@
+/* eslint no-console:0 */
+
 const React = require('react');
 const ReactDOM = require('react-dom');
 const Upload = require('rc-upload');
@@ -13,9 +15,9 @@ const props = {
     console.log('onError', err);
   },
   beforeUpload(file) {
-    return new Promise(function(resolve) {
+    return new Promise((resolve) => {
       console.log('start check');
-      setTimeout(function() {
+      setTimeout(() => {
         console.log('check finshed');
         resolve(file);
       }, 3000);
@@ -25,13 +27,17 @@ const props = {
 
 const Test = React.createClass({
   render() {
-    return (<div style={{
-      margin: 100,
-    }}>
-      <div>
-        <Upload {...props}><a href="#nowhere">开始上传</a></Upload>
+    return (
+      <div
+        style={{
+          margin: 100,
+        }}
+      >
+        <div>
+          <Upload {...props}><a href="#nowhere">开始上传</a></Upload>
+        </div>
       </div>
-    </div>);
+    );
   },
 });
 

@@ -101,8 +101,8 @@ const AjaxUploader = React.createClass({
     this.reqs[uid] = request({
       action: props.action,
       filename: props.name,
-      file: file,
-      data: data,
+      file,
+      data,
       headers: props.headers,
       withCredentials: props.withCredentials,
       onProgress: e => {

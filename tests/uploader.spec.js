@@ -1,18 +1,28 @@
-/**
- * only require other specs here
- */
+/* eslint no-console:0 */
 
 import expect from 'expect.js';
 import Uploader from '../index';
-const React = require('react');
-const ReactDOM = require('react-dom');
-const TestUtils = require('react-addons-test-utils');
-const Simulate = TestUtils.Simulate;
+import React from 'react';
+import ReactDOM from 'react-dom';
+import TestUtils from 'react-addons-test-utils';
+const { Simulate } = TestUtils;
+import sinon from 'sinon';
 
-import './request.spec';
+describe('uploader', () => {
+  let requests;
+  let xhr;
 
-describe('uploader', function() {
-  describe('ajax uploader', function() {
+  beforeEach(() => {
+    xhr = sinon.useFakeXMLHttpRequest();
+    requests = [];
+    xhr.onCreate = req => requests.push(req);
+  });
+
+  afterEach(() => {
+    xhr.restore();
+  });
+
+  describe('ajax uploader', () => {
     if (typeof FormData === 'undefined') {
       return;
     }
@@ -23,45 +33,50 @@ describe('uploader', function() {
 
     const props = {
       action: '/test',
-      data: {a: 1, b: 2},
+      data: { a: 1, b: 2 },
       multiple: true,
-      onStart(files) {
-        const file = files[0];
+      onStart(file) {
         console.log('onStart', file, file.name);
-        if (handlers.onStart) { handlers.onStart(files); }
+        if (handlers.onStart) {
+          handlers.onStart(file);
+        }
       },
       onSuccess(ret, file) {
         console.log('onSuccess', ret);
-        if (handlers.onSuccess) { handlers.onSuccess(ret, file); }
+        if (handlers.onSuccess) {
+          handlers.onSuccess(ret, file);
+        }
       },
       onProgress(step, file) {
         console.log('onProgress', step, file);
       },
       onError(err, result, file) {
         console.log('onError', err);
-        if (handlers.onError) { handlers.onError(err, result, file); }
+        if (handlers.onError) {
+          handlers.onError(err, result, file);
+        }
       },
     };
 
-    beforeEach(function(done) {
+    beforeEach((done) => {
       node = document.createElement('div');
       document.body.appendChild(node);
 
-      ReactDOM.render(<Uploader {...props} />, node, function() {
+      ReactDOM.render(<Uploader {...props} />, node, function init() {
         uploader = this;
         done();
       });
     });
 
-    afterEach(function() {
+    afterEach(() => {
       ReactDOM.unmountComponentAtNode(node);
     });
 
-    it('create works', function() {
+    it('create works', () => {
       expect(TestUtils.scryRenderedDOMComponentsWithTag(uploader, 'span').length).to.be(1);
     });
 
-    it('upload success', function(done) {
+    it('upload success', (done) => {
       const input = TestUtils.findRenderedDOMComponentWithTag(uploader, 'input');
 
       const files = [{
@@ -72,20 +87,22 @@ describe('uploader', function() {
       }];
       files.item = (i) => files[i];
 
-      Simulate.change(input, { target: { files } });
-
-      handlers.onSuccess = function(ret, file) {
+      handlers.onSuccess = (ret, file) => {
         expect(ret[1]).to.eql(file.name);
         expect(file).to.have.property('uid');
         done();
       };
 
-      handlers.onError = function(err) {
+      handlers.onError = (err) => {
         done(err);
       };
+
+      Simulate.change(input, { target: { files } });
+
+      requests[0].respond(200, {}, `["","${files[0].name}"]`);
     });
 
-    it('upload error', function(done) {
+    it('upload error', (done) => {
       const input = TestUtils.findRenderedDOMComponentWithTag(uploader, 'input');
 
       const files = [{
@@ -96,14 +113,16 @@ describe('uploader', function() {
       }];
       files.item = (i) => files[i];
 
-      Simulate.change(input, { target: { files } });
-
-      handlers.onError = function(err, ret) {
+      handlers.onError = (err, ret) => {
         expect(err instanceof Error).to.equal(true);
         expect(err.status).to.equal(400);
         expect(ret).to.equal('error 400');
         done();
       };
+
+      Simulate.change(input, { target: { files } });
+
+      requests[0].respond(400, {}, `error 400`);
     });
   });
 });
