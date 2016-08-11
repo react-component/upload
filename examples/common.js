@@ -19668,6 +19668,8 @@
 	  value: true
 	});
 	
+	var _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; };
+	
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
 	
 	var _react = __webpack_require__(2);
@@ -19702,6 +19704,7 @@
 	    headers: _react.PropTypes.object,
 	    accept: _react.PropTypes.string,
 	    multiple: _react.PropTypes.bool,
+	    disabled: _react.PropTypes.bool,
 	    beforeUpload: _react.PropTypes.func,
 	    onReady: _react.PropTypes.func,
 	    withCredentials: _react.PropTypes.bool,
@@ -19746,17 +19749,21 @@
 	    return typeof FormData !== 'undefined' ? _AjaxUploader2['default'] : _IframeUploader2['default'];
 	  },
 	
+	  abort: function abort(file) {
+	    this.refs.inner.abort(file);
+	  },
+	
 	  render: function render() {
 	    if (this.props.supportServerRender) {
 	      var _Component = this.state.Component;
 	
 	      if (_Component) {
-	        return _react2['default'].createElement(_Component, this.props);
+	        return _react2['default'].createElement(_Component, _extends({}, this.props, { ref: 'inner' }));
 	      }
 	      return null;
 	    }
 	    var Component = this.getComponent();
-	    return _react2['default'].createElement(Component, this.props);
+	    return _react2['default'].createElement(Component, _extends({}, this.props, { ref: 'inner' }));
 	  }
 	});
 	
@@ -19772,6 +19779,8 @@
 	Object.defineProperty(exports, '__esModule', {
 	  value: true
 	});
+	
+	var _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; };
 	
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
 	
@@ -19795,6 +19804,9 @@
 	    style: _react.PropTypes.object,
 	    prefixCls: _react.PropTypes.string,
 	    multiple: _react.PropTypes.bool,
+	    disabled: _react.PropTypes.bool,
+	    accept: _react.PropTypes.string,
+	    children: _react.PropTypes.any,
 	    onStart: _react.PropTypes.func,
 	    data: _react.PropTypes.oneOfType([_react.PropTypes.object, _react.PropTypes.func]),
 	    headers: _react.PropTypes.object,
@@ -19803,21 +19815,16 @@
 	  },
 	
 	  getInitialState: function getInitialState() {
+	    this.reqs = {};
 	    return {
-	      disabled: false,
 	      uid: (0, _uid2['default'])()
 	    };
 	  },
 	
 	  onChange: function onChange(e) {
-	    if (this.state.disabled) {
-	      return;
-	    }
-	    this.setState({
-	      disabled: true
-	    });
 	    var files = e.target.files;
 	    this.uploadFiles(files);
+	    this.reset();
 	  },
 	
 	  onClick: function onClick() {
@@ -19840,10 +19847,6 @@
 	      return;
 	    }
 	
-	    if (this.state.disabled) {
-	      return;
-	    }
-	
 	    var files = e.dataTransfer.files;
 	    this.uploadFiles(files);
 	
@@ -19852,21 +19855,11 @@
 	
 	  uploadFiles: function uploadFiles(files) {
 	    var postFiles = Array.prototype.slice.call(files);
-	    if (!this.props.multiple) {
-	      postFiles = postFiles.slice(0, 1);
-	    }
 	    var len = postFiles.length;
-	    if (len > 0) {
-	      for (var i = 0; i < len; i++) {
-	        var file = postFiles[i];
-	        file.uid = (0, _uid2['default'])();
-	        this.upload(file);
-	      }
-	      if (this.props.multiple) {
-	        this.props.onStart(postFiles);
-	      } else {
-	        this.props.onStart(postFiles[0]);
-	      }
+	    for (var i = 0; i < len; i++) {
+	      var file = postFiles[i];
+	      file.uid = (0, _uid2['default'])();
+	      this.upload(file);
 	    }
 	  },
 	
@@ -19874,6 +19867,7 @@
 	    var _this = this;
 	
 	    var props = this.props;
+	
 	    if (!props.beforeUpload) {
 	      return this.post(file);
 	    }
@@ -19886,14 +19880,9 @@
 	        } else {
 	          _this.post(file);
 	        }
-	      }, function () {
-	        _this._reset();
 	      });
 	    } else if (before !== false) {
 	      this.post(file);
-	    } else {
-	      // fix https://github.com/ant-design/ant-design/issues/1989
-	      this._reset();
 	    }
 	  },
 	
@@ -19902,11 +19891,14 @@
 	
 	    var props = this.props;
 	    var data = props.data;
+	    var onStart = props.onStart;
+	
 	    if (typeof data === 'function') {
 	      data = data(file);
 	    }
+	    var uid = file.uid;
 	
-	    (0, _request2['default'])({
+	    this.reqs[uid] = (0, _request2['default'])({
 	      action: props.action,
 	      filename: props.name,
 	      file: file,
@@ -19917,49 +19909,79 @@
 	        props.onProgress(e, file);
 	      },
 	      onSuccess: function onSuccess(ret) {
+	        delete _this2.reqs[uid];
 	        props.onSuccess(ret, file);
-	        _this2._reset();
 	      },
 	      onError: function onError(err, ret) {
+	        delete _this2.reqs[uid];
 	        props.onError(err, ret, file);
-	        _this2._reset();
 	      }
 	    });
+	    onStart(file);
 	  },
 	
-	  _reset: function _reset() {
+	  reset: function reset() {
 	    this.setState({
-	      disabled: false,
 	      uid: (0, _uid2['default'])()
 	    });
 	  },
 	
+	  abort: function abort(file) {
+	    var reqs = this.reqs;
+	
+	    if (file) {
+	      var uid = file;
+	      if (file && file.uid) {
+	        uid = file.uid;
+	      }
+	      if (reqs[uid]) {
+	        reqs[uid].abort();
+	        delete reqs[uid];
+	      }
+	    } else {
+	      Object.keys(reqs).forEach(function (uid) {
+	        reqs[uid].abort();
+	        delete reqs[uid];
+	      });
+	    }
+	  },
+	
 	  render: function render() {
-	    var props = this.props;
-	    var Tag = this.props.component;
+	    var _props = this.props;
+	    var Tag = _props.component;
+	    var prefixCls = _props.prefixCls;
+	    var disabled = _props.disabled;
+	    var style = _props.style;
+	    var multiple = _props.multiple;
+	    var accept = _props.accept;
+	    var children = _props.children;
+	
+	    var events = disabled ? {
+	      className: prefixCls + ' ' + prefixCls + '-disabled'
+	    } : {
+	      className: '' + prefixCls,
+	      onClick: this.onClick,
+	      onKeyDown: this.onKeyDown,
+	      onDrop: this.onFileDrop,
+	      onDragOver: this.onFileDrop,
+	      tabIndex: '0'
+	    };
 	    return _react2['default'].createElement(
 	      Tag,
-	      {
-	        onClick: this.onClick,
-	        onKeyDown: this.onKeyDown,
-	        onDrop: this.onFileDrop,
-	        onDragOver: this.onFileDrop,
+	      _extends({}, events, {
 	        role: 'button',
-	        tabIndex: '0',
-	        style: this.props.style,
-	        className: this.state.disabled ? this.props.prefixCls + ' ' + props.prefixCls + '-disabled' : '' + this.props.prefixCls
-	      },
+	        style: style
+	      }),
 	      _react2['default'].createElement('input', {
 	        type: 'file',
 	        ref: 'file',
 	        key: this.state.uid,
-	        disabled: this.state.disabled,
 	        style: { display: 'none' },
-	        accept: props.accept,
-	        multiple: this.props.multiple,
+	        accept: accept,
+	        multiple: multiple,
 	        onChange: this.onChange
 	      }),
-	      props.children
+	      children
 	    );
 	  }
 	});
@@ -20012,10 +20034,6 @@
 	// }
 	
 	function upload(option) {
-	  if (typeof XMLHttpRequest === 'undefined') {
-	    return;
-	  }
-	
 	  var xhr = new XMLHttpRequest();
 	  if (xhr.upload) {
 	    xhr.upload.onprogress = function progress(e) {
@@ -20071,6 +20089,12 @@
 	    }
 	  }
 	  xhr.send(formData);
+	
+	  return {
+	    abort: function abort() {
+	      xhr.abort();
+	    }
+	  };
 	}
 	
 	module.exports = exports['default'];
@@ -20124,7 +20148,7 @@
 	
 	var _warning2 = _interopRequireDefault(_warning);
 	
-	var iframeStyle = {
+	var IFRAME_STYLE = {
 	  position: 'absolute',
 	  top: 0,
 	  opacity: 0,
@@ -20133,13 +20157,16 @@
 	  zIndex: 9999
 	};
 	
+	// diferent from AjaxUpload, can only upload on at one time, serial seriously
 	var IframeUploader = _react2['default'].createClass({
 	  displayName: 'IframeUploader',
 	
 	  propTypes: {
 	    component: _react.PropTypes.string,
 	    style: _react.PropTypes.object,
+	    disabled: _react.PropTypes.bool,
 	    prefixCls: _react.PropTypes.string,
+	    accept: _react.PropTypes.string,
 	    onStart: _react.PropTypes.func,
 	    multiple: _react.PropTypes.bool,
 	    children: _react.PropTypes.any,
@@ -20149,7 +20176,10 @@
 	  },
 	
 	  getInitialState: function getInitialState() {
-	    return { disabled: false };
+	    this.file = {};
+	    return {
+	      uploading: false
+	    };
 	  },
 	
 	  componentDidMount: function componentDidMount() {
@@ -20162,12 +20192,13 @@
 	  },
 	
 	  onLoad: function onLoad() {
-	    if (!this.state.disabled) {
+	    if (!this.state.uploading) {
 	      return;
 	    }
 	    var props = this.props;
+	    var file = this.file;
+	
 	    var response = undefined;
-	    var eventFile = this.file;
 	    try {
 	      var doc = this.getIframeDocument();
 	      var script = doc.getElementsByTagName('script')[0];
@@ -20175,17 +20206,18 @@
 	        doc.body.removeChild(script);
 	      }
 	      response = doc.body.innerHTML;
-	      props.onSuccess(response, eventFile);
+	      props.onSuccess(response, file);
 	    } catch (err) {
 	      (0, _warning2['default'])(false, 'cross domain error for Upload. Maybe server should return document.domain script. see Note from https://github.com/react-component/upload');
 	      response = 'cross-domain';
-	      props.onError(err, null, eventFile);
+	      props.onError(err, null, file);
 	    }
-	    this.enableIframe();
-	    this.initIframe();
+	    this.endUpload();
 	  },
 	
 	  onChange: function onChange() {
+	    var _this = this;
+	
 	    var target = this.getFormInputNode();
 	    // ie8/9 don't support FileList Object
 	    // http://stackoverflow.com/questions/12830058/ie8-input-type-file-get-files
@@ -20193,23 +20225,24 @@
 	      uid: (0, _uid2['default'])(),
 	      name: target.value
 	    };
-	    this.props.onStart(this.getFileForMultiple(file));
-	    var formNode = this.getFormNode();
-	    var dataSpan = this.getFormDataNode();
-	    var data = this.props.data;
-	    if (typeof data === 'function') {
-	      data = data(file);
+	    this.startUpload();
+	    var props = this.props;
+	
+	    if (!props.beforeUpload) {
+	      return this.post(file);
 	    }
-	    var inputs = [];
-	    for (var key in data) {
-	      if (data.hasOwnProperty(key)) {
-	        inputs.push('<input name="' + key + '" value="' + data[key] + '"/>');
-	      }
+	    var before = props.beforeUpload(file);
+	    if (before && before.then) {
+	      before.then(function () {
+	        _this.post(file);
+	      }, function () {
+	        _this.endUpload();
+	      });
+	    } else if (before !== false) {
+	      this.post(file);
+	    } else {
+	      this.endUpload();
 	    }
-	    dataSpan.innerHTML = inputs.join('');
-	    this.disabledIframe();
-	    formNode.submit();
-	    dataSpan.innerHTML = '';
 	  },
 	
 	  getIframeNode: function getIframeNode() {
@@ -20272,21 +20305,23 @@
 	    this.getFormInputNode().onchange = this.onChange;
 	  },
 	
-	  enableIframe: function enableIframe() {
-	    if (this.state.disabled) {
+	  endUpload: function endUpload() {
+	    if (this.state.uploading) {
+	      this.file = {};
 	      // hack avoid batch
-	      this.state.disabled = false;
+	      this.state.uploading = false;
 	      this.setState({
-	        disabled: false
+	        uploading: false
 	      });
+	      this.initIframe();
 	    }
 	  },
 	
-	  disabledIframe: function disabledIframe() {
-	    if (!this.state.disabled) {
-	      this.state.disabled = true;
+	  startUpload: function startUpload() {
+	    if (!this.state.uploading) {
+	      this.state.uploading = true;
 	      this.setState({
-	        disabled: true
+	        uploading: true
 	      });
 	    }
 	  },
@@ -20298,23 +20333,65 @@
 	    iframeNode.style.width = rootNode.offsetWidth + 'px';
 	  },
 	
+	  abort: function abort(file) {
+	    if (file) {
+	      var uid = file;
+	      if (file && file.uid) {
+	        uid = file.uid;
+	      }
+	      if (uid === this.file.uid) {
+	        this.endUpload();
+	      }
+	    } else {
+	      this.endUpload();
+	    }
+	  },
+	
+	  post: function post(file) {
+	    var formNode = this.getFormNode();
+	    var dataSpan = this.getFormDataNode();
+	    var data = this.props.data;
+	    var onStart = this.props.onStart;
+	
+	    if (typeof data === 'function') {
+	      data = data(file);
+	    }
+	    var inputs = [];
+	    for (var key in data) {
+	      if (data.hasOwnProperty(key)) {
+	        inputs.push('<input name="' + key + '" value="' + data[key] + '"/>');
+	      }
+	    }
+	    dataSpan.innerHTML = inputs.join('');
+	    formNode.submit();
+	    dataSpan.innerHTML = '';
+	    onStart(file);
+	  },
+	
 	  render: function render() {
-	    var style = _extends({}, iframeStyle, {
-	      display: this.state.disabled ? 'none' : ''
+	    var _props = this.props;
+	    var Tag = _props.component;
+	    var disabled = _props.disabled;
+	    var prefixCls = _props.prefixCls;
+	    var children = _props.children;
+	    var style = _props.style;
+	
+	    var iframeStyle = _extends({}, IFRAME_STYLE, {
+	      display: this.state.uploading || disabled ? 'none' : ''
 	    });
-	    var Tag = this.props.component;
+	
 	    return _react2['default'].createElement(
 	      Tag,
 	      {
-	        className: this.state.disabled ? this.props.prefixCls + ' ' + this.props.prefixCls + '-disabled' : '' + this.props.prefixCls,
-	        style: _extends({ position: 'relative', zIndex: 0 }, this.props.style)
+	        className: disabled ? prefixCls + ' ' + prefixCls + '-disabled' : '' + prefixCls,
+	        style: _extends({ position: 'relative', zIndex: 0 }, style)
 	      },
 	      _react2['default'].createElement('iframe', {
 	        ref: 'iframe',
 	        onLoad: this.onLoad,
-	        style: style
+	        style: iframeStyle
 	      }),
-	      this.props.children
+	      children
 	    );
 	  }
 	});

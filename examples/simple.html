@@ -2,7 +2,7 @@
 <html>
 
 <head>
-  <title>simple.js - example - rc-upload@1.14.0</title>
+  <title>simple.js - example - rc-upload@2.0.0</title>
   <meta name="viewport"
         content="width=device-width,initial-scale=1.0,minimum-scale=1.0,maximum-scale=1.0,user-scalable=no">
   <meta charset="utf-8"/>
@@ -257,7 +257,7 @@ Monokai Sublime style. Derived from Monokai by noformnocontent http://nn.mit-lic
 <body>
 <div class="container">
   <div class="header">
-    <h1>rc-upload@1.14.0</h1>
+    <h1>rc-upload@2.0.0</h1>
 
     <p>upload ui component for react</p>
   </div>
@@ -267,27 +267,6 @@ Monokai Sublime style. Derived from Monokai by noformnocontent http://nn.mit-lic
   <div class="highlight"><pre><code language="js"><span class="hljs-keyword">const</span> React = <span class="hljs-built_in">require</span>(<span class="hljs-string">'react'</span>);
 <span class="hljs-keyword">const</span> ReactDOM = <span class="hljs-built_in">require</span>(<span class="hljs-string">'react-dom'</span>);
 <span class="hljs-keyword">const</span> Upload = <span class="hljs-built_in">require</span>(<span class="hljs-string">'rc-upload'</span>);
-<span class="hljs-keyword">const</span> props = {
-  action: <span class="hljs-string">'/upload.do'</span>,
-  data: { a: <span class="hljs-number">1</span>, b: <span class="hljs-number">2</span> },
-  headers: {
-    Authorization: <span class="hljs-string">'xxxxxxx'</span>,
-  },
-  multiple: <span class="hljs-literal">true</span>,
-  onStart(files) {
-    <span class="hljs-keyword">const</span> file = files[<span class="hljs-number">0</span>];
-    <span class="hljs-built_in">console</span>.log(<span class="hljs-string">'onStart'</span>, file, file.name);
-  },
-  onSuccess(ret) {
-    <span class="hljs-built_in">console</span>.log(<span class="hljs-string">'onSuccess'</span>, ret);
-  },
-  onProgress(step, file) {
-    <span class="hljs-built_in">console</span>.log(<span class="hljs-string">'onProgress'</span>, step, file);
-  },
-  onError(err) {
-    <span class="hljs-built_in">console</span>.log(<span class="hljs-string">'onError'</span>, err);
-  },
-};
 
 <span class="hljs-comment">// document.domain = 'alipay.net';</span>
 
@@ -298,6 +277,30 @@ Monokai Sublime style. Derived from Monokai by noformnocontent http://nn.mit-lic
 
 <span class="hljs-keyword">const</span> Test = React.createClass({
   getInitialState() {
+    <span class="hljs-keyword">this</span>.uploaderProps = {
+      action: <span class="hljs-string">'/upload.do'</span>,
+      data: { a: <span class="hljs-number">1</span>, b: <span class="hljs-number">2</span> },
+      headers: {
+        Authorization: <span class="hljs-string">'xxxxxxx'</span>,
+      },
+      multiple: <span class="hljs-literal">true</span>,
+      beforeUpload(file) {
+        <span class="hljs-built_in">console</span>.log(<span class="hljs-string">'beforeUpload'</span>, file.name);
+      },
+      onStart: (file) =&gt; {
+        <span class="hljs-built_in">console</span>.log(<span class="hljs-string">'onStart'</span>, file.name);
+        <span class="hljs-comment">// this.refs.inner.abort(file);</span>
+      },
+      onSuccess(file) {
+        <span class="hljs-built_in">console</span>.log(<span class="hljs-string">'onSuccess'</span>, file);
+      },
+      onProgress(step, file) {
+        <span class="hljs-built_in">console</span>.log(<span class="hljs-string">'onProgress'</span>, file.name);
+      },
+      onError(err) {
+        <span class="hljs-built_in">console</span>.log(<span class="hljs-string">'onError'</span>, err);
+      },
+    };
     <span class="hljs-keyword">return</span> {
       destroyed: <span class="hljs-literal">false</span>,
     };
@@ -323,7 +326,7 @@ Monokai Sublime style. Derived from Monokai by noformnocontent http://nn.mit-lic
       </span><span class="hljs-tag">&lt;/<span class="hljs-title">style</span>&gt;</span>
 
       <span class="hljs-tag">&lt;<span class="hljs-title">div</span>&gt;</span>
-        <span class="hljs-tag">&lt;<span class="hljs-title">Upload</span> {<span class="hljs-attribute">...props</span>}&gt;</span><span class="hljs-tag">&lt;<span class="hljs-title">a</span> <span class="hljs-attribute">href</span>=<span class="hljs-value">"#nowhere"</span>&gt;</span>开始上传<span class="hljs-tag">&lt;/<span class="hljs-title">a</span>&gt;</span><span class="hljs-tag">&lt;/<span class="hljs-title">Upload</span>&gt;</span>
+        <span class="hljs-tag">&lt;<span class="hljs-title">Upload</span> {<span class="hljs-attribute">...this.uploaderProps</span>} <span class="hljs-attribute">ref</span>=<span class="hljs-value">"inner"</span>&gt;</span><span class="hljs-tag">&lt;<span class="hljs-title">a</span> <span class="hljs-attribute">href</span>=<span class="hljs-value">"#nowhere"</span>&gt;</span>开始上传<span class="hljs-tag">&lt;/<span class="hljs-title">a</span>&gt;</span><span class="hljs-tag">&lt;/<span class="hljs-title">Upload</span>&gt;</span>
       <span class="hljs-tag">&lt;/<span class="hljs-title">div</span>&gt;</span>
 
       <span class="hljs-tag">&lt;<span class="hljs-title">h2</span>&gt;</span>滚动<span class="hljs-tag">&lt;/<span class="hljs-title">h2</span>&gt;</span>
@@ -336,7 +339,8 @@ Monokai Sublime style. Derived from Monokai by noformnocontent http://nn.mit-lic
         <span class="hljs-tag">&lt;<span class="hljs-title">div</span> <span class="hljs-attribute">style</span>=<span class="hljs-value">{{</span>
           <span class="hljs-attribute">height:</span> <span class="hljs-attribute">500</span>,
         }}&gt;</span>
-          <span class="hljs-tag">&lt;<span class="hljs-title">Upload</span> {<span class="hljs-attribute">...props</span>} <span class="hljs-attribute">component</span>=<span class="hljs-value">"div"</span> <span class="hljs-attribute">style</span>=<span class="hljs-value">{{display:</span> '<span class="hljs-attribute">inline-block</span>'}}&gt;</span><span class="hljs-tag">&lt;<span class="hljs-title">a</span> <span class="hljs-attribute">href</span>=<span class="hljs-value">"#nowhere"</span>&gt;</span>开始上传2<span class="hljs-tag">&lt;/<span class="hljs-title">a</span>&gt;</span><span class="hljs-tag">&lt;/<span class="hljs-title">Upload</span>&gt;</span>
+          <span class="hljs-tag">&lt;<span class="hljs-title">Upload</span> {<span class="hljs-attribute">...this.uploaderProps</span>} <span class="hljs-attribute">component</span>=<span class="hljs-value">"div"</span> <span class="hljs-attribute">style</span>=<span class="hljs-value">{{</span> <span class="hljs-attribute">display:</span> '<span class="hljs-attribute">inline-block</span>' }}&gt;</span><span class="hljs-tag">&lt;<span class="hljs-title">a</span>
+            <span class="hljs-attribute">href</span>=<span class="hljs-value">"#nowhere"</span>&gt;</span>开始上传2<span class="hljs-tag">&lt;/<span class="hljs-title">a</span>&gt;</span><span class="hljs-tag">&lt;/<span class="hljs-title">Upload</span>&gt;</span>
         <span class="hljs-tag">&lt;/<span class="hljs-title">div</span>&gt;</span>
       <span class="hljs-tag">&lt;/<span class="hljs-title">div</span>&gt;</span>
 

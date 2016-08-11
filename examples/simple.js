@@ -18,27 +18,6 @@ webpackJsonp([1],{
 	var React = __webpack_require__(2);
 	var ReactDOM = __webpack_require__(158);
 	var Upload = __webpack_require__(159);
-	var props = {
-	  action: '/upload.do',
-	  data: { a: 1, b: 2 },
-	  headers: {
-	    Authorization: 'xxxxxxx'
-	  },
-	  multiple: true,
-	  onStart: function onStart(files) {
-	    var file = files[0];
-	    console.log('onStart', file, file.name);
-	  },
-	  onSuccess: function onSuccess(ret) {
-	    console.log('onSuccess', ret);
-	  },
-	  onProgress: function onProgress(step, file) {
-	    console.log('onProgress', step, file);
-	  },
-	  onError: function onError(err) {
-	    console.log('onError', err);
-	  }
-	};
 	
 	// document.domain = 'alipay.net';
 	
@@ -48,6 +27,30 @@ webpackJsonp([1],{
 	  displayName: 'Test',
 	
 	  getInitialState: function getInitialState() {
+	    this.uploaderProps = {
+	      action: '/upload.do',
+	      data: { a: 1, b: 2 },
+	      headers: {
+	        Authorization: 'xxxxxxx'
+	      },
+	      multiple: true,
+	      beforeUpload: function beforeUpload(file) {
+	        console.log('beforeUpload', file.name);
+	      },
+	      onStart: function onStart(file) {
+	        console.log('onStart', file.name);
+	        // this.refs.inner.abort(file);
+	      },
+	      onSuccess: function onSuccess(file) {
+	        console.log('onSuccess', file);
+	      },
+	      onProgress: function onProgress(step, file) {
+	        console.log('onProgress', file.name);
+	      },
+	      onError: function onError(err) {
+	        console.log('onError', err);
+	      }
+	    };
 	    return {
 	      destroyed: false
 	    };
@@ -83,7 +86,7 @@ webpackJsonp([1],{
 	        null,
 	        React.createElement(
 	          Upload,
-	          props,
+	          _extends({}, this.uploaderProps, { ref: 'inner' }),
 	          React.createElement(
 	            'a',
 	            { href: '#nowhere' },
@@ -110,10 +113,11 @@ webpackJsonp([1],{
 	            } },
 	          React.createElement(
 	            Upload,
-	            _extends({}, props, { component: 'div', style: { display: 'inline-block' } }),
+	            _extends({}, this.uploaderProps, { component: 'div', style: { display: 'inline-block' } }),
 	            React.createElement(
 	              'a',
-	              { href: '#nowhere' },
+	              {
+	                href: '#nowhere' },
 	              '开始上传2'
 	            )
 	          )
