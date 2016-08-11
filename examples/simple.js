@@ -3,21 +3,27 @@ webpackJsonp([1],{
 /***/ 0:
 /***/ function(module, exports, __webpack_require__) {
 
-	module.exports = __webpack_require__(167);
+	module.exports = __webpack_require__(222);
 
 
 /***/ },
 
-/***/ 167:
+/***/ 222:
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 	
-	var _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; };
+	var _extends2 = __webpack_require__(179);
+	
+	var _extends3 = _interopRequireDefault(_extends2);
+	
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+	
+	/* eslint no-console:0 */
 	
 	var React = __webpack_require__(2);
-	var ReactDOM = __webpack_require__(158);
-	var Upload = __webpack_require__(159);
+	var ReactDOM = __webpack_require__(36);
+	var Upload = __webpack_require__(176);
 	
 	// document.domain = 'alipay.net';
 	
@@ -25,7 +31,6 @@ webpackJsonp([1],{
 	
 	var Test = React.createClass({
 	  displayName: 'Test',
-	
 	  getInitialState: function getInitialState() {
 	    this.uploaderProps = {
 	      action: '/upload.do',
@@ -37,6 +42,7 @@ webpackJsonp([1],{
 	      beforeUpload: function beforeUpload(file) {
 	        console.log('beforeUpload', file.name);
 	      },
+	
 	      onStart: function onStart(file) {
 	        console.log('onStart', file.name);
 	        // this.refs.inner.abort(file);
@@ -55,22 +61,22 @@ webpackJsonp([1],{
 	      destroyed: false
 	    };
 	  },
-	
 	  destroy: function destroy() {
 	    this.setState({
 	      destroyed: true
 	    });
 	  },
-	
 	  render: function render() {
 	    if (this.state.destroyed) {
 	      return null;
 	    }
 	    return React.createElement(
 	      'div',
-	      { style: {
+	      {
+	        style: {
 	          margin: 100
-	        } },
+	        }
+	      },
 	      React.createElement(
 	        'h2',
 	        null,
@@ -86,7 +92,7 @@ webpackJsonp([1],{
 	        null,
 	        React.createElement(
 	          Upload,
-	          _extends({}, this.uploaderProps, { ref: 'inner' }),
+	          (0, _extends3.default)({}, this.uploaderProps, { ref: 'inner' }),
 	          React.createElement(
 	            'a',
 	            { href: '#nowhere' },
@@ -101,23 +107,26 @@ webpackJsonp([1],{
 	      ),
 	      React.createElement(
 	        'div',
-	        { style: {
+	        {
+	          style: {
 	            height: 200,
 	            overflow: 'auto',
 	            border: '1px solid red'
-	          } },
+	          }
+	        },
 	        React.createElement(
 	          'div',
-	          { style: {
+	          {
+	            style: {
 	              height: 500
-	            } },
+	            }
+	          },
 	          React.createElement(
 	            Upload,
-	            _extends({}, this.uploaderProps, { component: 'div', style: { display: 'inline-block' } }),
+	            (0, _extends3.default)({}, this.uploaderProps, { component: 'div', style: { display: 'inline-block' } }),
 	            React.createElement(
 	              'a',
-	              {
-	                href: '#nowhere' },
+	              { href: '#nowhere' },
 	              '开始上传2'
 	            )
 	          )
