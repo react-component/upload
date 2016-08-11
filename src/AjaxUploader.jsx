@@ -19,6 +19,7 @@ const AjaxUploader = React.createClass({
     headers: PropTypes.object,
     beforeUpload: PropTypes.func,
     withCredentials: PropTypes.bool,
+    toggleToReset: PropTypes.bool,
   },
 
   getInitialState() {
@@ -26,6 +27,12 @@ const AjaxUploader = React.createClass({
     return {
       uid: getUid(),
     };
+  },
+
+  componentWillReceiveProps(nextProps) {
+    if (this.props.toggleToReset !== nextProps.toggleToReset) {
+      this._reset();
+    }
   },
 
   onChange(e) {
