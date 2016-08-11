@@ -28,6 +28,10 @@ const AjaxUploader = React.createClass({
     };
   },
 
+  componentWillUnmount() {
+    this.abort();
+  },
+
   onChange(e) {
     const files = e.target.files;
     this.uploadFiles(files);
