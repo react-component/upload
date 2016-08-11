@@ -17,19 +17,23 @@ webpackJsonp([1],{
 	
 	var _extends3 = _interopRequireDefault(_extends2);
 	
+	var _react = __webpack_require__(2);
+	
+	var _react2 = _interopRequireDefault(_react);
+	
+	var _reactDom = __webpack_require__(36);
+	
+	var _reactDom2 = _interopRequireDefault(_reactDom);
+	
+	var _rcUpload = __webpack_require__(176);
+	
+	var _rcUpload2 = _interopRequireDefault(_rcUpload);
+	
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 	
-	/* eslint no-console:0 */
+	var style = '\n        .rc-upload-disabled {\n           opacity:0.5;\n        '; /* eslint no-console:0 */
 	
-	var React = __webpack_require__(2);
-	var ReactDOM = __webpack_require__(36);
-	var Upload = __webpack_require__(176);
-	
-	// document.domain = 'alipay.net';
-	
-	var style = '\n        .rc-upload-disabled {\n           opacity:0.5;\n        ';
-	
-	var Test = React.createClass({
+	var Test = _react2.default.createClass({
 	  displayName: 'Test',
 	  getInitialState: function getInitialState() {
 	    this.uploaderProps = {
@@ -51,7 +55,7 @@ webpackJsonp([1],{
 	        console.log('onSuccess', file);
 	      },
 	      onProgress: function onProgress(step, file) {
-	        console.log('onProgress', file.name);
+	        console.log('onProgress', Math.round(step.percent), file.name);
 	      },
 	      onError: function onError(err) {
 	        console.log('onError', err);
@@ -70,42 +74,42 @@ webpackJsonp([1],{
 	    if (this.state.destroyed) {
 	      return null;
 	    }
-	    return React.createElement(
+	    return _react2.default.createElement(
 	      'div',
 	      {
 	        style: {
 	          margin: 100
 	        }
 	      },
-	      React.createElement(
+	      _react2.default.createElement(
 	        'h2',
 	        null,
 	        '固定位置'
 	      ),
-	      React.createElement(
+	      _react2.default.createElement(
 	        'style',
 	        null,
 	        style
 	      ),
-	      React.createElement(
+	      _react2.default.createElement(
 	        'div',
 	        null,
-	        React.createElement(
-	          Upload,
+	        _react2.default.createElement(
+	          _rcUpload2.default,
 	          (0, _extends3.default)({}, this.uploaderProps, { ref: 'inner' }),
-	          React.createElement(
+	          _react2.default.createElement(
 	            'a',
-	            { href: '#nowhere' },
+	            null,
 	            '开始上传'
 	          )
 	        )
 	      ),
-	      React.createElement(
+	      _react2.default.createElement(
 	        'h2',
 	        null,
 	        '滚动'
 	      ),
-	      React.createElement(
+	      _react2.default.createElement(
 	        'div',
 	        {
 	          style: {
@@ -114,25 +118,25 @@ webpackJsonp([1],{
 	            border: '1px solid red'
 	          }
 	        },
-	        React.createElement(
+	        _react2.default.createElement(
 	          'div',
 	          {
 	            style: {
 	              height: 500
 	            }
 	          },
-	          React.createElement(
-	            Upload,
+	          _react2.default.createElement(
+	            _rcUpload2.default,
 	            (0, _extends3.default)({}, this.uploaderProps, { component: 'div', style: { display: 'inline-block' } }),
-	            React.createElement(
+	            _react2.default.createElement(
 	              'a',
-	              { href: '#nowhere' },
+	              null,
 	              '开始上传2'
 	            )
 	          )
 	        )
 	      ),
-	      React.createElement(
+	      _react2.default.createElement(
 	        'button',
 	        { onClick: this.destroy },
 	        'destroy'
@@ -141,7 +145,7 @@ webpackJsonp([1],{
 	  }
 	});
 	
-	ReactDOM.render(React.createElement(Test, null), document.getElementById('__react-content'));
+	_reactDom2.default.render(_react2.default.createElement(Test, null), document.getElementById('__react-content'));
 
 /***/ }
 

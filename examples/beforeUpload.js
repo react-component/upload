@@ -11,11 +11,20 @@ webpackJsonp([0],[
 
 	'use strict';
 	
-	/* eslint no-console:0 */
+	var _react = __webpack_require__(2);
 	
-	var React = __webpack_require__(2);
-	var ReactDOM = __webpack_require__(36);
-	var Upload = __webpack_require__(176);
+	var _react2 = _interopRequireDefault(_react);
+	
+	var _reactDom = __webpack_require__(36);
+	
+	var _reactDom2 = _interopRequireDefault(_reactDom);
+	
+	var _rcUpload = __webpack_require__(176);
+	
+	var _rcUpload2 = _interopRequireDefault(_rcUpload);
+	
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+	
 	var props = {
 	  action: '/upload.do',
 	  onStart: function onStart(file) {
@@ -36,27 +45,27 @@ webpackJsonp([0],[
 	      }, 3000);
 	    });
 	  }
-	};
+	}; /* eslint no-console:0 */
 	
-	var Test = React.createClass({
+	var Test = _react2.default.createClass({
 	  displayName: 'Test',
 	  render: function render() {
-	    return React.createElement(
+	    return _react2.default.createElement(
 	      'div',
 	      {
 	        style: {
 	          margin: 100
 	        }
 	      },
-	      React.createElement(
+	      _react2.default.createElement(
 	        'div',
 	        null,
-	        React.createElement(
-	          Upload,
+	        _react2.default.createElement(
+	          _rcUpload2.default,
 	          props,
-	          React.createElement(
+	          _react2.default.createElement(
 	            'a',
-	            { href: '#nowhere' },
+	            null,
 	            '开始上传'
 	          )
 	        )
@@ -65,7 +74,7 @@ webpackJsonp([0],[
 	  }
 	});
 	
-	ReactDOM.render(React.createElement(Test, null), document.getElementById('__react-content'));
+	_reactDom2.default.render(_react2.default.createElement(Test, null), document.getElementById('__react-content'));
 
 /***/ }
 ]);

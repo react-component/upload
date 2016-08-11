@@ -22212,6 +22212,9 @@
 	      uid: (0, _uid2.default)()
 	    };
 	  },
+	  componentWillUnmount: function componentWillUnmount() {
+	    this.abort();
+	  },
 	  onChange: function onChange(e) {
 	    var files = e.target.files;
 	    this.uploadFiles(files);
