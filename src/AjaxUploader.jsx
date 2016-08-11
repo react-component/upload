@@ -8,6 +8,9 @@ const AjaxUploader = React.createClass({
     style: PropTypes.object,
     prefixCls: PropTypes.string,
     multiple: PropTypes.bool,
+    disabled: PropTypes.bool,
+    accept: PropTypes.string,
+    children: PropTypes.any,
     onStart: PropTypes.func,
     data: PropTypes.oneOfType([
       PropTypes.object,
@@ -58,27 +61,17 @@ const AjaxUploader = React.createClass({
   },
 
   uploadFiles(files) {
-    let postFiles = Array.prototype.slice.call(files);
-    if (!this.props.multiple) {
-      postFiles = postFiles.slice(0, 1);
-    }
+    const postFiles = Array.prototype.slice.call(files);
     const len = postFiles.length;
-    if (len > 0) {
-      for (let i = 0; i < len; i++) {
-        const file = postFiles[i];
-        file.uid = getUid();
-        this.upload(file);
-      }
-      if (this.props.multiple) {
-        this.props.onStart(postFiles);
-      } else {
-        this.props.onStart(postFiles[0]);
-      }
+    for (let i = 0; i < len; i++) {
+      const file = postFiles[i];
+      file.uid = getUid();
+      this.upload(file);
     }
   },
 
   upload(file) {
-    const props = this.props;
+    const { props } = this;
     if (!props.beforeUpload) {
       return this.post(file);
     }
@@ -98,8 +91,9 @@ const AjaxUploader = React.createClass({
   },
 
   post(file) {
-    const props = this.props;
-    let data = props.data;
+    const { props } = this;
+    let { data } = props;
+    const { onStart } = props;
     if (typeof data === 'function') {
       data = data(file);
     }
@@ -123,6 +117,7 @@ const AjaxUploader = React.createClass({
         props.onError(err, ret, file);
       },
     });
+    onStart(file);
   },
 
   reset() {
@@ -132,40 +127,55 @@ const AjaxUploader = React.createClass({
   },
 
   abort(file) {
-    let uid = file;
-    if (file && file.uid) {
-      uid = file.uid;
-    }
-    if (this.reqs[uid]) {
-      this.reqs[uid].abort();
-      delete this.reqs[uid];
+    const { reqs } = this;
+    if (file) {
+      let uid = file;
+      if (file && file.uid) {
+        uid = file.uid;
+      }
+      if (reqs[uid]) {
+        reqs[uid].abort();
+        delete reqs[uid];
+      }
+    } else {
+      Object.keys(reqs).forEach((uid) => {
+        reqs[uid].abort();
+        delete reqs[uid];
+      });
     }
   },
 
   render() {
-    const props = this.props;
-    const Tag = this.props.component;
+    const {
+      component: Tag, prefixCls, disabled,
+      style, multiple, accept, children,
+    } = this.props;
+    const events = disabled ? {
+      className: `${prefixCls} ${prefixCls}-disabled`,
+    } : {
+      className: `${prefixCls}`,
+      onClick: this.onClick,
+      onKeyDown: this.onKeyDown,
+      onDrop: this.onFileDrop,
+      onDragOver: this.onFileDrop,
+      tabIndex: '0',
+    };
     return (
       <Tag
-        onClick={this.onClick}
-        onKeyDown={this.onKeyDown}
-        onDrop={this.onFileDrop}
-        onDragOver={this.onFileDrop}
+        {...events}
         role="button"
-        tabIndex="0"
-        style={this.props.style}
-        className={`${this.props.prefixCls}`}
+        style={style}
       >
         <input
           type="file"
           ref="file"
           key={this.state.uid}
           style={{ display: 'none' }}
-          accept={props.accept}
-          multiple={this.props.multiple}
+          accept={accept}
+          multiple={multiple}
           onChange={this.onChange}
         />
-        {props.children}
+        {children}
       </Tag>
     );
   },

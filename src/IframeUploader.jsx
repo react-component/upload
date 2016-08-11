@@ -1,9 +1,9 @@
 import React, { PropTypes } from 'react';
 import ReactDOM from 'react-dom';
-import uid from './uid';
+import getUid from './uid';
 import warning from 'warning';
 
-const iframeStyle = {
+const IFRAME_STYLE = {
   position: 'absolute',
   top: 0,
   opacity: 0,
@@ -12,11 +12,14 @@ const iframeStyle = {
   zIndex: 9999,
 };
 
+// diferent from AjaxUpload, can only upload on at one time, serial seriously
 const IframeUploader = React.createClass({
   propTypes: {
     component: PropTypes.string,
     style: PropTypes.object,
+    disabled: PropTypes.bool,
     prefixCls: PropTypes.string,
+    accept: PropTypes.string,
     onStart: PropTypes.func,
     multiple: PropTypes.bool,
     children: PropTypes.any,
@@ -29,7 +32,10 @@ const IframeUploader = React.createClass({
   },
 
   getInitialState() {
-    return { disabled: false };
+    this.file = {};
+    return {
+      uploading: false,
+    };
   },
 
   componentDidMount() {
@@ -42,12 +48,11 @@ const IframeUploader = React.createClass({
   },
 
   onLoad() {
-    if (!this.state.disabled) {
+    if (!this.state.uploading) {
       return;
     }
-    const props = this.props;
+    const { props, file } = this;
     let response;
-    const eventFile = this.file;
     try {
       const doc = this.getIframeDocument();
       const script = doc.getElementsByTagName('script')[0];
@@ -55,14 +60,13 @@ const IframeUploader = React.createClass({
         doc.body.removeChild(script);
       }
       response = doc.body.innerHTML;
-      props.onSuccess(response, eventFile);
+      props.onSuccess(response, file);
     } catch (err) {
       warning(false, 'cross domain error for Upload. Maybe server should return document.domain script. see Note from https://github.com/react-component/upload');
       response = 'cross-domain';
-      props.onError(err, null, eventFile);
+      props.onError(err, null, file);
     }
-    this.enableIframe();
-    this.initIframe();
+    this.endUpload();
   },
 
   onChange() {
@@ -70,26 +74,26 @@ const IframeUploader = React.createClass({
     // ie8/9 don't support FileList Object
     // http://stackoverflow.com/questions/12830058/ie8-input-type-file-get-files
     const file = this.file = {
-      uid: uid(),
+      uid: getUid(),
       name: target.value,
     };
-    this.props.onStart(this.getFileForMultiple(file));
-    const formNode = this.getFormNode();
-    const dataSpan = this.getFormDataNode();
-    let data = this.props.data;
-    if (typeof data === 'function') {
-      data = data(file);
+    this.startUpload();
+    const { props } = this;
+    if (!props.beforeUpload) {
+      return this.post(file);
     }
-    const inputs = [];
-    for (const key in data) {
-      if (data.hasOwnProperty(key)) {
-        inputs.push(`<input name="${key}" value="${data[key]}"/>`);
-      }
+    const before = props.beforeUpload(file);
+    if (before && before.then) {
+      before.then(() => {
+        this.post(file);
+      }, ()=> {
+        this.endUpload();
+      });
+    } else if (before !== false) {
+      this.post(file);
+    } else {
+      this.endUpload();
     }
-    dataSpan.innerHTML = inputs.join('');
-    this.disabledIframe();
-    formNode.submit();
-    dataSpan.innerHTML = '';
   },
 
   getIframeNode() {
@@ -180,21 +184,23 @@ const IframeUploader = React.createClass({
     this.getFormInputNode().onchange = this.onChange;
   },
 
-  enableIframe() {
-    if (this.state.disabled) {
+  endUpload() {
+    if (this.state.uploading) {
+      this.file = {};
       // hack avoid batch
-      this.state.disabled = false;
+      this.state.uploading = false;
       this.setState({
-        disabled: false,
+        uploading: false,
       });
+      this.initIframe();
     }
   },
 
-  disabledIframe() {
-    if (!this.state.disabled) {
-      this.state.disabled = true;
+  startUpload() {
+    if (!this.state.uploading) {
+      this.state.uploading = true;
       this.setState({
-        disabled: true,
+        uploading: true,
       });
     }
   },
@@ -206,30 +212,61 @@ const IframeUploader = React.createClass({
     iframeNode.style.width = rootNode.offsetWidth + 'px';
   },
 
-  abort() {
-    if (this.state.disabled) {
-      this.enableIframe();
-      this.initIframe();
+  abort(file) {
+    if (file) {
+      let uid = file;
+      if (file && file.uid) {
+        uid = file.uid;
+      }
+      if (uid === this.file.uid) {
+        this.endUpload();
+      }
+    } else {
+      this.endUpload();
     }
   },
 
+  post(file) {
+    const formNode = this.getFormNode();
+    const dataSpan = this.getFormDataNode();
+    let { data } = this.props;
+    const { onStart } = this.props;
+    if (typeof data === 'function') {
+      data = data(file);
+    }
+    const inputs = [];
+    for (const key in data) {
+      if (data.hasOwnProperty(key)) {
+        inputs.push(`<input name="${key}" value="${data[key]}"/>`);
+      }
+    }
+    dataSpan.innerHTML = inputs.join('');
+    formNode.submit();
+    dataSpan.innerHTML = '';
+    onStart(file);
+  },
+
   render() {
-    const style = {
-      ...iframeStyle,
-      display: this.state.disabled ? 'none' : '',
+    const {
+      component: Tag, disabled,
+      prefixCls, children, style,
+    } = this.props;
+    const iframeStyle = {
+      ...IFRAME_STYLE,
+      display: this.state.uploading || disabled ? 'none' : '',
     };
-    const Tag = this.props.component;
+
     return (
       <Tag
-        className={this.state.disabled ? `${this.props.prefixCls} ${this.props.prefixCls}-disabled` : `${this.props.prefixCls}`}
-        style={{ position: 'relative', zIndex: 0, ...this.props.style }}
+        className={disabled ? `${prefixCls} ${prefixCls}-disabled` : `${prefixCls}`}
+        style={{ position: 'relative', zIndex: 0, ...style }}
       >
         <iframe
           ref="iframe"
           onLoad={this.onLoad}
-          style={style}
+          style={iframeStyle}
         />
-        {this.props.children}
+        {children}
       </Tag>
     );
   },

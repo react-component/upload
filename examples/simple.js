@@ -18,10 +18,12 @@ const Test = React.createClass({
         Authorization: 'xxxxxxx',
       },
       multiple: true,
-      onStart: (files) => {
-        const file = files[0];
+      beforeUpload(file) {
+        console.log('beforeUpload', file.name);
+      },
+      onStart: (file) => {
         console.log('onStart', file.name);
-        this.refs.inner.abort(file);
+        // this.refs.inner.abort(file);
       },
       onSuccess(file) {
         console.log('onSuccess', file);

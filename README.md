@@ -55,6 +55,7 @@ React.render(<Upload />, container);
 |-----|---|--------|----|
 |name | string | file| file param post to server |
 |style | object | {}| root component inline style |
+|disabled | boolean | false | whether disabled |
 |component | "div"|"span" | "span"| wrap component name |
 |supportServerRender | boolean | false| whether to support server render |
 |onReady | function | | only call when supportServerRender is true, upload is rendered completely |
@@ -74,7 +75,7 @@ React.render(<Upload />, container);
 
 1. `err`: request error message
 2. `responce`: request responce, not support on iframeUpload
-3. `file`: upload file object
+3. `file`: upload file
 
 ### onSuccess arguments
 
@@ -84,7 +85,7 @@ React.render(<Upload />, container);
 
 ### methods
 
-abort(file: File) => void: abort the uploading file
+abort(file?: File) => void: abort the uploading file
 
 
 ### IE8/9 Note

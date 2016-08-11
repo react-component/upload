@@ -24,6 +24,7 @@ const Upload = React.createClass({
     headers: PropTypes.object,
     accept: PropTypes.string,
     multiple: PropTypes.bool,
+    disabled: PropTypes.bool,
     beforeUpload: PropTypes.func,
     onReady: PropTypes.func,
     withCredentials: PropTypes.bool,

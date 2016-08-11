@@ -1,9 +1,11 @@
 # History
 ----
 
-### 1.15.0 / 2016-08-10
+### 2.0.0 / 2016-08-10
 
 - add abort api
+- props.onStart's argument is always a single File
+- add disabled prop
 
 ### 1.14.1 / 2016-07-19
 
