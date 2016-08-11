@@ -1,10 +1,8 @@
 /* eslint no-console:0 */
 
-const React = require('react');
-const ReactDOM = require('react-dom');
-const Upload = require('rc-upload');
-
-// document.domain = 'alipay.net';
+import React from 'react';
+import ReactDOM from 'react-dom';
+import Upload from 'rc-upload';
 
 const style = `
         .rc-upload-disabled {
@@ -31,7 +29,7 @@ const Test = React.createClass({
         console.log('onSuccess', file);
       },
       onProgress(step, file) {
-        console.log('onProgress', file.name);
+        console.log('onProgress', Math.round(step.percent), file.name);
       },
       onError(err) {
         console.log('onError', err);
@@ -64,7 +62,7 @@ const Test = React.createClass({
       </style>
 
       <div>
-        <Upload {...this.uploaderProps} ref="inner"><a href="#nowhere">开始上传</a></Upload>
+        <Upload {...this.uploaderProps} ref="inner"><a>开始上传</a></Upload>
       </div>
 
       <h2>滚动</h2>
@@ -82,7 +80,7 @@ const Test = React.createClass({
           }}
         >
           <Upload {...this.uploaderProps} component="div" style={{ display: 'inline-block' }}>
-            <a href="#nowhere">开始上传2</a></Upload>
+            <a>开始上传2</a></Upload>
         </div>
       </div>
 

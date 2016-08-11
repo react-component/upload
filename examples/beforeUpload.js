@@ -1,8 +1,9 @@
 /* eslint no-console:0 */
 
-const React = require('react');
-const ReactDOM = require('react-dom');
-const Upload = require('rc-upload');
+import React from 'react';
+import ReactDOM from 'react-dom';
+import Upload from 'rc-upload';
+
 const props = {
   action: '/upload.do',
   onStart(file) {
@@ -34,7 +35,7 @@ const Test = React.createClass({
         }}
       >
         <div>
-          <Upload {...props}><a href="#nowhere">开始上传</a></Upload>
+          <Upload {...props}><a>开始上传</a></Upload>
         </div>
       </div>
     );
