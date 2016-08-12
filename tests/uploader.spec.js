@@ -99,7 +99,9 @@ describe('uploader', () => {
 
       Simulate.change(input, { target: { files } });
 
-      requests[0].respond(200, {}, `["","${files[0].name}"]`);
+      setTimeout(() => {
+        requests[0].respond(200, {}, `["","${files[0].name}"]`);
+      }, 100);
     });
 
     it('upload error', (done) => {
@@ -121,8 +123,9 @@ describe('uploader', () => {
       };
 
       Simulate.change(input, { target: { files } });
-
-      requests[0].respond(400, {}, `error 400`);
+      setTimeout(() => {
+        requests[0].respond(400, {}, `error 400`);
+      }, 100);
     });
   });
 });

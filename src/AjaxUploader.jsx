@@ -77,7 +77,8 @@ const AjaxUploader = React.createClass({
   upload(file) {
     const { props } = this;
     if (!props.beforeUpload) {
-      return this.post(file);
+      // always async in case use react state to keep fileList
+      return setTimeout(() => this.post(file), 0);
     }
 
     const before = props.beforeUpload(file);
@@ -90,7 +91,7 @@ const AjaxUploader = React.createClass({
         }
       });
     } else if (before !== false) {
-      this.post(file);
+      setTimeout(() => this.post(file), 0);
     }
   },
 
