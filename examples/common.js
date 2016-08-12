@@ -22258,7 +22258,10 @@
 	    var props = this.props;
 	
 	    if (!props.beforeUpload) {
-	      return this.post(file);
+	      // always async in case use react state to keep fileList
+	      return setTimeout(function () {
+	        return _this.post(file);
+	      }, 0);
 	    }
 	
 	    var before = props.beforeUpload(file);
@@ -22271,7 +22274,9 @@
 	        }
 	      });
 	    } else if (before !== false) {
-	      this.post(file);
+	      setTimeout(function () {
+	        return _this.post(file);
+	      }, 0);
 	    }
 	  },
 	  post: function post(file) {
