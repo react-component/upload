@@ -1,3 +1,5 @@
+/* eslint react/no-is-mounted:0*/
+
 import request from './request';
 import React, { PropTypes } from 'react';
 import getUid from './uid';
@@ -96,6 +98,9 @@ const AjaxUploader = React.createClass({
   },
 
   post(file) {
+    if (!this.isMounted()) {
+      return;
+    }
     const { props } = this;
     let { data } = props;
     const { onStart } = props;
