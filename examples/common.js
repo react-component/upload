@@ -22282,6 +22282,9 @@
 	  post: function post(file) {
 	    var _this2 = this;
 	
+	    if (!this.isMounted()) {
+	      return;
+	    }
 	    var props = this.props;
 	    var data = props.data;
 	    var onStart = props.onStart;
@@ -22374,7 +22377,7 @@
 	      children
 	    );
 	  }
-	});
+	}); /* eslint react/no-is-mounted:0*/
 	
 	exports.default = AjaxUploader;
 	module.exports = exports['default'];
