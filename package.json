@@ -51,6 +51,7 @@
   ],
   "dependencies": {
     "babel-runtime": "6.x",
+    "classnames": "^2.2.5",
     "warning": "2.x"
   }
 }
