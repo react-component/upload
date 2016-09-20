@@ -1,5 +1,6 @@
 import React, { PropTypes } from 'react';
 import ReactDOM from 'react-dom';
+import classNames from 'classnames';
 import getUid from './uid';
 import warning from 'warning';
 
@@ -19,6 +20,7 @@ const IframeUploader = React.createClass({
     style: PropTypes.object,
     disabled: PropTypes.bool,
     prefixCls: PropTypes.string,
+    className: PropTypes.string,
     accept: PropTypes.string,
     onStart: PropTypes.func,
     multiple: PropTypes.bool,
@@ -249,17 +251,21 @@ const IframeUploader = React.createClass({
 
   render() {
     const {
-      component: Tag, disabled,
+      component: Tag, disabled, className,
       prefixCls, children, style,
     } = this.props;
     const iframeStyle = {
       ...IFRAME_STYLE,
       display: this.state.uploading || disabled ? 'none' : '',
     };
-
+    const cls = classNames({
+      [prefixCls]: true,
+      [`${prefixCls}-disabled`]: disabled,
+      [className]: className,
+    });
     return (
       <Tag
-        className={disabled ? `${prefixCls} ${prefixCls}-disabled` : `${prefixCls}`}
+        className={cls}
         style={{ position: 'relative', zIndex: 0, ...style }}
       >
         <iframe

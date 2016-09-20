@@ -1,7 +1,8 @@
 /* eslint react/no-is-mounted:0*/
 
-import request from './request';
 import React, { PropTypes } from 'react';
+import classNames from 'classnames';
+import request from './request';
 import getUid from './uid';
 
 const AjaxUploader = React.createClass({
@@ -9,6 +10,7 @@ const AjaxUploader = React.createClass({
     component: PropTypes.string,
     style: PropTypes.object,
     prefixCls: PropTypes.string,
+    className: PropTypes.string,
     multiple: PropTypes.bool,
     disabled: PropTypes.bool,
     accept: PropTypes.string,
@@ -157,13 +159,15 @@ const AjaxUploader = React.createClass({
 
   render() {
     const {
-      component: Tag, prefixCls, disabled,
+      component: Tag, prefixCls, className, disabled,
       style, multiple, accept, children,
     } = this.props;
-    const events = disabled ? {
-      className: `${prefixCls} ${prefixCls}-disabled`,
-    } : {
-      className: `${prefixCls}`,
+    const cls = classNames({
+      [prefixCls]: true,
+      [`${prefixCls}-disabled`]: disabled,
+      [className]: className,
+    });
+    const events = disabled ? {} : {
       onClick: this.onClick,
       onKeyDown: this.onKeyDown,
       onDrop: this.onFileDrop,
@@ -173,6 +177,7 @@ const AjaxUploader = React.createClass({
     return (
       <Tag
         {...events}
+        className={cls}
         role="button"
         style={style}
       >
