@@ -55,6 +55,7 @@ React.render(<Upload />, container);
 |-----|---|--------|----|
 |name | string | file| file param post to server |
 |style | object | {}| root component inline style |
+|className | string | - | root component className |
 |disabled | boolean | false | whether disabled |
 |component | "div"|"span" | "span"| wrap component name |
 |supportServerRender | boolean | false| whether to support server render |

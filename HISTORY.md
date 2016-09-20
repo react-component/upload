@@ -1,6 +1,10 @@
 # History
 ----
 
+### 2.1.0 / 2016-09-20
+
+- add `className` prop
+
 ### 2.0.0 / 2016-08-10
 
 - add abort api
