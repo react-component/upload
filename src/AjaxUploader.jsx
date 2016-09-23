@@ -88,7 +88,8 @@ const AjaxUploader = React.createClass({
     const before = props.beforeUpload(file);
     if (before && before.then) {
       before.then((processedFile) => {
-        if (Object.prototype.toString.call(processedFile) === '[object File]') {
+        const processedFileType = Object.prototype.toString.call(processedFile);
+        if (processedFileType === '[object File]' || processedFileType === '[object Blob]') {
           this.post(processedFile);
         } else {
           this.post(file);
