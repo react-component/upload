@@ -1,6 +1,10 @@
 # History
 ----
 
+### 2.1.1 / 2016-09-23
+
+- support Blob file upload [!52](https://github.com/react-component/upload/pull/52)
+
 ### 2.1.0 / 2016-09-20
 
 - add `className` prop
