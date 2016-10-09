@@ -26,6 +26,7 @@ const Upload = React.createClass({
     multiple: PropTypes.bool,
     disabled: PropTypes.bool,
     beforeUpload: PropTypes.func,
+    customRequest: PropTypes.func,
     onReady: PropTypes.func,
     withCredentials: PropTypes.bool,
     supportServerRender: PropTypes.bool,
@@ -47,6 +48,7 @@ const Upload = React.createClass({
       supportServerRender: false,
       multiple: false,
       beforeUpload: null,
+      customRequest: null,
       withCredentials: false,
     };
   },
