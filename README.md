@@ -70,6 +70,7 @@ React.render(<Upload />, container);
 |onSuccess | function | | success callback |
 |onProgress | function || progress callback, only for modern browsers|
 |beforeUpload| function |null| before upload check, return false or a rejected Promise will stop upload, only for modern browsers|
+|customRequest | function | null | provide an override for the default xhr behavior for additional customization|
 |withCredentials | boolean | false | ajax upload with cookie send |
 
 #### onError arguments
@@ -82,6 +83,23 @@ React.render(<Upload />, container);
 
 1. `result`: request body
 2. `file`: upload file
+
+
+### customRequest
+
+Allows for advanced customization by overriding default behavior in AjaxUplaoder. Provide your own XMLHttpRequest calls to interface with custom backend processes or interact with AWS S3 service through the aws-sdk-js package.
+
+customRequest callback is passed an object with:
+
+* `onProgress: (event: { percent: number }): void`
+* `onError: (event: Error, body?: Object): void`
+* `onSuccess: (body: Object): void`
+* `data: Object`
+* `filename: String`
+* `file: File`
+* `withCredentials: Boolean`
+* `action: String`
+* `headers: Object`
 
 
 ### methods
