@@ -2,7 +2,7 @@
 
 import React, { PropTypes } from 'react';
 import classNames from 'classnames';
-import request from './request';
+import defaultRequest from './request';
 import getUid from './uid';
 
 const AjaxUploader = React.createClass({
@@ -22,6 +22,7 @@ const AjaxUploader = React.createClass({
     ]),
     headers: PropTypes.object,
     beforeUpload: PropTypes.func,
+    customRequest: PropTypes.func,
     withCredentials: PropTypes.bool,
   },
 
@@ -111,6 +112,7 @@ const AjaxUploader = React.createClass({
       data = data(file);
     }
     const { uid } = file;
+    const request = props.customRequest || defaultRequest;
     this.reqs[uid] = request({
       action: props.action,
       filename: props.name,
