@@ -1,6 +1,10 @@
 # History
 ----
 
+### 2.2.0 / 2016-10-13
+
+- support custom request option [!53](https://github.com/react-component/upload/pull/53)
+
 ### 2.1.1 / 2016-09-23
 
 - support Blob file upload [!52](https://github.com/react-component/upload/pull/52)
