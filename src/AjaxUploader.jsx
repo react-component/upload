@@ -75,18 +75,18 @@ const AjaxUploader = React.createClass({
     for (let i = 0; i < len; i++) {
       const file = postFiles[i];
       file.uid = getUid();
-      this.upload(file);
+      this.upload(file, postFiles);
     }
   },
 
-  upload(file) {
+  upload(file, fileList) {
     const { props } = this;
     if (!props.beforeUpload) {
       // always async in case use react state to keep fileList
       return setTimeout(() => this.post(file), 0);
     }
 
-    const before = props.beforeUpload(file);
+    const before = props.beforeUpload(file, fileList);
     if (before && before.then) {
       before.then((processedFile) => {
         const processedFileType = Object.prototype.toString.call(processedFile);

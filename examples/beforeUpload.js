@@ -6,6 +6,7 @@ import Upload from 'rc-upload';
 
 const props = {
   action: '/upload.do',
+  multiple: true,
   onStart(file) {
     console.log('onStart', file, file.name);
   },
@@ -15,7 +16,8 @@ const props = {
   onError(err) {
     console.log('onError', err);
   },
-  beforeUpload(file) {
+  beforeUpload(file, fileList) {
+    console.log(file, fileList);
     return new Promise((resolve) => {
       console.log('start check');
       setTimeout(() => {
