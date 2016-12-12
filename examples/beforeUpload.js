@@ -15,11 +15,11 @@ webpackJsonp([0],[
 	
 	var _react2 = _interopRequireDefault(_react);
 	
-	var _reactDom = __webpack_require__(35);
+	var _reactDom = __webpack_require__(33);
 	
 	var _reactDom2 = _interopRequireDefault(_reactDom);
 	
-	var _rcUpload = __webpack_require__(173);
+	var _rcUpload = __webpack_require__(179);
 	
 	var _rcUpload2 = _interopRequireDefault(_rcUpload);
 	
@@ -27,6 +27,7 @@ webpackJsonp([0],[
 	
 	var props = {
 	  action: '/upload.do',
+	  multiple: true,
 	  onStart: function onStart(file) {
 	    console.log('onStart', file, file.name);
 	  },
@@ -36,7 +37,8 @@ webpackJsonp([0],[
 	  onError: function onError(err) {
 	    console.log('onError', err);
 	  },
-	  beforeUpload: function beforeUpload(file) {
+	  beforeUpload: function beforeUpload(file, fileList) {
+	    console.log(file, fileList);
 	    return new Promise(function (resolve) {
 	      console.log('start check');
 	      setTimeout(function () {
@@ -66,7 +68,7 @@ webpackJsonp([0],[
 	          _react2.default.createElement(
 	            'a',
 	            null,
-	            '开始上传'
+	            '\u5F00\u59CB\u4E0A\u4F20'
 	          )
 	        )
 	      )

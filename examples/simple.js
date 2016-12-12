@@ -3,17 +3,17 @@ webpackJsonp([1],{
 /***/ 0:
 /***/ function(module, exports, __webpack_require__) {
 
-	module.exports = __webpack_require__(224);
+	module.exports = __webpack_require__(230);
 
 
 /***/ },
 
-/***/ 224:
+/***/ 230:
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 	
-	var _extends2 = __webpack_require__(176);
+	var _extends2 = __webpack_require__(182);
 	
 	var _extends3 = _interopRequireDefault(_extends2);
 	
@@ -21,11 +21,11 @@ webpackJsonp([1],{
 	
 	var _react2 = _interopRequireDefault(_react);
 	
-	var _reactDom = __webpack_require__(35);
+	var _reactDom = __webpack_require__(33);
 	
 	var _reactDom2 = _interopRequireDefault(_reactDom);
 	
-	var _rcUpload = __webpack_require__(173);
+	var _rcUpload = __webpack_require__(179);
 	
 	var _rcUpload2 = _interopRequireDefault(_rcUpload);
 	
@@ -84,7 +84,7 @@ webpackJsonp([1],{
 	      _react2.default.createElement(
 	        'h2',
 	        null,
-	        '固定位置'
+	        '\u56FA\u5B9A\u4F4D\u7F6E'
 	      ),
 	      _react2.default.createElement(
 	        'style',
@@ -100,14 +100,14 @@ webpackJsonp([1],{
 	          _react2.default.createElement(
 	            'a',
 	            null,
-	            '开始上传'
+	            '\u5F00\u59CB\u4E0A\u4F20'
 	          )
 	        )
 	      ),
 	      _react2.default.createElement(
 	        'h2',
 	        null,
-	        '滚动'
+	        '\u6EDA\u52A8'
 	      ),
 	      _react2.default.createElement(
 	        'div',
@@ -131,7 +131,7 @@ webpackJsonp([1],{
 	            _react2.default.createElement(
 	              'a',
 	              null,
-	              '开始上传2'
+	              '\u5F00\u59CB\u4E0A\u4F202'
 	            )
 	          )
 	        )
