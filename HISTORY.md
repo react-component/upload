@@ -1,6 +1,10 @@
 # History
 ----
 
+### 2.3.0 / 2016-12-12
+
+- expose file list as argument to `beforeUpload` [!57](https://github.com/react-component/upload/pull/57)
+
 ### 2.2.0 / 2016-10-13
 
 - support custom request option [!53](https://github.com/react-component/upload/pull/53)
