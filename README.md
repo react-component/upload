@@ -76,7 +76,7 @@ React.render(<Upload />, container);
 #### onError arguments
 
 1. `err`: request error message
-2. `responce`: request responce, not support on iframeUpload
+2. `response`: request response, not support on iframeUpload
 3. `file`: upload file
 
 ### onSuccess arguments
