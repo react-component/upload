@@ -126,7 +126,8 @@ const IframeUploader = React.createClass({
     let domainScript = '';
     let domainInput = '';
     if (domain) {
-      domainScript = `<script>document.domain="${domain}";</script>`;
+      const script = 'script';
+      domainScript = `<${script}>document.domain="${domain}";</${script}>`;
       domainInput = `<input name="_documentDomain" value="${domain}" />`;
     }
     return `
