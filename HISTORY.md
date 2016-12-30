@@ -1,6 +1,10 @@
 # History
 ----
 
+### 2.3.2 / 2016-12-30
+
+- Fix crash if customRequest does not call onSuccess() / onError() [!60](https://github.com/react-component/upload/pull/60)
+
 ### 2.3.0 / 2016-12-12
 
 - expose file list as argument to `beforeUpload` [!57](https://github.com/react-component/upload/pull/57)
