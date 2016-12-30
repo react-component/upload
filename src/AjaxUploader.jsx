@@ -154,7 +154,7 @@ const AjaxUploader = React.createClass({
       }
     } else {
       Object.keys(reqs).forEach((uid) => {
-        reqs[uid].abort();
+        if( reqs[uid] ) reqs[uid].abort();
         delete reqs[uid];
       });
     }
