@@ -21917,7 +21917,7 @@
 	      }
 	    } else {
 	      Object.keys(reqs).forEach(function (uid) {
-	        reqs[uid].abort();
+	        if (reqs[uid]) reqs[uid].abort();
 	        delete reqs[uid];
 	      });
 	    }
