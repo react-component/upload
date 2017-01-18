@@ -81,7 +81,7 @@ React.render(<Upload />, container);
 
 ### onSuccess arguments
 
-1. `result`: request body
+1. `result`: response body
 2. `file`: upload file
 
 
