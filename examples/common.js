@@ -21854,6 +21854,8 @@
 	        } else {
 	          _this.post(file);
 	        }
+	      }).catch(function (e) {
+	        console && console.log(e);
 	      });
 	    } else if (before !== false) {
 	      setTimeout(function () {

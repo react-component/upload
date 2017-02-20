@@ -39,7 +39,7 @@ webpackJsonp([0],[
 	  },
 	  beforeUpload: function beforeUpload(file, fileList) {
 	    console.log(file, fileList);
-	    return new Promise(function (resolve) {
+	    return new Promise(function (resolve, reject) {
 	      console.log('start check');
 	      setTimeout(function () {
 	        console.log('check finshed');
