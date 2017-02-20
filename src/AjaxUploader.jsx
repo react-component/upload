@@ -95,6 +95,8 @@ const AjaxUploader = React.createClass({
         } else {
           this.post(file);
         }
+      }).catch(e => {
+        console && console.log(e);
       });
     } else if (before !== false) {
       setTimeout(() => this.post(file), 0);

@@ -18,7 +18,7 @@ const props = {
   },
   beforeUpload(file, fileList) {
     console.log(file, fileList);
-    return new Promise((resolve) => {
+    return new Promise((resolve, reject) => {
       console.log('start check');
       setTimeout(() => {
         console.log('check finshed');

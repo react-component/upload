@@ -1,6 +1,10 @@
 # History
 ----
 
+### 2.3.3 / 2017-02-20
+
+- beforeUpload add empty catch function when promise passed, fix [#64](https://github.com/react-component/upload/issues/64)
+
 ### 2.3.2 / 2016-12-30
 
 - Fix crash if customRequest does not call onSuccess() / onError() [!60](https://github.com/react-component/upload/pull/60)
