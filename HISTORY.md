@@ -1,6 +1,10 @@
 # History
 ----
 
+### 2.3.4 / 2017-03-10
+
+- disable upload progress listener in request if onPress is not set [!65](https://github.com/react-component/upload/pull/65)
+
 ### 2.3.3 / 2017-02-20
 
 - beforeUpload add empty catch function when promise passed, fix [#64](https://github.com/react-component/upload/issues/64)
