@@ -40,7 +40,6 @@ const Upload = React.createClass({
       headers: {},
       name: 'file',
       multipart: false,
-      onProgress: empty,
       onReady: empty,
       onStart: empty,
       onError: empty,
