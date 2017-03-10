@@ -23,6 +23,7 @@ const AjaxUploader = React.createClass({
     headers: PropTypes.object,
     beforeUpload: PropTypes.func,
     customRequest: PropTypes.func,
+    onProgress: PropTypes.func,
     withCredentials: PropTypes.bool,
   },
 
@@ -96,7 +97,7 @@ const AjaxUploader = React.createClass({
           this.post(file);
         }
       }).catch(e => {
-        console && console.log(e);
+        console && console.log(e); // eslint-disable-line
       });
     } else if (before !== false) {
       setTimeout(() => this.post(file), 0);
@@ -109,7 +110,7 @@ const AjaxUploader = React.createClass({
     }
     const { props } = this;
     let { data } = props;
-    const { onStart } = props;
+    const { onStart, onProgress } = props;
     if (typeof data === 'function') {
       data = data(file);
     }
@@ -122,9 +123,9 @@ const AjaxUploader = React.createClass({
       data,
       headers: props.headers,
       withCredentials: props.withCredentials,
-      onProgress: e => {
-        props.onProgress(e, file);
-      },
+      onProgress: onProgress ? e => {
+        onProgress(e, file);
+      } : null,
       onSuccess: ret => {
         delete this.reqs[uid];
         props.onSuccess(ret, file);
@@ -156,7 +157,10 @@ const AjaxUploader = React.createClass({
       }
     } else {
       Object.keys(reqs).forEach((uid) => {
-        if( reqs[uid] ) reqs[uid].abort();
+        if (reqs[uid]) {
+          reqs[uid].abort();
+        }
+
         delete reqs[uid];
       });
     }

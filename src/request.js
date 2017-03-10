@@ -33,7 +33,8 @@ function getBody(xhr) {
 // }
 export default function upload(option) {
   const xhr = new XMLHttpRequest();
-  if (xhr.upload) {
+
+  if (option.onProgress && xhr.upload) {
     xhr.upload.onprogress = function progress(e) {
       if (e.total > 0) {
         e.percent = e.loaded / e.total * 100;
