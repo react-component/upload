@@ -1,2 +1,4 @@
 // export this package's api
-module.exports = require('./Upload');
+import Upload from './Upload';
+
+export default Upload;

@@ -1,4 +1,6 @@
-import React, { PropTypes } from 'react';
+import React from 'react';
+import PropTypes from 'prop-types';
+import createReactClass from 'create-react-class';
 import ReactDOM from 'react-dom';
 import classNames from 'classnames';
 import getUid from './uid';
@@ -14,7 +16,8 @@ const IFRAME_STYLE = {
 };
 
 // diferent from AjaxUpload, can only upload on at one time, serial seriously
-const IframeUploader = React.createClass({
+const IframeUploader = createReactClass({
+  displayName: 'IframeUploader',
   propTypes: {
     component: PropTypes.string,
     style: PropTypes.object,

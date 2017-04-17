@@ -28,20 +28,18 @@ const props = {
   },
 };
 
-const Test = React.createClass({
-  render() {
-    return (
-      <div
-        style={{
-          margin: 100,
-        }}
-      >
-        <div>
-          <Upload {...props}><a>开始上传</a></Upload>
-        </div>
+const Test = () => {
+  return (
+    <div
+      style={{
+        margin: 100,
+      }}
+    >
+      <div>
+        <Upload {...props}><a>开始上传</a></Upload>
       </div>
-    );
-  },
-});
+    </div>
+  );
+};
 
 ReactDOM.render(<Test/>, document.getElementById('__react-content'));

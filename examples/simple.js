@@ -9,8 +9,9 @@ const style = `
            opacity:0.5;
         `;
 
-const Test = React.createClass({
-  getInitialState() {
+class Test extends React.Component {
+  constructor(props) {
+    super(props);
     this.uploaderProps = {
       action: '/upload.do',
       data: { a: 1, b: 2 },
@@ -35,17 +36,15 @@ const Test = React.createClass({
         console.log('onError', err);
       },
     };
-    return {
+    this.state = {
       destroyed: false,
     };
-  },
-
-  destroy() {
+  }
+  destroy = () => {
     this.setState({
       destroyed: true,
     });
-  },
-
+  }
   render() {
     if (this.state.destroyed) {
       return null;
@@ -86,7 +85,7 @@ const Test = React.createClass({
 
       <button onClick={this.destroy}>destroy</button>
     </div>);
-  },
-});
+  }
+}
 
 ReactDOM.render(<Test/>, document.getElementById('__react-content'));

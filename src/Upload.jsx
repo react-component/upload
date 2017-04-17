@@ -1,11 +1,14 @@
-import React, { PropTypes } from 'react';
+import React from 'react';
+import PropTypes from 'prop-types';
+import createReactClass from 'create-react-class';
 import AjaxUpload from './AjaxUploader';
 import IframeUpload from './IframeUploader';
 
 function empty() {
 }
 
-const Upload = React.createClass({
+const Upload = createReactClass({
+  displayName: 'Upload',
   propTypes: {
     component: PropTypes.string,
     style: PropTypes.object,

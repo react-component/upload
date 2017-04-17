@@ -1,11 +1,14 @@
 /* eslint react/no-is-mounted:0*/
 
-import React, { PropTypes } from 'react';
+import React from 'react';
+import PropTypes from 'prop-types';
+import createReactClass from 'create-react-class';
 import classNames from 'classnames';
 import defaultRequest from './request';
 import getUid from './uid';
 
-const AjaxUploader = React.createClass({
+const AjaxUploader = createReactClass({
+  displayName: 'AjaxUploader',
   propTypes: {
     component: PropTypes.string,
     style: PropTypes.object,
