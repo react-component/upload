@@ -37,7 +37,12 @@ const AjaxUploader = createReactClass({
     };
   },
 
+  componentDidMount() {
+    this._isMounted = true;
+  },
+
   componentWillUnmount() {
+    this._isMounted = false;
     this.abort();
   },
 
@@ -108,7 +113,7 @@ const AjaxUploader = createReactClass({
   },
 
   post(file) {
-    if (!this.isMounted()) {
+    if (!this._isMounted) {
       return;
     }
     const { props } = this;
