@@ -1,6 +1,6 @@
-import React from 'react';
+/* eslint react/sort-comp:0 */
+import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-import createReactClass from 'create-react-class';
 import ReactDOM from 'react-dom';
 import classNames from 'classnames';
 import getUid from './uid';
@@ -16,9 +16,8 @@ const IFRAME_STYLE = {
 };
 
 // diferent from AjaxUpload, can only upload on at one time, serial seriously
-const IframeUploader = createReactClass({
-  displayName: 'IframeUploader',
-  propTypes: {
+class IframeUploader extends Component {
+  static propTypes = {
     component: PropTypes.string,
     style: PropTypes.object,
     disabled: PropTypes.bool,
@@ -34,25 +33,13 @@ const IframeUploader = createReactClass({
     ]),
     action: PropTypes.string,
     name: PropTypes.string,
-  },
+  }
 
-  getInitialState() {
-    this.file = {};
-    return {
-      uploading: false,
-    };
-  },
+  state = { uploading: false }
 
-  componentDidMount() {
-    this.updateIframeWH();
-    this.initIframe();
-  },
+  file = {}
 
-  componentDidUpdate() {
-    this.updateIframeWH();
-  },
-
-  onLoad() {
+  onLoad = () => {
     if (!this.state.uploading) {
       return;
     }
@@ -72,9 +59,9 @@ const IframeUploader = createReactClass({
       props.onError(err, null, file);
     }
     this.endUpload();
-  },
+  }
 
-  onChange() {
+  onChange = () => {
     const target = this.getFormInputNode();
     // ie8/9 don't support FileList Object
     // http://stackoverflow.com/questions/12830058/ie8-input-type-file-get-files
@@ -99,31 +86,40 @@ const IframeUploader = createReactClass({
     } else {
       this.endUpload();
     }
-  },
+  }
+
+  componentDidMount() {
+    this.updateIframeWH();
+    this.initIframe();
+  }
+
+  componentDidUpdate() {
+    this.updateIframeWH();
+  }
 
   getIframeNode() {
     return this.refs.iframe;
-  },
+  }
 
   getIframeDocument() {
     return this.getIframeNode().contentDocument;
-  },
+  }
 
   getFormNode() {
     return this.getIframeDocument().getElementById('form');
-  },
+  }
 
   getFormInputNode() {
     return this.getIframeDocument().getElementById('input');
-  },
+  }
 
   getFormDataNode() {
     return this.getIframeDocument().getElementById('data');
-  },
+  }
 
   getFileForMultiple(file) {
     return this.props.multiple ? [file] : file;
-  },
+  }
 
   getIframeHTML(domain) {
     let domainScript = '';
@@ -157,7 +153,7 @@ const IframeUploader = createReactClass({
     </body>
     </html>
     `;
-  },
+  }
 
   initIframeSrc() {
     if (this.domain) {
@@ -169,7 +165,7 @@ const IframeUploader = createReactClass({
         d.close();
       })())`;
     }
-  },
+  }
 
   initIframe() {
     const iframeNode = this.getIframeNode();
@@ -189,7 +185,7 @@ const IframeUploader = createReactClass({
     doc.write(this.getIframeHTML(this.domain));
     doc.close();
     this.getFormInputNode().onchange = this.onChange;
-  },
+  }
 
   endUpload() {
     if (this.state.uploading) {
@@ -201,7 +197,7 @@ const IframeUploader = createReactClass({
       });
       this.initIframe();
     }
-  },
+  }
 
   startUpload() {
     if (!this.state.uploading) {
@@ -210,14 +206,14 @@ const IframeUploader = createReactClass({
         uploading: true,
       });
     }
-  },
+  }
 
   updateIframeWH() {
     const rootNode = ReactDOM.findDOMNode(this);
     const iframeNode = this.getIframeNode();
     iframeNode.style.height = `${rootNode.offsetHeight}px`;
     iframeNode.style.width = `${rootNode.offsetWidth}px`;
-  },
+  }
 
   abort(file) {
     if (file) {
@@ -231,7 +227,7 @@ const IframeUploader = createReactClass({
     } else {
       this.endUpload();
     }
-  },
+  }
 
   post(file) {
     const formNode = this.getFormNode();
@@ -251,7 +247,7 @@ const IframeUploader = createReactClass({
     formNode.submit();
     dataSpan.innerHTML = '';
     onStart(file);
-  },
+  }
 
   render() {
     const {
@@ -280,7 +276,7 @@ const IframeUploader = createReactClass({
         {children}
       </Tag>
     );
-  },
-});
+  }
+}
 
 export default IframeUploader;

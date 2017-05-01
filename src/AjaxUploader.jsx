@@ -1,15 +1,13 @@
-/* eslint react/no-is-mounted:0*/
+/* eslint react/no-is-mounted:0 react/sort-comp:0 */
 
-import React from 'react';
+import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-import createReactClass from 'create-react-class';
 import classNames from 'classnames';
 import defaultRequest from './request';
 import getUid from './uid';
 
-const AjaxUploader = createReactClass({
-  displayName: 'AjaxUploader',
-  propTypes: {
+class AjaxUploader extends Component {
+  static propTypes = {
     component: PropTypes.string,
     style: PropTypes.object,
     prefixCls: PropTypes.string,
@@ -28,45 +26,33 @@ const AjaxUploader = createReactClass({
     customRequest: PropTypes.func,
     onProgress: PropTypes.func,
     withCredentials: PropTypes.bool,
-  },
+  }
 
-  getInitialState() {
-    this.reqs = {};
-    return {
-      uid: getUid(),
-    };
-  },
+  state = { uid: getUid() }
 
-  componentDidMount() {
-    this._isMounted = true;
-  },
+  reqs = {}
 
-  componentWillUnmount() {
-    this._isMounted = false;
-    this.abort();
-  },
-
-  onChange(e) {
+  onChange = e => {
     const files = e.target.files;
     this.uploadFiles(files);
     this.reset();
-  },
+  }
 
-  onClick() {
+  onClick = () => {
     const el = this.refs.file;
     if (!el) {
       return;
     }
     el.click();
-  },
+  }
 
-  onKeyDown(e) {
+  onKeyDown = e => {
     if (e.key === 'Enter') {
       this.onClick();
     }
-  },
+  }
 
-  onFileDrop(e) {
+  onFileDrop = e => {
     if (e.type === 'dragover') {
       e.preventDefault();
       return;
@@ -76,7 +62,16 @@ const AjaxUploader = createReactClass({
     this.uploadFiles(files);
 
     e.preventDefault();
-  },
+  }
+
+  componentDidMount() {
+    this._isMounted = true;
+  }
+
+  componentWillUnmount() {
+    this._isMounted = false;
+    this.abort();
+  }
 
   uploadFiles(files) {
     const postFiles = Array.prototype.slice.call(files);
@@ -86,7 +81,7 @@ const AjaxUploader = createReactClass({
       file.uid = getUid();
       this.upload(file, postFiles);
     }
-  },
+  }
 
   upload(file, fileList) {
     const { props } = this;
@@ -110,7 +105,7 @@ const AjaxUploader = createReactClass({
     } else if (before !== false) {
       setTimeout(() => this.post(file), 0);
     }
-  },
+  }
 
   post(file) {
     if (!this._isMounted) {
@@ -144,13 +139,13 @@ const AjaxUploader = createReactClass({
       },
     });
     onStart(file);
-  },
+  }
 
   reset() {
     this.setState({
       uid: getUid(),
     });
-  },
+  }
 
   abort(file) {
     const { reqs } = this;
@@ -172,7 +167,7 @@ const AjaxUploader = createReactClass({
         delete reqs[uid];
       });
     }
-  },
+  }
 
   render() {
     const {
@@ -210,7 +205,7 @@ const AjaxUploader = createReactClass({
         {children}
       </Tag>
     );
-  },
-});
+  }
+}
 
 export default AjaxUploader;
