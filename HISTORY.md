@@ -1,6 +1,10 @@
 # History
 ----
 
+### 2.3.5 / 2017-05-01
+
+- Fix prop-types and create-react-class warning [!67](https://github.com/react-component/upload/pull/67)
+
 ### 2.3.4 / 2017-03-10
 
 - disable upload progress listener in request if onPress is not set [!65](https://github.com/react-component/upload/pull/65)
