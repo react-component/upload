@@ -3,12 +3,12 @@ webpackJsonp([1],{
 /***/ 0:
 /***/ function(module, exports, __webpack_require__) {
 
-	module.exports = __webpack_require__(230);
+	module.exports = __webpack_require__(275);
 
 
 /***/ },
 
-/***/ 230:
+/***/ 275:
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -16,6 +16,18 @@ webpackJsonp([1],{
 	var _extends2 = __webpack_require__(182);
 	
 	var _extends3 = _interopRequireDefault(_extends2);
+	
+	var _classCallCheck2 = __webpack_require__(220);
+	
+	var _classCallCheck3 = _interopRequireDefault(_classCallCheck2);
+	
+	var _possibleConstructorReturn2 = __webpack_require__(221);
+	
+	var _possibleConstructorReturn3 = _interopRequireDefault(_possibleConstructorReturn2);
+	
+	var _inherits2 = __webpack_require__(257);
+	
+	var _inherits3 = _interopRequireDefault(_inherits2);
 	
 	var _react = __webpack_require__(2);
 	
@@ -33,10 +45,21 @@ webpackJsonp([1],{
 	
 	var style = '\n        .rc-upload-disabled {\n           opacity:0.5;\n        '; /* eslint no-console:0 */
 	
-	var Test = _react2.default.createClass({
-	  displayName: 'Test',
-	  getInitialState: function getInitialState() {
-	    this.uploaderProps = {
+	var Test = function (_React$Component) {
+	  (0, _inherits3.default)(Test, _React$Component);
+	
+	  function Test(props) {
+	    (0, _classCallCheck3.default)(this, Test);
+	
+	    var _this = (0, _possibleConstructorReturn3.default)(this, _React$Component.call(this, props));
+	
+	    _this.destroy = function () {
+	      _this.setState({
+	        destroyed: true
+	      });
+	    };
+	
+	    _this.uploaderProps = {
 	      action: '/upload.do',
 	      data: { a: 1, b: 2 },
 	      headers: {
@@ -61,16 +84,13 @@ webpackJsonp([1],{
 	        console.log('onError', err);
 	      }
 	    };
-	    return {
+	    _this.state = {
 	      destroyed: false
 	    };
-	  },
-	  destroy: function destroy() {
-	    this.setState({
-	      destroyed: true
-	    });
-	  },
-	  render: function render() {
+	    return _this;
+	  }
+	
+	  Test.prototype.render = function render() {
 	    if (this.state.destroyed) {
 	      return null;
 	    }
@@ -142,8 +162,10 @@ webpackJsonp([1],{
 	        'destroy'
 	      )
 	    );
-	  }
-	});
+	  };
+	
+	  return Test;
+	}(_react2.default.Component);
 	
 	_reactDom2.default.render(_react2.default.createElement(Test, null), document.getElementById('__react-content'));
 

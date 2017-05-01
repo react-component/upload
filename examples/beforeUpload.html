@@ -2,7 +2,7 @@
 <html>
 
 <head>
-  <title>beforeUpload.js - example - rc-upload@2.3.4</title>
+  <title>beforeUpload.js - example - rc-upload@2.3.5</title>
   <meta name="viewport"
         content="width=device-width,initial-scale=1.0,minimum-scale=1.0,maximum-scale=1.0,user-scalable=no">
   <meta charset="utf-8"/>
@@ -263,7 +263,7 @@ Monokai Sublime style. Derived from Monokai by noformnocontent http://nn.mit-lic
 <body>
   <div class="container">
     <div class="header">
-      <h1>rc-upload@2.3.4</h1>
+      <h1>rc-upload@2.3.5</h1>
 
       <p>upload ui component for react</p>
     </div>
@@ -299,21 +299,19 @@ Monokai Sublime style. Derived from Monokai by noformnocontent http://nn.mit-lic
   },
 };
 
-<span class="hljs-keyword">const</span> Test = React.createClass({
-  render() {
-    <span class="hljs-keyword">return</span> (
-      <span class="xml"><span class="hljs-tag">&lt;<span class="hljs-title">div</span>
-        <span class="hljs-attribute">style</span>=<span class="hljs-value">{{</span>
-          <span class="hljs-attribute">margin:</span> <span class="hljs-attribute">100</span>,
-        }}
-      &gt;</span>
-        <span class="hljs-tag">&lt;<span class="hljs-title">div</span>&gt;</span>
-          <span class="hljs-tag">&lt;<span class="hljs-title">Upload</span> {<span class="hljs-attribute">...props</span>}&gt;</span><span class="hljs-tag">&lt;<span class="hljs-title">a</span>&gt;</span>开始上传<span class="hljs-tag">&lt;/<span class="hljs-title">a</span>&gt;</span><span class="hljs-tag">&lt;/<span class="hljs-title">Upload</span>&gt;</span>
-        <span class="hljs-tag">&lt;/<span class="hljs-title">div</span>&gt;</span>
+<span class="hljs-keyword">const</span> Test = () =&gt; {
+  <span class="hljs-keyword">return</span> (
+    <span class="xml"><span class="hljs-tag">&lt;<span class="hljs-title">div</span>
+      <span class="hljs-attribute">style</span>=<span class="hljs-value">{{</span>
+        <span class="hljs-attribute">margin:</span> <span class="hljs-attribute">100</span>,
+      }}
+    &gt;</span>
+      <span class="hljs-tag">&lt;<span class="hljs-title">div</span>&gt;</span>
+        <span class="hljs-tag">&lt;<span class="hljs-title">Upload</span> {<span class="hljs-attribute">...props</span>}&gt;</span><span class="hljs-tag">&lt;<span class="hljs-title">a</span>&gt;</span>开始上传<span class="hljs-tag">&lt;/<span class="hljs-title">a</span>&gt;</span><span class="hljs-tag">&lt;/<span class="hljs-title">Upload</span>&gt;</span>
       <span class="hljs-tag">&lt;/<span class="hljs-title">div</span>&gt;</span>
-    )</span>;
-  },
-});
+    <span class="hljs-tag">&lt;/<span class="hljs-title">div</span>&gt;</span>
+  )</span>;
+};
 
 ReactDOM.render(<span class="xml"><span class="hljs-tag">&lt;<span class="hljs-title">Test</span>/&gt;</span>, document.getElementById('__react-content'));
 </span></code></pre></div>

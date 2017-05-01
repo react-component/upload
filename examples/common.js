@@ -719,7 +719,7 @@
 
 /***/ },
 /* 7 */
-[231, 8],
+[276, 8],
 /* 8 */
 /***/ function(module, exports) {
 
@@ -6431,7 +6431,7 @@
 
 /***/ },
 /* 51 */
-[231, 36],
+[276, 36],
 /* 52 */
 /***/ function(module, exports, __webpack_require__) {
 
@@ -21126,8 +21126,19 @@
 
 	'use strict';
 	
-	// export this package's api
-	module.exports = __webpack_require__(181);
+	Object.defineProperty(exports, "__esModule", {
+	  value: true
+	});
+	
+	var _Upload = __webpack_require__(181);
+	
+	var _Upload2 = _interopRequireDefault(_Upload);
+	
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+	
+	exports.default = _Upload2.default; // export this package's api
+	
+	module.exports = exports['default'];
 
 /***/ },
 /* 181 */
@@ -21143,15 +21154,31 @@
 	
 	var _extends3 = _interopRequireDefault(_extends2);
 	
+	var _classCallCheck2 = __webpack_require__(220);
+	
+	var _classCallCheck3 = _interopRequireDefault(_classCallCheck2);
+	
+	var _possibleConstructorReturn2 = __webpack_require__(221);
+	
+	var _possibleConstructorReturn3 = _interopRequireDefault(_possibleConstructorReturn2);
+	
+	var _inherits2 = __webpack_require__(257);
+	
+	var _inherits3 = _interopRequireDefault(_inherits2);
+	
 	var _react = __webpack_require__(2);
 	
 	var _react2 = _interopRequireDefault(_react);
 	
-	var _AjaxUploader = __webpack_require__(220);
+	var _propTypes = __webpack_require__(!(function webpackMissingModule() { var e = new Error("Cannot find module \"prop-types\""); e.code = 'MODULE_NOT_FOUND'; throw e; }()));
+	
+	var _propTypes2 = _interopRequireDefault(_propTypes);
+	
+	var _AjaxUploader = __webpack_require__(265);
 	
 	var _AjaxUploader2 = _interopRequireDefault(_AjaxUploader);
 	
-	var _IframeUploader = __webpack_require__(228);
+	var _IframeUploader = __webpack_require__(273);
 	
 	var _IframeUploader2 = _interopRequireDefault(_IframeUploader);
 	
@@ -21159,84 +21186,94 @@
 	
 	function empty() {}
 	
-	var Upload = _react2.default.createClass({
-	  displayName: 'Upload',
+	var Upload = function (_Component) {
+	  (0, _inherits3.default)(Upload, _Component);
 	
-	  propTypes: {
-	    component: _react.PropTypes.string,
-	    style: _react.PropTypes.object,
-	    prefixCls: _react.PropTypes.string,
-	    action: _react.PropTypes.string,
-	    name: _react.PropTypes.string,
-	    multipart: _react.PropTypes.bool,
-	    onError: _react.PropTypes.func,
-	    onSuccess: _react.PropTypes.func,
-	    onProgress: _react.PropTypes.func,
-	    onStart: _react.PropTypes.func,
-	    data: _react.PropTypes.oneOfType([_react.PropTypes.object, _react.PropTypes.func]),
-	    headers: _react.PropTypes.object,
-	    accept: _react.PropTypes.string,
-	    multiple: _react.PropTypes.bool,
-	    disabled: _react.PropTypes.bool,
-	    beforeUpload: _react.PropTypes.func,
-	    customRequest: _react.PropTypes.func,
-	    onReady: _react.PropTypes.func,
-	    withCredentials: _react.PropTypes.bool,
-	    supportServerRender: _react.PropTypes.bool
-	  },
+	  function Upload() {
+	    var _temp, _this, _ret;
 	
-	  getDefaultProps: function getDefaultProps() {
-	    return {
-	      component: 'span',
-	      prefixCls: 'rc-upload',
-	      data: {},
-	      headers: {},
-	      name: 'file',
-	      multipart: false,
-	      onReady: empty,
-	      onStart: empty,
-	      onError: empty,
-	      onSuccess: empty,
-	      supportServerRender: false,
-	      multiple: false,
-	      beforeUpload: null,
-	      customRequest: null,
-	      withCredentials: false
-	    };
-	  },
-	  getInitialState: function getInitialState() {
-	    return {
+	    (0, _classCallCheck3.default)(this, Upload);
+	
+	    for (var _len = arguments.length, args = Array(_len), _key = 0; _key < _len; _key++) {
+	      args[_key] = arguments[_key];
+	    }
+	
+	    return _ret = (_temp = (_this = (0, _possibleConstructorReturn3.default)(this, _Component.call.apply(_Component, [this].concat(args))), _this), _this.state = {
 	      Component: null
-	    };
-	  },
-	  componentDidMount: function componentDidMount() {
+	    }, _temp), (0, _possibleConstructorReturn3.default)(_this, _ret);
+	  }
+	
+	  Upload.prototype.componentDidMount = function componentDidMount() {
 	    if (this.props.supportServerRender) {
 	      /* eslint react/no-did-mount-set-state:0 */
 	      this.setState({
 	        Component: this.getComponent()
 	      }, this.props.onReady);
 	    }
-	  },
-	  getComponent: function getComponent() {
-	    return typeof FormData !== 'undefined' ? _AjaxUploader2.default : _IframeUploader2.default;
-	  },
-	  abort: function abort(file) {
-	    this.refs.inner.abort(file);
-	  },
-	  render: function render() {
-	    if (this.props.supportServerRender) {
-	      var _Component = this.state.Component;
+	  };
 	
-	      if (_Component) {
-	        return _react2.default.createElement(_Component, (0, _extends3.default)({}, this.props, { ref: 'inner' }));
+	  Upload.prototype.getComponent = function getComponent() {
+	    return typeof FormData !== 'undefined' ? _AjaxUploader2.default : _IframeUploader2.default;
+	  };
+	
+	  Upload.prototype.abort = function abort(file) {
+	    this.refs.inner.abort(file);
+	  };
+	
+	  Upload.prototype.render = function render() {
+	    if (this.props.supportServerRender) {
+	      var _ComponentUploader = this.state.Component;
+	      if (_ComponentUploader) {
+	        return _react2.default.createElement(_ComponentUploader, (0, _extends3.default)({}, this.props, { ref: 'inner' }));
 	      }
 	      return null;
 	    }
-	    var Component = this.getComponent();
-	    return _react2.default.createElement(Component, (0, _extends3.default)({}, this.props, { ref: 'inner' }));
-	  }
-	});
+	    var ComponentUploader = this.getComponent();
+	    return _react2.default.createElement(ComponentUploader, (0, _extends3.default)({}, this.props, { ref: 'inner' }));
+	  };
 	
+	  return Upload;
+	}(_react.Component);
+	
+	Upload.propTypes = {
+	  component: _propTypes2.default.string,
+	  style: _propTypes2.default.object,
+	  prefixCls: _propTypes2.default.string,
+	  action: _propTypes2.default.string,
+	  name: _propTypes2.default.string,
+	  multipart: _propTypes2.default.bool,
+	  onError: _propTypes2.default.func,
+	  onSuccess: _propTypes2.default.func,
+	  onProgress: _propTypes2.default.func,
+	  onStart: _propTypes2.default.func,
+	  data: _propTypes2.default.oneOfType([_propTypes2.default.object, _propTypes2.default.func]),
+	  headers: _propTypes2.default.object,
+	  accept: _propTypes2.default.string,
+	  multiple: _propTypes2.default.bool,
+	  disabled: _propTypes2.default.bool,
+	  beforeUpload: _propTypes2.default.func,
+	  customRequest: _propTypes2.default.func,
+	  onReady: _propTypes2.default.func,
+	  withCredentials: _propTypes2.default.bool,
+	  supportServerRender: _propTypes2.default.bool
+	};
+	Upload.defaultProps = {
+	  component: 'span',
+	  prefixCls: 'rc-upload',
+	  data: {},
+	  headers: {},
+	  name: 'file',
+	  multipart: false,
+	  onReady: empty,
+	  onStart: empty,
+	  onError: empty,
+	  onSuccess: empty,
+	  supportServerRender: false,
+	  multiple: false,
+	  beforeUpload: null,
+	  customRequest: null,
+	  withCredentials: false
+	};
 	exports.default = Upload;
 	module.exports = exports['default'];
 
@@ -21775,6 +21812,993 @@
 
 /***/ },
 /* 220 */
+/***/ function(module, exports) {
+
+	"use strict";
+	
+	exports.__esModule = true;
+	
+	exports.default = function (instance, Constructor) {
+	  if (!(instance instanceof Constructor)) {
+	    throw new TypeError("Cannot call a class as a function");
+	  }
+	};
+
+/***/ },
+/* 221 */
+/***/ function(module, exports, __webpack_require__) {
+
+	"use strict";
+	
+	exports.__esModule = true;
+	
+	var _typeof2 = __webpack_require__(222);
+	
+	var _typeof3 = _interopRequireDefault(_typeof2);
+	
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+	
+	exports.default = function (self, call) {
+	  if (!self) {
+	    throw new ReferenceError("this hasn't been initialised - super() hasn't been called");
+	  }
+	
+	  return call && ((typeof call === "undefined" ? "undefined" : (0, _typeof3.default)(call)) === "object" || typeof call === "function") ? call : self;
+	};
+
+/***/ },
+/* 222 */
+/***/ function(module, exports, __webpack_require__) {
+
+	"use strict";
+	
+	exports.__esModule = true;
+	
+	var _iterator = __webpack_require__(223);
+	
+	var _iterator2 = _interopRequireDefault(_iterator);
+	
+	var _symbol = __webpack_require__(243);
+	
+	var _symbol2 = _interopRequireDefault(_symbol);
+	
+	var _typeof = typeof _symbol2.default === "function" && typeof _iterator2.default === "symbol" ? function (obj) { return typeof obj; } : function (obj) { return obj && typeof _symbol2.default === "function" && obj.constructor === _symbol2.default && obj !== _symbol2.default.prototype ? "symbol" : typeof obj; };
+	
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+	
+	exports.default = typeof _symbol2.default === "function" && _typeof(_iterator2.default) === "symbol" ? function (obj) {
+	  return typeof obj === "undefined" ? "undefined" : _typeof(obj);
+	} : function (obj) {
+	  return obj && typeof _symbol2.default === "function" && obj.constructor === _symbol2.default && obj !== _symbol2.default.prototype ? "symbol" : typeof obj === "undefined" ? "undefined" : _typeof(obj);
+	};
+
+/***/ },
+/* 223 */
+/***/ function(module, exports, __webpack_require__) {
+
+	module.exports = { "default": __webpack_require__(224), __esModule: true };
+
+/***/ },
+/* 224 */
+/***/ function(module, exports, __webpack_require__) {
+
+	__webpack_require__(225);
+	__webpack_require__(238);
+	module.exports = __webpack_require__(242).f('iterator');
+
+/***/ },
+/* 225 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+	var $at  = __webpack_require__(226)(true);
+	
+	// 21.1.3.27 String.prototype[@@iterator]()
+	__webpack_require__(227)(String, 'String', function(iterated){
+	  this._t = String(iterated); // target
+	  this._i = 0;                // next index
+	// 21.1.5.2.1 %StringIteratorPrototype%.next()
+	}, function(){
+	  var O     = this._t
+	    , index = this._i
+	    , point;
+	  if(index >= O.length)return {value: undefined, done: true};
+	  point = $at(O, index);
+	  this._i += point.length;
+	  return {value: point, done: false};
+	});
+
+/***/ },
+/* 226 */
+/***/ function(module, exports, __webpack_require__) {
+
+	var toInteger = __webpack_require__(211)
+	  , defined   = __webpack_require__(208);
+	// true  -> String#at
+	// false -> String#codePointAt
+	module.exports = function(TO_STRING){
+	  return function(that, pos){
+	    var s = String(defined(that))
+	      , i = toInteger(pos)
+	      , l = s.length
+	      , a, b;
+	    if(i < 0 || i >= l)return TO_STRING ? '' : undefined;
+	    a = s.charCodeAt(i);
+	    return a < 0xd800 || a > 0xdbff || i + 1 === l || (b = s.charCodeAt(i + 1)) < 0xdc00 || b > 0xdfff
+	      ? TO_STRING ? s.charAt(i) : a
+	      : TO_STRING ? s.slice(i, i + 2) : (a - 0xd800 << 10) + (b - 0xdc00) + 0x10000;
+	  };
+	};
+
+/***/ },
+/* 227 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+	var LIBRARY        = __webpack_require__(228)
+	  , $export        = __webpack_require__(186)
+	  , redefine       = __webpack_require__(229)
+	  , hide           = __webpack_require__(191)
+	  , has            = __webpack_require__(204)
+	  , Iterators      = __webpack_require__(230)
+	  , $iterCreate    = __webpack_require__(231)
+	  , setToStringTag = __webpack_require__(235)
+	  , getPrototypeOf = __webpack_require__(237)
+	  , ITERATOR       = __webpack_require__(236)('iterator')
+	  , BUGGY          = !([].keys && 'next' in [].keys()) // Safari has buggy iterators w/o `next`
+	  , FF_ITERATOR    = '@@iterator'
+	  , KEYS           = 'keys'
+	  , VALUES         = 'values';
+	
+	var returnThis = function(){ return this; };
+	
+	module.exports = function(Base, NAME, Constructor, next, DEFAULT, IS_SET, FORCED){
+	  $iterCreate(Constructor, NAME, next);
+	  var getMethod = function(kind){
+	    if(!BUGGY && kind in proto)return proto[kind];
+	    switch(kind){
+	      case KEYS: return function keys(){ return new Constructor(this, kind); };
+	      case VALUES: return function values(){ return new Constructor(this, kind); };
+	    } return function entries(){ return new Constructor(this, kind); };
+	  };
+	  var TAG        = NAME + ' Iterator'
+	    , DEF_VALUES = DEFAULT == VALUES
+	    , VALUES_BUG = false
+	    , proto      = Base.prototype
+	    , $native    = proto[ITERATOR] || proto[FF_ITERATOR] || DEFAULT && proto[DEFAULT]
+	    , $default   = $native || getMethod(DEFAULT)
+	    , $entries   = DEFAULT ? !DEF_VALUES ? $default : getMethod('entries') : undefined
+	    , $anyNative = NAME == 'Array' ? proto.entries || $native : $native
+	    , methods, key, IteratorPrototype;
+	  // Fix native
+	  if($anyNative){
+	    IteratorPrototype = getPrototypeOf($anyNative.call(new Base));
+	    if(IteratorPrototype !== Object.prototype){
+	      // Set @@toStringTag to native iterators
+	      setToStringTag(IteratorPrototype, TAG, true);
+	      // fix for some old engines
+	      if(!LIBRARY && !has(IteratorPrototype, ITERATOR))hide(IteratorPrototype, ITERATOR, returnThis);
+	    }
+	  }
+	  // fix Array#{values, @@iterator}.name in V8 / FF
+	  if(DEF_VALUES && $native && $native.name !== VALUES){
+	    VALUES_BUG = true;
+	    $default = function values(){ return $native.call(this); };
+	  }
+	  // Define iterator
+	  if((!LIBRARY || FORCED) && (BUGGY || VALUES_BUG || !proto[ITERATOR])){
+	    hide(proto, ITERATOR, $default);
+	  }
+	  // Plug for library
+	  Iterators[NAME] = $default;
+	  Iterators[TAG]  = returnThis;
+	  if(DEFAULT){
+	    methods = {
+	      values:  DEF_VALUES ? $default : getMethod(VALUES),
+	      keys:    IS_SET     ? $default : getMethod(KEYS),
+	      entries: $entries
+	    };
+	    if(FORCED)for(key in methods){
+	      if(!(key in proto))redefine(proto, key, methods[key]);
+	    } else $export($export.P + $export.F * (BUGGY || VALUES_BUG), NAME, methods);
+	  }
+	  return methods;
+	};
+
+/***/ },
+/* 228 */
+/***/ function(module, exports) {
+
+	module.exports = true;
+
+/***/ },
+/* 229 */
+/***/ function(module, exports, __webpack_require__) {
+
+	module.exports = __webpack_require__(191);
+
+/***/ },
+/* 230 */
+/***/ function(module, exports) {
+
+	module.exports = {};
+
+/***/ },
+/* 231 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+	var create         = __webpack_require__(232)
+	  , descriptor     = __webpack_require__(200)
+	  , setToStringTag = __webpack_require__(235)
+	  , IteratorPrototype = {};
+	
+	// 25.1.2.1.1 %IteratorPrototype%[@@iterator]()
+	__webpack_require__(191)(IteratorPrototype, __webpack_require__(236)('iterator'), function(){ return this; });
+	
+	module.exports = function(Constructor, NAME, next){
+	  Constructor.prototype = create(IteratorPrototype, {next: descriptor(1, next)});
+	  setToStringTag(Constructor, NAME + ' Iterator');
+	};
+
+/***/ },
+/* 232 */
+/***/ function(module, exports, __webpack_require__) {
+
+	// 19.1.2.2 / 15.2.3.5 Object.create(O [, Properties])
+	var anObject    = __webpack_require__(193)
+	  , dPs         = __webpack_require__(233)
+	  , enumBugKeys = __webpack_require__(216)
+	  , IE_PROTO    = __webpack_require__(213)('IE_PROTO')
+	  , Empty       = function(){ /* empty */ }
+	  , PROTOTYPE   = 'prototype';
+	
+	// Create object with fake `null` prototype: use iframe Object with cleared prototype
+	var createDict = function(){
+	  // Thrash, waste and sodomy: IE GC bug
+	  var iframe = __webpack_require__(198)('iframe')
+	    , i      = enumBugKeys.length
+	    , lt     = '<'
+	    , gt     = '>'
+	    , iframeDocument;
+	  iframe.style.display = 'none';
+	  __webpack_require__(234).appendChild(iframe);
+	  iframe.src = 'javascript:'; // eslint-disable-line no-script-url
+	  // createDict = iframe.contentWindow.Object;
+	  // html.removeChild(iframe);
+	  iframeDocument = iframe.contentWindow.document;
+	  iframeDocument.open();
+	  iframeDocument.write(lt + 'script' + gt + 'document.F=Object' + lt + '/script' + gt);
+	  iframeDocument.close();
+	  createDict = iframeDocument.F;
+	  while(i--)delete createDict[PROTOTYPE][enumBugKeys[i]];
+	  return createDict();
+	};
+	
+	module.exports = Object.create || function create(O, Properties){
+	  var result;
+	  if(O !== null){
+	    Empty[PROTOTYPE] = anObject(O);
+	    result = new Empty;
+	    Empty[PROTOTYPE] = null;
+	    // add "__proto__" for Object.getPrototypeOf polyfill
+	    result[IE_PROTO] = O;
+	  } else result = createDict();
+	  return Properties === undefined ? result : dPs(result, Properties);
+	};
+
+
+/***/ },
+/* 233 */
+/***/ function(module, exports, __webpack_require__) {
+
+	var dP       = __webpack_require__(192)
+	  , anObject = __webpack_require__(193)
+	  , getKeys  = __webpack_require__(202);
+	
+	module.exports = __webpack_require__(196) ? Object.defineProperties : function defineProperties(O, Properties){
+	  anObject(O);
+	  var keys   = getKeys(Properties)
+	    , length = keys.length
+	    , i = 0
+	    , P;
+	  while(length > i)dP.f(O, P = keys[i++], Properties[P]);
+	  return O;
+	};
+
+/***/ },
+/* 234 */
+/***/ function(module, exports, __webpack_require__) {
+
+	module.exports = __webpack_require__(187).document && document.documentElement;
+
+/***/ },
+/* 235 */
+/***/ function(module, exports, __webpack_require__) {
+
+	var def = __webpack_require__(192).f
+	  , has = __webpack_require__(204)
+	  , TAG = __webpack_require__(236)('toStringTag');
+	
+	module.exports = function(it, tag, stat){
+	  if(it && !has(it = stat ? it : it.prototype, TAG))def(it, TAG, {configurable: true, value: tag});
+	};
+
+/***/ },
+/* 236 */
+/***/ function(module, exports, __webpack_require__) {
+
+	var store      = __webpack_require__(214)('wks')
+	  , uid        = __webpack_require__(215)
+	  , Symbol     = __webpack_require__(187).Symbol
+	  , USE_SYMBOL = typeof Symbol == 'function';
+	
+	var $exports = module.exports = function(name){
+	  return store[name] || (store[name] =
+	    USE_SYMBOL && Symbol[name] || (USE_SYMBOL ? Symbol : uid)('Symbol.' + name));
+	};
+	
+	$exports.store = store;
+
+/***/ },
+/* 237 */
+/***/ function(module, exports, __webpack_require__) {
+
+	// 19.1.2.9 / 15.2.3.2 Object.getPrototypeOf(O)
+	var has         = __webpack_require__(204)
+	  , toObject    = __webpack_require__(219)
+	  , IE_PROTO    = __webpack_require__(213)('IE_PROTO')
+	  , ObjectProto = Object.prototype;
+	
+	module.exports = Object.getPrototypeOf || function(O){
+	  O = toObject(O);
+	  if(has(O, IE_PROTO))return O[IE_PROTO];
+	  if(typeof O.constructor == 'function' && O instanceof O.constructor){
+	    return O.constructor.prototype;
+	  } return O instanceof Object ? ObjectProto : null;
+	};
+
+/***/ },
+/* 238 */
+/***/ function(module, exports, __webpack_require__) {
+
+	__webpack_require__(239);
+	var global        = __webpack_require__(187)
+	  , hide          = __webpack_require__(191)
+	  , Iterators     = __webpack_require__(230)
+	  , TO_STRING_TAG = __webpack_require__(236)('toStringTag');
+	
+	for(var collections = ['NodeList', 'DOMTokenList', 'MediaList', 'StyleSheetList', 'CSSRuleList'], i = 0; i < 5; i++){
+	  var NAME       = collections[i]
+	    , Collection = global[NAME]
+	    , proto      = Collection && Collection.prototype;
+	  if(proto && !proto[TO_STRING_TAG])hide(proto, TO_STRING_TAG, NAME);
+	  Iterators[NAME] = Iterators.Array;
+	}
+
+/***/ },
+/* 239 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+	var addToUnscopables = __webpack_require__(240)
+	  , step             = __webpack_require__(241)
+	  , Iterators        = __webpack_require__(230)
+	  , toIObject        = __webpack_require__(205);
+	
+	// 22.1.3.4 Array.prototype.entries()
+	// 22.1.3.13 Array.prototype.keys()
+	// 22.1.3.29 Array.prototype.values()
+	// 22.1.3.30 Array.prototype[@@iterator]()
+	module.exports = __webpack_require__(227)(Array, 'Array', function(iterated, kind){
+	  this._t = toIObject(iterated); // target
+	  this._i = 0;                   // next index
+	  this._k = kind;                // kind
+	// 22.1.5.2.1 %ArrayIteratorPrototype%.next()
+	}, function(){
+	  var O     = this._t
+	    , kind  = this._k
+	    , index = this._i++;
+	  if(!O || index >= O.length){
+	    this._t = undefined;
+	    return step(1);
+	  }
+	  if(kind == 'keys'  )return step(0, index);
+	  if(kind == 'values')return step(0, O[index]);
+	  return step(0, [index, O[index]]);
+	}, 'values');
+	
+	// argumentsList[@@iterator] is %ArrayProto_values% (9.4.4.6, 9.4.4.7)
+	Iterators.Arguments = Iterators.Array;
+	
+	addToUnscopables('keys');
+	addToUnscopables('values');
+	addToUnscopables('entries');
+
+/***/ },
+/* 240 */
+/***/ function(module, exports) {
+
+	module.exports = function(){ /* empty */ };
+
+/***/ },
+/* 241 */
+/***/ function(module, exports) {
+
+	module.exports = function(done, value){
+	  return {value: value, done: !!done};
+	};
+
+/***/ },
+/* 242 */
+/***/ function(module, exports, __webpack_require__) {
+
+	exports.f = __webpack_require__(236);
+
+/***/ },
+/* 243 */
+/***/ function(module, exports, __webpack_require__) {
+
+	module.exports = { "default": __webpack_require__(244), __esModule: true };
+
+/***/ },
+/* 244 */
+/***/ function(module, exports, __webpack_require__) {
+
+	__webpack_require__(245);
+	__webpack_require__(254);
+	__webpack_require__(255);
+	__webpack_require__(256);
+	module.exports = __webpack_require__(188).Symbol;
+
+/***/ },
+/* 245 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+	// ECMAScript 6 symbols shim
+	var global         = __webpack_require__(187)
+	  , has            = __webpack_require__(204)
+	  , DESCRIPTORS    = __webpack_require__(196)
+	  , $export        = __webpack_require__(186)
+	  , redefine       = __webpack_require__(229)
+	  , META           = __webpack_require__(246).KEY
+	  , $fails         = __webpack_require__(197)
+	  , shared         = __webpack_require__(214)
+	  , setToStringTag = __webpack_require__(235)
+	  , uid            = __webpack_require__(215)
+	  , wks            = __webpack_require__(236)
+	  , wksExt         = __webpack_require__(242)
+	  , wksDefine      = __webpack_require__(247)
+	  , keyOf          = __webpack_require__(248)
+	  , enumKeys       = __webpack_require__(249)
+	  , isArray        = __webpack_require__(250)
+	  , anObject       = __webpack_require__(193)
+	  , toIObject      = __webpack_require__(205)
+	  , toPrimitive    = __webpack_require__(199)
+	  , createDesc     = __webpack_require__(200)
+	  , _create        = __webpack_require__(232)
+	  , gOPNExt        = __webpack_require__(251)
+	  , $GOPD          = __webpack_require__(253)
+	  , $DP            = __webpack_require__(192)
+	  , $keys          = __webpack_require__(202)
+	  , gOPD           = $GOPD.f
+	  , dP             = $DP.f
+	  , gOPN           = gOPNExt.f
+	  , $Symbol        = global.Symbol
+	  , $JSON          = global.JSON
+	  , _stringify     = $JSON && $JSON.stringify
+	  , PROTOTYPE      = 'prototype'
+	  , HIDDEN         = wks('_hidden')
+	  , TO_PRIMITIVE   = wks('toPrimitive')
+	  , isEnum         = {}.propertyIsEnumerable
+	  , SymbolRegistry = shared('symbol-registry')
+	  , AllSymbols     = shared('symbols')
+	  , OPSymbols      = shared('op-symbols')
+	  , ObjectProto    = Object[PROTOTYPE]
+	  , USE_NATIVE     = typeof $Symbol == 'function'
+	  , QObject        = global.QObject;
+	// Don't use setters in Qt Script, https://github.com/zloirock/core-js/issues/173
+	var setter = !QObject || !QObject[PROTOTYPE] || !QObject[PROTOTYPE].findChild;
+	
+	// fallback for old Android, https://code.google.com/p/v8/issues/detail?id=687
+	var setSymbolDesc = DESCRIPTORS && $fails(function(){
+	  return _create(dP({}, 'a', {
+	    get: function(){ return dP(this, 'a', {value: 7}).a; }
+	  })).a != 7;
+	}) ? function(it, key, D){
+	  var protoDesc = gOPD(ObjectProto, key);
+	  if(protoDesc)delete ObjectProto[key];
+	  dP(it, key, D);
+	  if(protoDesc && it !== ObjectProto)dP(ObjectProto, key, protoDesc);
+	} : dP;
+	
+	var wrap = function(tag){
+	  var sym = AllSymbols[tag] = _create($Symbol[PROTOTYPE]);
+	  sym._k = tag;
+	  return sym;
+	};
+	
+	var isSymbol = USE_NATIVE && typeof $Symbol.iterator == 'symbol' ? function(it){
+	  return typeof it == 'symbol';
+	} : function(it){
+	  return it instanceof $Symbol;
+	};
+	
+	var $defineProperty = function defineProperty(it, key, D){
+	  if(it === ObjectProto)$defineProperty(OPSymbols, key, D);
+	  anObject(it);
+	  key = toPrimitive(key, true);
+	  anObject(D);
+	  if(has(AllSymbols, key)){
+	    if(!D.enumerable){
+	      if(!has(it, HIDDEN))dP(it, HIDDEN, createDesc(1, {}));
+	      it[HIDDEN][key] = true;
+	    } else {
+	      if(has(it, HIDDEN) && it[HIDDEN][key])it[HIDDEN][key] = false;
+	      D = _create(D, {enumerable: createDesc(0, false)});
+	    } return setSymbolDesc(it, key, D);
+	  } return dP(it, key, D);
+	};
+	var $defineProperties = function defineProperties(it, P){
+	  anObject(it);
+	  var keys = enumKeys(P = toIObject(P))
+	    , i    = 0
+	    , l = keys.length
+	    , key;
+	  while(l > i)$defineProperty(it, key = keys[i++], P[key]);
+	  return it;
+	};
+	var $create = function create(it, P){
+	  return P === undefined ? _create(it) : $defineProperties(_create(it), P);
+	};
+	var $propertyIsEnumerable = function propertyIsEnumerable(key){
+	  var E = isEnum.call(this, key = toPrimitive(key, true));
+	  if(this === ObjectProto && has(AllSymbols, key) && !has(OPSymbols, key))return false;
+	  return E || !has(this, key) || !has(AllSymbols, key) || has(this, HIDDEN) && this[HIDDEN][key] ? E : true;
+	};
+	var $getOwnPropertyDescriptor = function getOwnPropertyDescriptor(it, key){
+	  it  = toIObject(it);
+	  key = toPrimitive(key, true);
+	  if(it === ObjectProto && has(AllSymbols, key) && !has(OPSymbols, key))return;
+	  var D = gOPD(it, key);
+	  if(D && has(AllSymbols, key) && !(has(it, HIDDEN) && it[HIDDEN][key]))D.enumerable = true;
+	  return D;
+	};
+	var $getOwnPropertyNames = function getOwnPropertyNames(it){
+	  var names  = gOPN(toIObject(it))
+	    , result = []
+	    , i      = 0
+	    , key;
+	  while(names.length > i){
+	    if(!has(AllSymbols, key = names[i++]) && key != HIDDEN && key != META)result.push(key);
+	  } return result;
+	};
+	var $getOwnPropertySymbols = function getOwnPropertySymbols(it){
+	  var IS_OP  = it === ObjectProto
+	    , names  = gOPN(IS_OP ? OPSymbols : toIObject(it))
+	    , result = []
+	    , i      = 0
+	    , key;
+	  while(names.length > i){
+	    if(has(AllSymbols, key = names[i++]) && (IS_OP ? has(ObjectProto, key) : true))result.push(AllSymbols[key]);
+	  } return result;
+	};
+	
+	// 19.4.1.1 Symbol([description])
+	if(!USE_NATIVE){
+	  $Symbol = function Symbol(){
+	    if(this instanceof $Symbol)throw TypeError('Symbol is not a constructor!');
+	    var tag = uid(arguments.length > 0 ? arguments[0] : undefined);
+	    var $set = function(value){
+	      if(this === ObjectProto)$set.call(OPSymbols, value);
+	      if(has(this, HIDDEN) && has(this[HIDDEN], tag))this[HIDDEN][tag] = false;
+	      setSymbolDesc(this, tag, createDesc(1, value));
+	    };
+	    if(DESCRIPTORS && setter)setSymbolDesc(ObjectProto, tag, {configurable: true, set: $set});
+	    return wrap(tag);
+	  };
+	  redefine($Symbol[PROTOTYPE], 'toString', function toString(){
+	    return this._k;
+	  });
+	
+	  $GOPD.f = $getOwnPropertyDescriptor;
+	  $DP.f   = $defineProperty;
+	  __webpack_require__(252).f = gOPNExt.f = $getOwnPropertyNames;
+	  __webpack_require__(218).f  = $propertyIsEnumerable;
+	  __webpack_require__(217).f = $getOwnPropertySymbols;
+	
+	  if(DESCRIPTORS && !__webpack_require__(228)){
+	    redefine(ObjectProto, 'propertyIsEnumerable', $propertyIsEnumerable, true);
+	  }
+	
+	  wksExt.f = function(name){
+	    return wrap(wks(name));
+	  }
+	}
+	
+	$export($export.G + $export.W + $export.F * !USE_NATIVE, {Symbol: $Symbol});
+	
+	for(var symbols = (
+	  // 19.4.2.2, 19.4.2.3, 19.4.2.4, 19.4.2.6, 19.4.2.8, 19.4.2.9, 19.4.2.10, 19.4.2.11, 19.4.2.12, 19.4.2.13, 19.4.2.14
+	  'hasInstance,isConcatSpreadable,iterator,match,replace,search,species,split,toPrimitive,toStringTag,unscopables'
+	).split(','), i = 0; symbols.length > i; )wks(symbols[i++]);
+	
+	for(var symbols = $keys(wks.store), i = 0; symbols.length > i; )wksDefine(symbols[i++]);
+	
+	$export($export.S + $export.F * !USE_NATIVE, 'Symbol', {
+	  // 19.4.2.1 Symbol.for(key)
+	  'for': function(key){
+	    return has(SymbolRegistry, key += '')
+	      ? SymbolRegistry[key]
+	      : SymbolRegistry[key] = $Symbol(key);
+	  },
+	  // 19.4.2.5 Symbol.keyFor(sym)
+	  keyFor: function keyFor(key){
+	    if(isSymbol(key))return keyOf(SymbolRegistry, key);
+	    throw TypeError(key + ' is not a symbol!');
+	  },
+	  useSetter: function(){ setter = true; },
+	  useSimple: function(){ setter = false; }
+	});
+	
+	$export($export.S + $export.F * !USE_NATIVE, 'Object', {
+	  // 19.1.2.2 Object.create(O [, Properties])
+	  create: $create,
+	  // 19.1.2.4 Object.defineProperty(O, P, Attributes)
+	  defineProperty: $defineProperty,
+	  // 19.1.2.3 Object.defineProperties(O, Properties)
+	  defineProperties: $defineProperties,
+	  // 19.1.2.6 Object.getOwnPropertyDescriptor(O, P)
+	  getOwnPropertyDescriptor: $getOwnPropertyDescriptor,
+	  // 19.1.2.7 Object.getOwnPropertyNames(O)
+	  getOwnPropertyNames: $getOwnPropertyNames,
+	  // 19.1.2.8 Object.getOwnPropertySymbols(O)
+	  getOwnPropertySymbols: $getOwnPropertySymbols
+	});
+	
+	// 24.3.2 JSON.stringify(value [, replacer [, space]])
+	$JSON && $export($export.S + $export.F * (!USE_NATIVE || $fails(function(){
+	  var S = $Symbol();
+	  // MS Edge converts symbol values to JSON as {}
+	  // WebKit converts symbol values to JSON as null
+	  // V8 throws on boxed symbols
+	  return _stringify([S]) != '[null]' || _stringify({a: S}) != '{}' || _stringify(Object(S)) != '{}';
+	})), 'JSON', {
+	  stringify: function stringify(it){
+	    if(it === undefined || isSymbol(it))return; // IE8 returns string on undefined
+	    var args = [it]
+	      , i    = 1
+	      , replacer, $replacer;
+	    while(arguments.length > i)args.push(arguments[i++]);
+	    replacer = args[1];
+	    if(typeof replacer == 'function')$replacer = replacer;
+	    if($replacer || !isArray(replacer))replacer = function(key, value){
+	      if($replacer)value = $replacer.call(this, key, value);
+	      if(!isSymbol(value))return value;
+	    };
+	    args[1] = replacer;
+	    return _stringify.apply($JSON, args);
+	  }
+	});
+	
+	// 19.4.3.4 Symbol.prototype[@@toPrimitive](hint)
+	$Symbol[PROTOTYPE][TO_PRIMITIVE] || __webpack_require__(191)($Symbol[PROTOTYPE], TO_PRIMITIVE, $Symbol[PROTOTYPE].valueOf);
+	// 19.4.3.5 Symbol.prototype[@@toStringTag]
+	setToStringTag($Symbol, 'Symbol');
+	// 20.2.1.9 Math[@@toStringTag]
+	setToStringTag(Math, 'Math', true);
+	// 24.3.3 JSON[@@toStringTag]
+	setToStringTag(global.JSON, 'JSON', true);
+
+/***/ },
+/* 246 */
+/***/ function(module, exports, __webpack_require__) {
+
+	var META     = __webpack_require__(215)('meta')
+	  , isObject = __webpack_require__(194)
+	  , has      = __webpack_require__(204)
+	  , setDesc  = __webpack_require__(192).f
+	  , id       = 0;
+	var isExtensible = Object.isExtensible || function(){
+	  return true;
+	};
+	var FREEZE = !__webpack_require__(197)(function(){
+	  return isExtensible(Object.preventExtensions({}));
+	});
+	var setMeta = function(it){
+	  setDesc(it, META, {value: {
+	    i: 'O' + ++id, // object ID
+	    w: {}          // weak collections IDs
+	  }});
+	};
+	var fastKey = function(it, create){
+	  // return primitive with prefix
+	  if(!isObject(it))return typeof it == 'symbol' ? it : (typeof it == 'string' ? 'S' : 'P') + it;
+	  if(!has(it, META)){
+	    // can't set metadata to uncaught frozen object
+	    if(!isExtensible(it))return 'F';
+	    // not necessary to add metadata
+	    if(!create)return 'E';
+	    // add missing metadata
+	    setMeta(it);
+	  // return object ID
+	  } return it[META].i;
+	};
+	var getWeak = function(it, create){
+	  if(!has(it, META)){
+	    // can't set metadata to uncaught frozen object
+	    if(!isExtensible(it))return true;
+	    // not necessary to add metadata
+	    if(!create)return false;
+	    // add missing metadata
+	    setMeta(it);
+	  // return hash weak collections IDs
+	  } return it[META].w;
+	};
+	// add metadata on freeze-family methods calling
+	var onFreeze = function(it){
+	  if(FREEZE && meta.NEED && isExtensible(it) && !has(it, META))setMeta(it);
+	  return it;
+	};
+	var meta = module.exports = {
+	  KEY:      META,
+	  NEED:     false,
+	  fastKey:  fastKey,
+	  getWeak:  getWeak,
+	  onFreeze: onFreeze
+	};
+
+/***/ },
+/* 247 */
+/***/ function(module, exports, __webpack_require__) {
+
+	var global         = __webpack_require__(187)
+	  , core           = __webpack_require__(188)
+	  , LIBRARY        = __webpack_require__(228)
+	  , wksExt         = __webpack_require__(242)
+	  , defineProperty = __webpack_require__(192).f;
+	module.exports = function(name){
+	  var $Symbol = core.Symbol || (core.Symbol = LIBRARY ? {} : global.Symbol || {});
+	  if(name.charAt(0) != '_' && !(name in $Symbol))defineProperty($Symbol, name, {value: wksExt.f(name)});
+	};
+
+/***/ },
+/* 248 */
+/***/ function(module, exports, __webpack_require__) {
+
+	var getKeys   = __webpack_require__(202)
+	  , toIObject = __webpack_require__(205);
+	module.exports = function(object, el){
+	  var O      = toIObject(object)
+	    , keys   = getKeys(O)
+	    , length = keys.length
+	    , index  = 0
+	    , key;
+	  while(length > index)if(O[key = keys[index++]] === el)return key;
+	};
+
+/***/ },
+/* 249 */
+/***/ function(module, exports, __webpack_require__) {
+
+	// all enumerable object keys, includes symbols
+	var getKeys = __webpack_require__(202)
+	  , gOPS    = __webpack_require__(217)
+	  , pIE     = __webpack_require__(218);
+	module.exports = function(it){
+	  var result     = getKeys(it)
+	    , getSymbols = gOPS.f;
+	  if(getSymbols){
+	    var symbols = getSymbols(it)
+	      , isEnum  = pIE.f
+	      , i       = 0
+	      , key;
+	    while(symbols.length > i)if(isEnum.call(it, key = symbols[i++]))result.push(key);
+	  } return result;
+	};
+
+/***/ },
+/* 250 */
+/***/ function(module, exports, __webpack_require__) {
+
+	// 7.2.2 IsArray(argument)
+	var cof = __webpack_require__(207);
+	module.exports = Array.isArray || function isArray(arg){
+	  return cof(arg) == 'Array';
+	};
+
+/***/ },
+/* 251 */
+/***/ function(module, exports, __webpack_require__) {
+
+	// fallback for IE11 buggy Object.getOwnPropertyNames with iframe and window
+	var toIObject = __webpack_require__(205)
+	  , gOPN      = __webpack_require__(252).f
+	  , toString  = {}.toString;
+	
+	var windowNames = typeof window == 'object' && window && Object.getOwnPropertyNames
+	  ? Object.getOwnPropertyNames(window) : [];
+	
+	var getWindowNames = function(it){
+	  try {
+	    return gOPN(it);
+	  } catch(e){
+	    return windowNames.slice();
+	  }
+	};
+	
+	module.exports.f = function getOwnPropertyNames(it){
+	  return windowNames && toString.call(it) == '[object Window]' ? getWindowNames(it) : gOPN(toIObject(it));
+	};
+
+
+/***/ },
+/* 252 */
+/***/ function(module, exports, __webpack_require__) {
+
+	// 19.1.2.7 / 15.2.3.4 Object.getOwnPropertyNames(O)
+	var $keys      = __webpack_require__(203)
+	  , hiddenKeys = __webpack_require__(216).concat('length', 'prototype');
+	
+	exports.f = Object.getOwnPropertyNames || function getOwnPropertyNames(O){
+	  return $keys(O, hiddenKeys);
+	};
+
+/***/ },
+/* 253 */
+/***/ function(module, exports, __webpack_require__) {
+
+	var pIE            = __webpack_require__(218)
+	  , createDesc     = __webpack_require__(200)
+	  , toIObject      = __webpack_require__(205)
+	  , toPrimitive    = __webpack_require__(199)
+	  , has            = __webpack_require__(204)
+	  , IE8_DOM_DEFINE = __webpack_require__(195)
+	  , gOPD           = Object.getOwnPropertyDescriptor;
+	
+	exports.f = __webpack_require__(196) ? gOPD : function getOwnPropertyDescriptor(O, P){
+	  O = toIObject(O);
+	  P = toPrimitive(P, true);
+	  if(IE8_DOM_DEFINE)try {
+	    return gOPD(O, P);
+	  } catch(e){ /* empty */ }
+	  if(has(O, P))return createDesc(!pIE.f.call(O, P), O[P]);
+	};
+
+/***/ },
+/* 254 */
+/***/ function(module, exports) {
+
+
+
+/***/ },
+/* 255 */
+/***/ function(module, exports, __webpack_require__) {
+
+	__webpack_require__(247)('asyncIterator');
+
+/***/ },
+/* 256 */
+/***/ function(module, exports, __webpack_require__) {
+
+	__webpack_require__(247)('observable');
+
+/***/ },
+/* 257 */
+/***/ function(module, exports, __webpack_require__) {
+
+	"use strict";
+	
+	exports.__esModule = true;
+	
+	var _setPrototypeOf = __webpack_require__(258);
+	
+	var _setPrototypeOf2 = _interopRequireDefault(_setPrototypeOf);
+	
+	var _create = __webpack_require__(262);
+	
+	var _create2 = _interopRequireDefault(_create);
+	
+	var _typeof2 = __webpack_require__(222);
+	
+	var _typeof3 = _interopRequireDefault(_typeof2);
+	
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+	
+	exports.default = function (subClass, superClass) {
+	  if (typeof superClass !== "function" && superClass !== null) {
+	    throw new TypeError("Super expression must either be null or a function, not " + (typeof superClass === "undefined" ? "undefined" : (0, _typeof3.default)(superClass)));
+	  }
+	
+	  subClass.prototype = (0, _create2.default)(superClass && superClass.prototype, {
+	    constructor: {
+	      value: subClass,
+	      enumerable: false,
+	      writable: true,
+	      configurable: true
+	    }
+	  });
+	  if (superClass) _setPrototypeOf2.default ? (0, _setPrototypeOf2.default)(subClass, superClass) : subClass.__proto__ = superClass;
+	};
+
+/***/ },
+/* 258 */
+/***/ function(module, exports, __webpack_require__) {
+
+	module.exports = { "default": __webpack_require__(259), __esModule: true };
+
+/***/ },
+/* 259 */
+/***/ function(module, exports, __webpack_require__) {
+
+	__webpack_require__(260);
+	module.exports = __webpack_require__(188).Object.setPrototypeOf;
+
+/***/ },
+/* 260 */
+/***/ function(module, exports, __webpack_require__) {
+
+	// 19.1.3.19 Object.setPrototypeOf(O, proto)
+	var $export = __webpack_require__(186);
+	$export($export.S, 'Object', {setPrototypeOf: __webpack_require__(261).set});
+
+/***/ },
+/* 261 */
+/***/ function(module, exports, __webpack_require__) {
+
+	// Works with __proto__ only. Old v8 can't work with null proto objects.
+	/* eslint-disable no-proto */
+	var isObject = __webpack_require__(194)
+	  , anObject = __webpack_require__(193);
+	var check = function(O, proto){
+	  anObject(O);
+	  if(!isObject(proto) && proto !== null)throw TypeError(proto + ": can't set as prototype!");
+	};
+	module.exports = {
+	  set: Object.setPrototypeOf || ('__proto__' in {} ? // eslint-disable-line
+	    function(test, buggy, set){
+	      try {
+	        set = __webpack_require__(189)(Function.call, __webpack_require__(253).f(Object.prototype, '__proto__').set, 2);
+	        set(test, []);
+	        buggy = !(test instanceof Array);
+	      } catch(e){ buggy = true; }
+	      return function setPrototypeOf(O, proto){
+	        check(O, proto);
+	        if(buggy)O.__proto__ = proto;
+	        else set(O, proto);
+	        return O;
+	      };
+	    }({}, false) : undefined),
+	  check: check
+	};
+
+/***/ },
+/* 262 */
+/***/ function(module, exports, __webpack_require__) {
+
+	module.exports = { "default": __webpack_require__(263), __esModule: true };
+
+/***/ },
+/* 263 */
+/***/ function(module, exports, __webpack_require__) {
+
+	__webpack_require__(264);
+	var $Object = __webpack_require__(188).Object;
+	module.exports = function create(P, D){
+	  return $Object.create(P, D);
+	};
+
+/***/ },
+/* 264 */
+/***/ function(module, exports, __webpack_require__) {
+
+	var $export = __webpack_require__(186)
+	// 19.1.2.2 / 15.2.3.5 Object.create(O [, Properties])
+	$export($export.S, 'Object', {create: __webpack_require__(232)});
+
+/***/ },
+/* 265 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -21787,89 +22811,93 @@
 	
 	var _extends3 = _interopRequireDefault(_extends2);
 	
-	var _defineProperty2 = __webpack_require__(221);
+	var _defineProperty2 = __webpack_require__(266);
 	
 	var _defineProperty3 = _interopRequireDefault(_defineProperty2);
+	
+	var _classCallCheck2 = __webpack_require__(220);
+	
+	var _classCallCheck3 = _interopRequireDefault(_classCallCheck2);
+	
+	var _possibleConstructorReturn2 = __webpack_require__(221);
+	
+	var _possibleConstructorReturn3 = _interopRequireDefault(_possibleConstructorReturn2);
+	
+	var _inherits2 = __webpack_require__(257);
+	
+	var _inherits3 = _interopRequireDefault(_inherits2);
 	
 	var _react = __webpack_require__(2);
 	
 	var _react2 = _interopRequireDefault(_react);
 	
-	var _classnames = __webpack_require__(225);
+	var _propTypes = __webpack_require__(!(function webpackMissingModule() { var e = new Error("Cannot find module \"prop-types\""); e.code = 'MODULE_NOT_FOUND'; throw e; }()));
+	
+	var _propTypes2 = _interopRequireDefault(_propTypes);
+	
+	var _classnames = __webpack_require__(270);
 	
 	var _classnames2 = _interopRequireDefault(_classnames);
 	
-	var _request = __webpack_require__(226);
+	var _request = __webpack_require__(271);
 	
 	var _request2 = _interopRequireDefault(_request);
 	
-	var _uid = __webpack_require__(227);
+	var _uid = __webpack_require__(272);
 	
 	var _uid2 = _interopRequireDefault(_uid);
 	
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 	
-	/* eslint react/no-is-mounted:0*/
+	var AjaxUploader = function (_Component) {
+	  (0, _inherits3.default)(AjaxUploader, _Component);
 	
-	var AjaxUploader = _react2.default.createClass({
-	  displayName: 'AjaxUploader',
+	  function AjaxUploader() {
+	    var _temp, _this, _ret;
 	
-	  propTypes: {
-	    component: _react.PropTypes.string,
-	    style: _react.PropTypes.object,
-	    prefixCls: _react.PropTypes.string,
-	    className: _react.PropTypes.string,
-	    multiple: _react.PropTypes.bool,
-	    disabled: _react.PropTypes.bool,
-	    accept: _react.PropTypes.string,
-	    children: _react.PropTypes.any,
-	    onStart: _react.PropTypes.func,
-	    data: _react.PropTypes.oneOfType([_react.PropTypes.object, _react.PropTypes.func]),
-	    headers: _react.PropTypes.object,
-	    beforeUpload: _react.PropTypes.func,
-	    customRequest: _react.PropTypes.func,
-	    onProgress: _react.PropTypes.func,
-	    withCredentials: _react.PropTypes.bool
-	  },
+	    (0, _classCallCheck3.default)(this, AjaxUploader);
 	
-	  getInitialState: function getInitialState() {
-	    this.reqs = {};
-	    return {
-	      uid: (0, _uid2.default)()
-	    };
-	  },
-	  componentWillUnmount: function componentWillUnmount() {
-	    this.abort();
-	  },
-	  onChange: function onChange(e) {
-	    var files = e.target.files;
-	    this.uploadFiles(files);
-	    this.reset();
-	  },
-	  onClick: function onClick() {
-	    var el = this.refs.file;
-	    if (!el) {
-	      return;
+	    for (var _len = arguments.length, args = Array(_len), _key = 0; _key < _len; _key++) {
+	      args[_key] = arguments[_key];
 	    }
-	    el.click();
-	  },
-	  onKeyDown: function onKeyDown(e) {
-	    if (e.key === 'Enter') {
-	      this.onClick();
-	    }
-	  },
-	  onFileDrop: function onFileDrop(e) {
-	    if (e.type === 'dragover') {
+	
+	    return _ret = (_temp = (_this = (0, _possibleConstructorReturn3.default)(this, _Component.call.apply(_Component, [this].concat(args))), _this), _this.state = { uid: (0, _uid2.default)() }, _this.reqs = {}, _this.onChange = function (e) {
+	      var files = e.target.files;
+	      _this.uploadFiles(files);
+	      _this.reset();
+	    }, _this.onClick = function () {
+	      var el = _this.refs.file;
+	      if (!el) {
+	        return;
+	      }
+	      el.click();
+	    }, _this.onKeyDown = function (e) {
+	      if (e.key === 'Enter') {
+	        _this.onClick();
+	      }
+	    }, _this.onFileDrop = function (e) {
+	      if (e.type === 'dragover') {
+	        e.preventDefault();
+	        return;
+	      }
+	
+	      var files = e.dataTransfer.files;
+	      _this.uploadFiles(files);
+	
 	      e.preventDefault();
-	      return;
-	    }
+	    }, _temp), (0, _possibleConstructorReturn3.default)(_this, _ret);
+	  }
 	
-	    var files = e.dataTransfer.files;
-	    this.uploadFiles(files);
+	  AjaxUploader.prototype.componentDidMount = function componentDidMount() {
+	    this._isMounted = true;
+	  };
 	
-	    e.preventDefault();
-	  },
-	  uploadFiles: function uploadFiles(files) {
+	  AjaxUploader.prototype.componentWillUnmount = function componentWillUnmount() {
+	    this._isMounted = false;
+	    this.abort();
+	  };
+	
+	  AjaxUploader.prototype.uploadFiles = function uploadFiles(files) {
 	    var postFiles = Array.prototype.slice.call(files);
 	    var len = postFiles.length;
 	    for (var i = 0; i < len; i++) {
@@ -21877,16 +22905,17 @@
 	      file.uid = (0, _uid2.default)();
 	      this.upload(file, postFiles);
 	    }
-	  },
-	  upload: function upload(file, fileList) {
-	    var _this = this;
+	  };
+	
+	  AjaxUploader.prototype.upload = function upload(file, fileList) {
+	    var _this2 = this;
 	
 	    var props = this.props;
 	
 	    if (!props.beforeUpload) {
 	      // always async in case use react state to keep fileList
 	      return setTimeout(function () {
-	        return _this.post(file);
+	        return _this2.post(file);
 	      }, 0);
 	    }
 	
@@ -21895,23 +22924,24 @@
 	      before.then(function (processedFile) {
 	        var processedFileType = Object.prototype.toString.call(processedFile);
 	        if (processedFileType === '[object File]' || processedFileType === '[object Blob]') {
-	          _this.post(processedFile);
+	          _this2.post(processedFile);
 	        } else {
-	          _this.post(file);
+	          _this2.post(file);
 	        }
 	      }).catch(function (e) {
 	        console && console.log(e); // eslint-disable-line
 	      });
 	    } else if (before !== false) {
 	      setTimeout(function () {
-	        return _this.post(file);
+	        return _this2.post(file);
 	      }, 0);
 	    }
-	  },
-	  post: function post(file) {
-	    var _this2 = this;
+	  };
 	
-	    if (!this.isMounted()) {
+	  AjaxUploader.prototype.post = function post(file) {
+	    var _this3 = this;
+	
+	    if (!this._isMounted) {
 	      return;
 	    }
 	    var props = this.props;
@@ -21936,22 +22966,24 @@
 	        onProgress(e, file);
 	      } : null,
 	      onSuccess: function onSuccess(ret) {
-	        delete _this2.reqs[uid];
+	        delete _this3.reqs[uid];
 	        props.onSuccess(ret, file);
 	      },
 	      onError: function onError(err, ret) {
-	        delete _this2.reqs[uid];
+	        delete _this3.reqs[uid];
 	        props.onError(err, ret, file);
 	      }
 	    });
 	    onStart(file);
-	  },
-	  reset: function reset() {
+	  };
+	
+	  AjaxUploader.prototype.reset = function reset() {
 	    this.setState({
 	      uid: (0, _uid2.default)()
 	    });
-	  },
-	  abort: function abort(file) {
+	  };
+	
+	  AjaxUploader.prototype.abort = function abort(file) {
 	    var reqs = this.reqs;
 	
 	    if (file) {
@@ -21972,8 +23004,9 @@
 	        delete reqs[uid];
 	      });
 	    }
-	  },
-	  render: function render() {
+	  };
+	
+	  AjaxUploader.prototype.render = function render() {
 	    var _classNames;
 	
 	    var _props = this.props,
@@ -22012,21 +23045,40 @@
 	      }),
 	      children
 	    );
-	  }
-	});
+	  };
 	
+	  return AjaxUploader;
+	}(_react.Component); /* eslint react/no-is-mounted:0 react/sort-comp:0 */
+	
+	AjaxUploader.propTypes = {
+	  component: _propTypes2.default.string,
+	  style: _propTypes2.default.object,
+	  prefixCls: _propTypes2.default.string,
+	  className: _propTypes2.default.string,
+	  multiple: _propTypes2.default.bool,
+	  disabled: _propTypes2.default.bool,
+	  accept: _propTypes2.default.string,
+	  children: _propTypes2.default.any,
+	  onStart: _propTypes2.default.func,
+	  data: _propTypes2.default.oneOfType([_propTypes2.default.object, _propTypes2.default.func]),
+	  headers: _propTypes2.default.object,
+	  beforeUpload: _propTypes2.default.func,
+	  customRequest: _propTypes2.default.func,
+	  onProgress: _propTypes2.default.func,
+	  withCredentials: _propTypes2.default.bool
+	};
 	exports.default = AjaxUploader;
 	module.exports = exports['default'];
 
 /***/ },
-/* 221 */
+/* 266 */
 /***/ function(module, exports, __webpack_require__) {
 
 	"use strict";
 	
 	exports.__esModule = true;
 	
-	var _defineProperty = __webpack_require__(222);
+	var _defineProperty = __webpack_require__(267);
 	
 	var _defineProperty2 = _interopRequireDefault(_defineProperty);
 	
@@ -22048,23 +23100,23 @@
 	};
 
 /***/ },
-/* 222 */
+/* 267 */
 /***/ function(module, exports, __webpack_require__) {
 
-	module.exports = { "default": __webpack_require__(223), __esModule: true };
+	module.exports = { "default": __webpack_require__(268), __esModule: true };
 
 /***/ },
-/* 223 */
+/* 268 */
 /***/ function(module, exports, __webpack_require__) {
 
-	__webpack_require__(224);
+	__webpack_require__(269);
 	var $Object = __webpack_require__(188).Object;
 	module.exports = function defineProperty(it, key, desc){
 	  return $Object.defineProperty(it, key, desc);
 	};
 
 /***/ },
-/* 224 */
+/* 269 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var $export = __webpack_require__(186);
@@ -22072,7 +23124,7 @@
 	$export($export.S + $export.F * !__webpack_require__(196), 'Object', {defineProperty: __webpack_require__(192).f});
 
 /***/ },
-/* 225 */
+/* 270 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;/*!
@@ -22126,7 +23178,7 @@
 
 
 /***/ },
-/* 226 */
+/* 271 */
 /***/ function(module, exports) {
 
 	'use strict';
@@ -22235,7 +23287,7 @@
 	module.exports = exports['default'];
 
 /***/ },
-/* 227 */
+/* 272 */
 /***/ function(module, exports) {
 
 	"use strict";
@@ -22253,7 +23305,7 @@
 	module.exports = exports['default'];
 
 /***/ },
-/* 228 */
+/* 273 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -22262,7 +23314,7 @@
 	  value: true
 	});
 	
-	var _defineProperty2 = __webpack_require__(221);
+	var _defineProperty2 = __webpack_require__(266);
 	
 	var _defineProperty3 = _interopRequireDefault(_defineProperty2);
 	
@@ -22270,28 +23322,45 @@
 	
 	var _extends3 = _interopRequireDefault(_extends2);
 	
+	var _classCallCheck2 = __webpack_require__(220);
+	
+	var _classCallCheck3 = _interopRequireDefault(_classCallCheck2);
+	
+	var _possibleConstructorReturn2 = __webpack_require__(221);
+	
+	var _possibleConstructorReturn3 = _interopRequireDefault(_possibleConstructorReturn2);
+	
+	var _inherits2 = __webpack_require__(257);
+	
+	var _inherits3 = _interopRequireDefault(_inherits2);
+	
 	var _react = __webpack_require__(2);
 	
 	var _react2 = _interopRequireDefault(_react);
+	
+	var _propTypes = __webpack_require__(!(function webpackMissingModule() { var e = new Error("Cannot find module \"prop-types\""); e.code = 'MODULE_NOT_FOUND'; throw e; }()));
+	
+	var _propTypes2 = _interopRequireDefault(_propTypes);
 	
 	var _reactDom = __webpack_require__(33);
 	
 	var _reactDom2 = _interopRequireDefault(_reactDom);
 	
-	var _classnames = __webpack_require__(225);
+	var _classnames = __webpack_require__(270);
 	
 	var _classnames2 = _interopRequireDefault(_classnames);
 	
-	var _uid = __webpack_require__(227);
+	var _uid = __webpack_require__(272);
 	
 	var _uid2 = _interopRequireDefault(_uid);
 	
-	var _warning = __webpack_require__(229);
+	var _warning = __webpack_require__(274);
 	
 	var _warning2 = _interopRequireDefault(_warning);
 	
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 	
+	/* eslint react/sort-comp:0 */
 	var IFRAME_STYLE = {
 	  position: 'absolute',
 	  top: 0,
@@ -22302,108 +23371,106 @@
 	};
 	
 	// diferent from AjaxUpload, can only upload on at one time, serial seriously
-	var IframeUploader = _react2.default.createClass({
-	  displayName: 'IframeUploader',
 	
-	  propTypes: {
-	    component: _react.PropTypes.string,
-	    style: _react.PropTypes.object,
-	    disabled: _react.PropTypes.bool,
-	    prefixCls: _react.PropTypes.string,
-	    className: _react.PropTypes.string,
-	    accept: _react.PropTypes.string,
-	    onStart: _react.PropTypes.func,
-	    multiple: _react.PropTypes.bool,
-	    children: _react.PropTypes.any,
-	    data: _react.PropTypes.oneOfType([_react.PropTypes.object, _react.PropTypes.func]),
-	    action: _react.PropTypes.string,
-	    name: _react.PropTypes.string
-	  },
+	var IframeUploader = function (_Component) {
+	  (0, _inherits3.default)(IframeUploader, _Component);
 	
-	  getInitialState: function getInitialState() {
-	    this.file = {};
-	    return {
-	      uploading: false
-	    };
-	  },
-	  componentDidMount: function componentDidMount() {
+	  function IframeUploader() {
+	    var _temp, _this, _ret;
+	
+	    (0, _classCallCheck3.default)(this, IframeUploader);
+	
+	    for (var _len = arguments.length, args = Array(_len), _key = 0; _key < _len; _key++) {
+	      args[_key] = arguments[_key];
+	    }
+	
+	    return _ret = (_temp = (_this = (0, _possibleConstructorReturn3.default)(this, _Component.call.apply(_Component, [this].concat(args))), _this), _this.state = { uploading: false }, _this.file = {}, _this.onLoad = function () {
+	      if (!_this.state.uploading) {
+	        return;
+	      }
+	      var _this2 = _this,
+	          props = _this2.props,
+	          file = _this2.file;
+	
+	      var response = void 0;
+	      try {
+	        var doc = _this.getIframeDocument();
+	        var script = doc.getElementsByTagName('script')[0];
+	        if (script && script.parentNode === doc.body) {
+	          doc.body.removeChild(script);
+	        }
+	        response = doc.body.innerHTML;
+	        props.onSuccess(response, file);
+	      } catch (err) {
+	        (0, _warning2.default)(false, 'cross domain error for Upload. Maybe server should return document.domain script. see Note from https://github.com/react-component/upload');
+	        response = 'cross-domain';
+	        props.onError(err, null, file);
+	      }
+	      _this.endUpload();
+	    }, _this.onChange = function () {
+	      var target = _this.getFormInputNode();
+	      // ie8/9 don't support FileList Object
+	      // http://stackoverflow.com/questions/12830058/ie8-input-type-file-get-files
+	      var file = _this.file = {
+	        uid: (0, _uid2.default)(),
+	        name: target.value
+	      };
+	      _this.startUpload();
+	      var _this3 = _this,
+	          props = _this3.props;
+	
+	      if (!props.beforeUpload) {
+	        return _this.post(file);
+	      }
+	      var before = props.beforeUpload(file);
+	      if (before && before.then) {
+	        before.then(function () {
+	          _this.post(file);
+	        }, function () {
+	          _this.endUpload();
+	        });
+	      } else if (before !== false) {
+	        _this.post(file);
+	      } else {
+	        _this.endUpload();
+	      }
+	    }, _temp), (0, _possibleConstructorReturn3.default)(_this, _ret);
+	  }
+	
+	  IframeUploader.prototype.componentDidMount = function componentDidMount() {
 	    this.updateIframeWH();
 	    this.initIframe();
-	  },
-	  componentDidUpdate: function componentDidUpdate() {
+	  };
+	
+	  IframeUploader.prototype.componentDidUpdate = function componentDidUpdate() {
 	    this.updateIframeWH();
-	  },
-	  onLoad: function onLoad() {
-	    if (!this.state.uploading) {
-	      return;
-	    }
-	    var props = this.props,
-	        file = this.file;
+	  };
 	
-	    var response = void 0;
-	    try {
-	      var doc = this.getIframeDocument();
-	      var script = doc.getElementsByTagName('script')[0];
-	      if (script && script.parentNode === doc.body) {
-	        doc.body.removeChild(script);
-	      }
-	      response = doc.body.innerHTML;
-	      props.onSuccess(response, file);
-	    } catch (err) {
-	      (0, _warning2.default)(false, 'cross domain error for Upload. Maybe server should return document.domain script. see Note from https://github.com/react-component/upload');
-	      response = 'cross-domain';
-	      props.onError(err, null, file);
-	    }
-	    this.endUpload();
-	  },
-	  onChange: function onChange() {
-	    var _this = this;
-	
-	    var target = this.getFormInputNode();
-	    // ie8/9 don't support FileList Object
-	    // http://stackoverflow.com/questions/12830058/ie8-input-type-file-get-files
-	    var file = this.file = {
-	      uid: (0, _uid2.default)(),
-	      name: target.value
-	    };
-	    this.startUpload();
-	    var props = this.props;
-	
-	    if (!props.beforeUpload) {
-	      return this.post(file);
-	    }
-	    var before = props.beforeUpload(file);
-	    if (before && before.then) {
-	      before.then(function () {
-	        _this.post(file);
-	      }, function () {
-	        _this.endUpload();
-	      });
-	    } else if (before !== false) {
-	      this.post(file);
-	    } else {
-	      this.endUpload();
-	    }
-	  },
-	  getIframeNode: function getIframeNode() {
+	  IframeUploader.prototype.getIframeNode = function getIframeNode() {
 	    return this.refs.iframe;
-	  },
-	  getIframeDocument: function getIframeDocument() {
+	  };
+	
+	  IframeUploader.prototype.getIframeDocument = function getIframeDocument() {
 	    return this.getIframeNode().contentDocument;
-	  },
-	  getFormNode: function getFormNode() {
+	  };
+	
+	  IframeUploader.prototype.getFormNode = function getFormNode() {
 	    return this.getIframeDocument().getElementById('form');
-	  },
-	  getFormInputNode: function getFormInputNode() {
+	  };
+	
+	  IframeUploader.prototype.getFormInputNode = function getFormInputNode() {
 	    return this.getIframeDocument().getElementById('input');
-	  },
-	  getFormDataNode: function getFormDataNode() {
+	  };
+	
+	  IframeUploader.prototype.getFormDataNode = function getFormDataNode() {
 	    return this.getIframeDocument().getElementById('data');
-	  },
-	  getFileForMultiple: function getFileForMultiple(file) {
+	  };
+	
+	  IframeUploader.prototype.getFileForMultiple = function getFileForMultiple(file) {
 	    return this.props.multiple ? [file] : file;
-	  },
-	  getIframeHTML: function getIframeHTML(domain) {
+	  };
+	
+	  IframeUploader.prototype.getIframeHTML = function getIframeHTML(domain) {
 	    var domainScript = '';
 	    var domainInput = '';
 	    if (domain) {
@@ -22412,13 +23479,15 @@
 	      domainInput = '<input name="_documentDomain" value="' + domain + '" />';
 	    }
 	    return '\n    <!DOCTYPE html>\n    <html>\n    <head>\n    <meta http-equiv="X-UA-Compatible" content="IE=edge" />\n    <style>\n    body,html {padding:0;margin:0;border:0;overflow:hidden;}\n    </style>\n    ' + domainScript + '\n    </head>\n    <body>\n    <form method="post"\n    encType="multipart/form-data"\n    action="' + this.props.action + '" id="form"\n    style="display:block;height:9999px;position:relative;overflow:hidden;">\n    <input id="input" type="file"\n     name="' + this.props.name + '"\n     style="position:absolute;top:0;right:0;height:9999px;font-size:9999px;cursor:pointer;"/>\n    ' + domainInput + '\n    <span id="data"></span>\n    </form>\n    </body>\n    </html>\n    ';
-	  },
-	  initIframeSrc: function initIframeSrc() {
+	  };
+	
+	  IframeUploader.prototype.initIframeSrc = function initIframeSrc() {
 	    if (this.domain) {
 	      this.getIframeNode().src = 'javascript:void((function(){\n        var d = document;\n        d.open();\n        d.domain=\'' + this.domain + '\';\n        d.write(\'\');\n        d.close();\n      })())';
 	    }
-	  },
-	  initIframe: function initIframe() {
+	  };
+	
+	  IframeUploader.prototype.initIframe = function initIframe() {
 	    var iframeNode = this.getIframeNode();
 	    var win = iframeNode.contentWindow;
 	    var doc = void 0;
@@ -22436,8 +23505,9 @@
 	    doc.write(this.getIframeHTML(this.domain));
 	    doc.close();
 	    this.getFormInputNode().onchange = this.onChange;
-	  },
-	  endUpload: function endUpload() {
+	  };
+	
+	  IframeUploader.prototype.endUpload = function endUpload() {
 	    if (this.state.uploading) {
 	      this.file = {};
 	      // hack avoid batch
@@ -22447,22 +23517,25 @@
 	      });
 	      this.initIframe();
 	    }
-	  },
-	  startUpload: function startUpload() {
+	  };
+	
+	  IframeUploader.prototype.startUpload = function startUpload() {
 	    if (!this.state.uploading) {
 	      this.state.uploading = true;
 	      this.setState({
 	        uploading: true
 	      });
 	    }
-	  },
-	  updateIframeWH: function updateIframeWH() {
+	  };
+	
+	  IframeUploader.prototype.updateIframeWH = function updateIframeWH() {
 	    var rootNode = _reactDom2.default.findDOMNode(this);
 	    var iframeNode = this.getIframeNode();
 	    iframeNode.style.height = rootNode.offsetHeight + 'px';
 	    iframeNode.style.width = rootNode.offsetWidth + 'px';
-	  },
-	  abort: function abort(file) {
+	  };
+	
+	  IframeUploader.prototype.abort = function abort(file) {
 	    if (file) {
 	      var uid = file;
 	      if (file && file.uid) {
@@ -22474,8 +23547,9 @@
 	    } else {
 	      this.endUpload();
 	    }
-	  },
-	  post: function post(file) {
+	  };
+	
+	  IframeUploader.prototype.post = function post(file) {
 	    var formNode = this.getFormNode();
 	    var dataSpan = this.getFormDataNode();
 	    var data = this.props.data;
@@ -22494,8 +23568,9 @@
 	    formNode.submit();
 	    dataSpan.innerHTML = '';
 	    onStart(file);
-	  },
-	  render: function render() {
+	  };
+	
+	  IframeUploader.prototype.render = function render() {
 	    var _classNames;
 	
 	    var _props = this.props,
@@ -22523,14 +23598,30 @@
 	      }),
 	      children
 	    );
-	  }
-	});
+	  };
 	
+	  return IframeUploader;
+	}(_react.Component);
+	
+	IframeUploader.propTypes = {
+	  component: _propTypes2.default.string,
+	  style: _propTypes2.default.object,
+	  disabled: _propTypes2.default.bool,
+	  prefixCls: _propTypes2.default.string,
+	  className: _propTypes2.default.string,
+	  accept: _propTypes2.default.string,
+	  onStart: _propTypes2.default.func,
+	  multiple: _propTypes2.default.bool,
+	  children: _propTypes2.default.any,
+	  data: _propTypes2.default.oneOfType([_propTypes2.default.object, _propTypes2.default.func]),
+	  action: _propTypes2.default.string,
+	  name: _propTypes2.default.string
+	};
 	exports.default = IframeUploader;
 	module.exports = exports['default'];
 
 /***/ },
-/* 229 */
+/* 274 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(process) {/**
@@ -22597,8 +23688,8 @@
 	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(4)))
 
 /***/ },
-/* 230 */,
-/* 231 */
+/* 275 */,
+/* 276 */
 /***/ function(module, exports, __webpack_require__, __webpack_module_template_argument_0__) {
 
 	/* WEBPACK VAR INJECTION */(function(process) {/**

@@ -49,32 +49,29 @@ webpackJsonp([0],[
 	  }
 	}; /* eslint no-console:0 */
 	
-	var Test = _react2.default.createClass({
-	  displayName: 'Test',
-	  render: function render() {
-	    return _react2.default.createElement(
+	var Test = function Test() {
+	  return _react2.default.createElement(
+	    'div',
+	    {
+	      style: {
+	        margin: 100
+	      }
+	    },
+	    _react2.default.createElement(
 	      'div',
-	      {
-	        style: {
-	          margin: 100
-	        }
-	      },
+	      null,
 	      _react2.default.createElement(
-	        'div',
-	        null,
+	        _rcUpload2.default,
+	        props,
 	        _react2.default.createElement(
-	          _rcUpload2.default,
-	          props,
-	          _react2.default.createElement(
-	            'a',
-	            null,
-	            '\u5F00\u59CB\u4E0A\u4F20'
-	          )
+	          'a',
+	          null,
+	          '\u5F00\u59CB\u4E0A\u4F20'
 	        )
 	      )
-	    );
-	  }
-	});
+	    )
+	  );
+	};
 	
 	_reactDom2.default.render(_react2.default.createElement(Test, null), document.getElementById('__react-content'));
 
