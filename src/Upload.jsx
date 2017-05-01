@@ -1,12 +1,13 @@
-import React, { PropTypes } from 'react';
+import React, { Component } from 'react';
+import PropTypes from 'prop-types';
 import AjaxUpload from './AjaxUploader';
 import IframeUpload from './IframeUploader';
 
 function empty() {
 }
 
-const Upload = React.createClass({
-  propTypes: {
+class Upload extends Component {
+  static propTypes = {
     component: PropTypes.string,
     style: PropTypes.object,
     prefixCls: PropTypes.string,
@@ -30,33 +31,29 @@ const Upload = React.createClass({
     onReady: PropTypes.func,
     withCredentials: PropTypes.bool,
     supportServerRender: PropTypes.bool,
-  },
+  }
 
-  getDefaultProps() {
-    return {
-      component: 'span',
-      prefixCls: 'rc-upload',
-      data: {},
-      headers: {},
-      name: 'file',
-      multipart: false,
-      onReady: empty,
-      onStart: empty,
-      onError: empty,
-      onSuccess: empty,
-      supportServerRender: false,
-      multiple: false,
-      beforeUpload: null,
-      customRequest: null,
-      withCredentials: false,
-    };
-  },
+  static defaultProps = {
+    component: 'span',
+    prefixCls: 'rc-upload',
+    data: {},
+    headers: {},
+    name: 'file',
+    multipart: false,
+    onReady: empty,
+    onStart: empty,
+    onError: empty,
+    onSuccess: empty,
+    supportServerRender: false,
+    multiple: false,
+    beforeUpload: null,
+    customRequest: null,
+    withCredentials: false,
+  }
 
-  getInitialState() {
-    return {
-      Component: null,
-    };
-  },
+  state = {
+    Component: null,
+  }
 
   componentDidMount() {
     if (this.props.supportServerRender) {
@@ -65,26 +62,27 @@ const Upload = React.createClass({
         Component: this.getComponent(),
       }, this.props.onReady);
     }
-  },
+  }
+
   getComponent() {
     return typeof FormData !== 'undefined' ? AjaxUpload : IframeUpload;
-  },
+  }
 
   abort(file) {
     this.refs.inner.abort(file);
-  },
+  }
 
   render() {
     if (this.props.supportServerRender) {
-      const { Component } = this.state;
-      if (Component) {
-        return <Component {...this.props} ref="inner"/>;
+      const ComponentUploader = this.state.Component;
+      if (ComponentUploader) {
+        return <ComponentUploader {...this.props} ref="inner"/>;
       }
       return null;
     }
-    const Component = this.getComponent();
-    return <Component {...this.props} ref="inner"/>;
-  },
-});
+    const ComponentUploader = this.getComponent();
+    return <ComponentUploader {...this.props} ref="inner"/>;
+  }
+}
 
 export default Upload;
