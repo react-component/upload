@@ -60,7 +60,7 @@ React.render(<Upload />, container);
 |component | "div"|"span" | "span"| wrap component name |
 |supportServerRender | boolean | false| whether to support server render |
 |onReady | function | | only call when supportServerRender is true, upload is rendered completely |
-|action| string | | from action url |
+|action| string | | form action url |
 |data| object/function(file) | | other data object to post or a function which returns a data object |
 |headers| object | {} | http headers to post, available in modern browsers |
 |accept | string | | input accept attribute |
