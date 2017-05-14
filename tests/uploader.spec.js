@@ -1,4 +1,5 @@
 /* eslint no-console:0 */
+
 import expect from 'expect.js';
 import Uploader from '../index';
 import React from 'react';
