@@ -44,8 +44,7 @@ describe('request', () => {
     requests[0].respond(200, {}, '{"success": true}');
   });
 
-  it.skip('40x code should be error', function callback(done) {
-    this.timeout(200000);
+  it('40x code should be error', done => {
     option.onError = e => {
       expect(e.toString()).to.contain('404');
       done();

@@ -4,7 +4,7 @@ import expect from 'expect.js';
 import Uploader from '../index';
 import React from 'react';
 import ReactDOM from 'react-dom';
-import TestUtils from 'react-addons-test-utils';
+import TestUtils from 'react-dom/test-utils';
 const { Simulate } = TestUtils;
 import sinon from 'sinon';
 
