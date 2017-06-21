@@ -237,13 +237,16 @@ class IframeUploader extends Component {
     if (typeof data === 'function') {
       data = data(file);
     }
-    const inputs = [];
+    const inputs = document.createDocumentFragment();
     for (const key in data) {
       if (data.hasOwnProperty(key)) {
-        inputs.push(`<input name="${key}" value="${data[key]}"/>`);
+        const input = document.createElement('input');
+        input.setAttribute('name', key);
+        input.value = data[key];
+        inputs.appendChild(input);
       }
     }
-    dataSpan.innerHTML = inputs.join('');
+    dataSpan.appendChild(inputs);
     formNode.submit();
     dataSpan.innerHTML = '';
     onStart(file);
