@@ -1,6 +1,10 @@
 # History
 ----
 
+### 2.3.8 / 2017-06-21
+
+- fix issue #80 & #81 [#82](https://github.com/react-component/upload/pull/82)
+
 ### 2.3.5 / 2017-05-01
 
 - Fix prop-types and create-react-class warning [!67](https://github.com/react-component/upload/pull/67)
