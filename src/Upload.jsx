@@ -65,7 +65,7 @@ class Upload extends Component {
   }
 
   getComponent() {
-    return typeof FormData !== 'undefined' ? AjaxUpload : IframeUpload;
+    return typeof File !== 'undefined' ? AjaxUpload : IframeUpload;
   }
 
   abort(file) {
