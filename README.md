@@ -113,6 +113,8 @@ abort(file?: File) => void: abort the uploading file
 
 In iframe uploader way, the content-type of response should be `text/plain` or `text/html`.[referense](https://github.com/blueimp/jQuery-File-Upload/wiki/Setup#content-type-negotiation)
 
+What's more, in iframe mode, the response's status should always be `200 OK`, otherwise you might get an `Access is denied` error in IE 8/9.
+
 #### Domain Problem
 
 If the Page set document.domain, then server should output document.domain according to _documentDomain parameter.
