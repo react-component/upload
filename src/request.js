@@ -64,7 +64,7 @@ export default function upload(option) {
       return option.onError(getError(option, xhr), getBody(xhr));
     }
 
-    option.onSuccess(getBody(xhr));
+    option.onSuccess(getBody(xhr), xhr);
   };
 
 

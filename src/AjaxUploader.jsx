@@ -129,9 +129,9 @@ class AjaxUploader extends Component {
       onProgress: onProgress ? e => {
         onProgress(e, file);
       } : null,
-      onSuccess: ret => {
+      onSuccess: (ret, xhr) => {
         delete this.reqs[uid];
-        props.onSuccess(ret, file);
+        props.onSuccess(ret, file, xhr);
       },
       onError: (err, ret) => {
         delete this.reqs[uid];
