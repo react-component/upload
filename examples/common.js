@@ -11214,9 +11214,9 @@ var AjaxUploader = function (_Component) {
         onProgress: onProgress ? function (e) {
           onProgress(e, file);
         } : null,
-        onSuccess: function onSuccess(ret) {
+        onSuccess: function onSuccess(ret, xhr) {
           delete _this3.reqs[uid];
-          props.onSuccess(ret, file);
+          props.onSuccess(ret, file, xhr);
         },
         onError: function onError(err, ret) {
           delete _this3.reqs[uid];
@@ -11867,7 +11867,7 @@ function upload(option) {
       return option.onError(getError(option, xhr), getBody(xhr));
     }
 
-    option.onSuccess(getBody(xhr));
+    option.onSuccess(getBody(xhr), xhr);
   };
 
   xhr.open('post', option.action, true);
