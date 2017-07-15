@@ -83,6 +83,8 @@ React.render(<Upload />, container);
 
 1. `result`: response body
 2. `file`: upload file
+3. `xhr`: xhr header, only for modern browsers which support AJAX upload. since
+   2.4.0
 
 
 ### customRequest
