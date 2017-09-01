@@ -5,6 +5,7 @@ import PropTypes from 'prop-types';
 import classNames from 'classnames';
 import defaultRequest from './request';
 import getUid from './uid';
+import attrAccept from 'attr-accept';
 
 class AjaxUploader extends Component {
   static propTypes = {
@@ -57,8 +58,9 @@ class AjaxUploader extends Component {
       e.preventDefault();
       return;
     }
-
-    const files = e.dataTransfer.files;
+    const files = Array.prototype.slice.call(e.dataTransfer.files).filter(
+      file => attrAccept(file, this.props.accept)
+    );
     this.uploadFiles(files);
 
     e.preventDefault();
