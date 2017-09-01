@@ -26,7 +26,7 @@ npm start
 
 ## Example
 
-http://localhost:8000/examples/
+http://localhost:8020/examples/
 
 online example: http://react-component.github.io/upload/examples/simple.html
 
