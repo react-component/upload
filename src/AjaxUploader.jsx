@@ -58,9 +58,7 @@ class AjaxUploader extends Component {
       e.preventDefault();
       return;
     }
-    const files = Array.prototype.slice.call(e.dataTransfer.files).filter(
-      file => attrAccept(file, this.props.accept)
-    );
+    const files = e.dataTransfer.files;
     this.uploadFiles(files);
 
     e.preventDefault();
@@ -115,7 +113,10 @@ class AjaxUploader extends Component {
     }
     const { props } = this;
     let { data } = props;
-    const { onStart, onProgress } = props;
+    const { onStart, onProgress, accept } = props;
+    if (!attrAccept(file, accept)) {
+      return;
+    }
     if (typeof data === 'function') {
       data = data(file);
     }
