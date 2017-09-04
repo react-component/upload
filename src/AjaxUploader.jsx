@@ -5,6 +5,7 @@ import PropTypes from 'prop-types';
 import classNames from 'classnames';
 import defaultRequest from './request';
 import getUid from './uid';
+import attrAccept from 'attr-accept';
 import traverseFileTree from './traverseFileTree';
 
 class AjaxUploader extends Component {
@@ -121,7 +122,10 @@ class AjaxUploader extends Component {
     }
     const { props } = this;
     let { data } = props;
-    const { onStart, onProgress } = props;
+    const { onStart, onProgress, accept } = props;
+    if (!attrAccept(file, accept)) {
+      return;
+    }
     if (typeof data === 'function') {
       data = data(file);
     }
