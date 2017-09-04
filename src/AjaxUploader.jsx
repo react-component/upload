@@ -5,6 +5,7 @@ import PropTypes from 'prop-types';
 import classNames from 'classnames';
 import defaultRequest from './request';
 import getUid from './uid';
+import traverseFileTree from './traverseFileTree';
 
 class AjaxUploader extends Component {
   static propTypes = {
@@ -13,6 +14,7 @@ class AjaxUploader extends Component {
     prefixCls: PropTypes.string,
     className: PropTypes.string,
     multiple: PropTypes.bool,
+    directory: PropTypes.bool,
     disabled: PropTypes.bool,
     accept: PropTypes.string,
     children: PropTypes.any,
@@ -53,18 +55,24 @@ class AjaxUploader extends Component {
   }
 
   onFileDrop = e => {
+    e.preventDefault();
+
     if (e.type === 'dragover') {
-      e.preventDefault();
       return;
     }
 
-    const files = e.dataTransfer.files;
-    this.uploadFiles(files);
-
-    e.preventDefault();
+    let files;
+    if (this.props.directory) {
+      traverseFileTree(e.dataTransfer.items, this.uploadFiles);
+    } else {
+      files = e.dataTransfer.files;
+      this.uploadFiles(files);
+    }
   }
 
   componentDidMount() {
+    this.refs.file.directory = this.props.directory;
+    this.refs.file.webkitdirectory = this.props.directory;
     this._isMounted = true;
   }
 
@@ -73,7 +81,7 @@ class AjaxUploader extends Component {
     this.abort();
   }
 
-  uploadFiles(files) {
+  uploadFiles = (files) => {
     const postFiles = Array.prototype.slice.call(files);
     const len = postFiles.length;
     for (let i = 0; i < len; i++) {

@@ -14,6 +14,7 @@ class Upload extends Component {
     action: PropTypes.string,
     name: PropTypes.string,
     multipart: PropTypes.bool,
+    directory: PropTypes.bool,
     onError: PropTypes.func,
     onSuccess: PropTypes.func,
     onProgress: PropTypes.func,
@@ -81,7 +82,7 @@ class Upload extends Component {
       return null;
     }
     const ComponentUploader = this.getComponent();
-    return <ComponentUploader {...this.props} ref="inner"/>;
+    return <ComponentUploader {...this.props} directory={this.props.directory} ref="inner"/>;
   }
 }
 
