@@ -11430,25 +11430,25 @@ var AjaxUploader = function (_Component) {
   }, {
     key: 'uploadFiles',
     value: function uploadFiles(files) {
+      var _this2 = this;
+
       var postFiles = Array.prototype.slice.call(files);
-      var len = postFiles.length;
-      for (var i = 0; i < len; i++) {
-        var file = postFiles[i];
+      postFiles.forEach(function (file) {
         file.uid = __webpack_require__.i(__WEBPACK_IMPORTED_MODULE_10__uid__["a" /* default */])();
-        this.upload(file, postFiles);
-      }
+        _this2.upload(file, postFiles);
+      });
     }
   }, {
     key: 'upload',
     value: function upload(file, fileList) {
-      var _this2 = this;
+      var _this3 = this;
 
       var props = this.props;
 
       if (!props.beforeUpload) {
         // always async in case use react state to keep fileList
         return setTimeout(function () {
-          return _this2.post(file);
+          return _this3.post(file);
         }, 0);
       }
 
@@ -11457,23 +11457,23 @@ var AjaxUploader = function (_Component) {
         before.then(function (processedFile) {
           var processedFileType = Object.prototype.toString.call(processedFile);
           if (processedFileType === '[object File]' || processedFileType === '[object Blob]') {
-            _this2.post(processedFile);
+            _this3.post(processedFile);
           } else {
-            _this2.post(file);
+            _this3.post(file);
           }
         })['catch'](function (e) {
           console && console.log(e); // eslint-disable-line
         });
       } else if (before !== false) {
         setTimeout(function () {
-          return _this2.post(file);
+          return _this3.post(file);
         }, 0);
       }
     }
   }, {
     key: 'post',
     value: function post(file) {
-      var _this3 = this;
+      var _this4 = this;
 
       if (!this._isMounted) {
         return;
@@ -11504,11 +11504,11 @@ var AjaxUploader = function (_Component) {
           onProgress(e, file);
         } : null,
         onSuccess: function onSuccess(ret, xhr) {
-          delete _this3.reqs[uid];
+          delete _this4.reqs[uid];
           props.onSuccess(ret, file, xhr);
         },
         onError: function onError(err, ret) {
-          delete _this3.reqs[uid];
+          delete _this4.reqs[uid];
           props.onError(err, ret, file);
         }
       });
