@@ -75,12 +75,10 @@ class AjaxUploader extends Component {
 
   uploadFiles(files) {
     const postFiles = Array.prototype.slice.call(files);
-    const len = postFiles.length;
-    for (let i = 0; i < len; i++) {
-      const file = postFiles[i];
+    postFiles.forEach((file) => {
       file.uid = getUid();
       this.upload(file, postFiles);
-    }
+    });
   }
 
   upload(file, fileList) {
