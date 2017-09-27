@@ -11409,7 +11409,9 @@ var AjaxUploader = function (_Component) {
         e.preventDefault();
         return;
       }
-      var files = e.dataTransfer.files;
+      var files = Array.prototype.slice.call(e.dataTransfer.files).filter(function (file) {
+        return __WEBPACK_IMPORTED_MODULE_11_attr_accept___default()(file, _this.props.accept);
+      });
       _this.uploadFiles(files);
 
       e.preventDefault();
@@ -11481,12 +11483,8 @@ var AjaxUploader = function (_Component) {
       var props = this.props;
       var data = props.data;
       var onStart = props.onStart,
-          onProgress = props.onProgress,
-          accept = props.accept;
+          onProgress = props.onProgress;
 
-      if (!__WEBPACK_IMPORTED_MODULE_11_attr_accept___default()(file, accept)) {
-        return;
-      }
       if (typeof data === 'function') {
         data = data(file);
       }
