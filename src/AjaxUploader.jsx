@@ -40,7 +40,7 @@ class AjaxUploader extends Component {
   }
 
   onClick = () => {
-    const el = this.refs.file;
+    const el = this.fileInput;
     if (!el) {
       return;
     }
@@ -169,6 +169,10 @@ class AjaxUploader extends Component {
     }
   }
 
+  saveFileInput = (node) => {
+    this.fileInput = node;
+  }
+
   render() {
     const {
       component: Tag, prefixCls, className, disabled,
@@ -195,7 +199,7 @@ class AjaxUploader extends Component {
       >
         <input
           type="file"
-          ref="file"
+          ref={this.saveFileInput}
           key={this.state.uid}
           style={{ display: 'none' }}
           accept={accept}
