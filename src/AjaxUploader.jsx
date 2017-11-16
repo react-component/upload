@@ -42,7 +42,7 @@ class AjaxUploader extends Component {
   }
 
   onClick = () => {
-    const el = this.refs.file;
+    const el = this.fileInput;
     if (!el) {
       return;
     }
@@ -61,8 +61,10 @@ class AjaxUploader extends Component {
     if (e.type === 'dragover') {
       return;
     }
+    let files = Array.prototype.slice.call(e.dataTransfer.files).filter(
+      file => attrAccept(file, this.props.accept)
+    );
 
-    let files;
     if (this.props.directory) {
       traverseFileTree(e.dataTransfer.items, this.uploadFiles);
     } else {
@@ -72,8 +74,6 @@ class AjaxUploader extends Component {
   }
 
   componentDidMount() {
-    this.refs.file.directory = this.props.directory;
-    this.refs.file.webkitdirectory = this.props.directory;
     this._isMounted = true;
   }
 
@@ -84,12 +84,10 @@ class AjaxUploader extends Component {
 
   uploadFiles = (files) => {
     const postFiles = Array.prototype.slice.call(files);
-    const len = postFiles.length;
-    for (let i = 0; i < len; i++) {
-      const file = postFiles[i];
+    postFiles.forEach((file) => {
       file.uid = getUid();
       this.upload(file, postFiles);
-    }
+    });
   }
 
   upload(file, fileList) {
@@ -122,10 +120,7 @@ class AjaxUploader extends Component {
     }
     const { props } = this;
     let { data } = props;
-    const { onStart, onProgress, accept } = props;
-    if (!attrAccept(file, accept)) {
-      return;
-    }
+    const { onStart, onProgress } = props;
     if (typeof data === 'function') {
       data = data(file);
     }
@@ -181,10 +176,14 @@ class AjaxUploader extends Component {
     }
   }
 
+  saveFileInput = (node) => {
+    this.fileInput = node;
+  }
+
   render() {
     const {
       component: Tag, prefixCls, className, disabled,
-      style, multiple, accept, children,
+      style, multiple, accept, children, directory,
     } = this.props;
     const cls = classNames({
       [prefixCls]: true,
@@ -207,10 +206,12 @@ class AjaxUploader extends Component {
       >
         <input
           type="file"
-          ref="file"
+          ref={this.saveFileInput}
           key={this.state.uid}
           style={{ display: 'none' }}
           accept={accept}
+          directory={directory ? 'directory' : null}
+          webkitdirectory={directory ? 'webkitdirectory' : null}
           multiple={multiple}
           onChange={this.onChange}
         />

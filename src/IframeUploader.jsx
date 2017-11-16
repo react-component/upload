@@ -98,7 +98,7 @@ class IframeUploader extends Component {
   }
 
   getIframeNode() {
-    return this.refs.iframe;
+    return this.iframe;
   }
 
   getIframeDocument() {
@@ -252,6 +252,10 @@ class IframeUploader extends Component {
     onStart(file);
   }
 
+  saveIframe = (node) => {
+    this.iframe = node;
+  }
+
   render() {
     const {
       component: Tag, disabled, className,
@@ -272,7 +276,7 @@ class IframeUploader extends Component {
         style={{ position: 'relative', zIndex: 0, ...style }}
       >
         <iframe
-          ref="iframe"
+          ref={this.saveIframe}
           onLoad={this.onLoad}
           style={iframeStyle}
         />
