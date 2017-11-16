@@ -35,6 +35,7 @@ describe('uploader', () => {
       action: '/test',
       data: { a: 1, b: 2 },
       multiple: true,
+      accept: '.png',
       onStart(file) {
         console.log('onStart', file, file.name);
         if (handlers.onStart) {
@@ -125,6 +126,52 @@ describe('uploader', () => {
       Simulate.change(input, { target: { files } });
       setTimeout(() => {
         requests[0].respond(400, {}, `error 400`);
+      }, 100);
+    });
+
+    it('drag to upload', (done) => {
+      const input = TestUtils.findRenderedDOMComponentWithTag(uploader, 'input');
+
+      const files = [{
+        name: 'success.png',
+        toString() {
+          return this.name;
+        },
+      }];
+      files.item = (i) => files[i];
+
+      handlers.onSuccess = (ret, file) => {
+        expect(ret[1]).to.eql(file.name);
+        expect(file).to.have.property('uid');
+        done();
+      };
+
+      handlers.onError = (err) => {
+        done(err);
+      };
+
+      Simulate.drop(input, { dataTransfer: { files } });
+
+      setTimeout(() => {
+        requests[0].respond(200, {}, `["","${files[0].name}"]`);
+      }, 100);
+    });
+
+    it('drag unaccepted type files to upload will not trigger onStart', (done) => {
+      const input = TestUtils.findRenderedDOMComponentWithTag(uploader, 'input');
+      const files = [{
+        name: 'success.jpg',
+        toString() {
+          return this.name;
+        },
+      }];
+      files.item = (i) => files[i];
+      Simulate.drop(input, { dataTransfer: { files } });
+      const mockStart = jest.fn();
+      handlers.onStart = mockStart;
+      setTimeout(() => {
+        expect(mockStart.mock.calls.length).to.be(0);
+        done();
       }, 100);
     });
   });
