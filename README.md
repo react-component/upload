@@ -89,7 +89,7 @@ React.render(<Upload />, container);
 
 ### customRequest
 
-Allows for advanced customization by overriding default behavior in AjaxUplaoder. Provide your own XMLHttpRequest calls to interface with custom backend processes or interact with AWS S3 service through the aws-sdk-js package.
+Allows for advanced customization by overriding default behavior in AjaxUploader. Provide your own XMLHttpRequest calls to interface with custom backend processes or interact with AWS S3 service through the aws-sdk-js package.
 
 customRequest callback is passed an object with:
 
