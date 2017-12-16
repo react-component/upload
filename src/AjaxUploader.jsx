@@ -5,8 +5,8 @@ import PropTypes from 'prop-types';
 import classNames from 'classnames';
 import defaultRequest from './request';
 import getUid from './uid';
-import attrAccept from 'attr-accept';
 import traverseFileTree from './traverseFileTree';
+import attrAccept from './attr-accept';
 
 class AjaxUploader extends Component {
   static propTypes = {
