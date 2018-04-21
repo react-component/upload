@@ -31,7 +31,10 @@ class IframeUploader extends Component {
       PropTypes.object,
       PropTypes.func,
     ]),
-    action: PropTypes.string,
+    action: PropTypes.oneOfType([
+      PropTypes.string,
+      PropTypes.func,
+    ]),
     name: PropTypes.string,
   }
 
@@ -142,7 +145,7 @@ class IframeUploader extends Component {
     <body>
     <form method="post"
     encType="multipart/form-data"
-    action="${this.props.action}" id="form"
+    action="" id="form"
     style="display:block;height:9999px;position:relative;overflow:hidden;">
     <input id="input" type="file"
      name="${this.props.name}"
@@ -247,9 +250,18 @@ class IframeUploader extends Component {
       }
     }
     dataSpan.appendChild(inputs);
-    formNode.submit();
-    dataSpan.innerHTML = '';
-    onStart(file);
+    new Promise(resolve => {
+      const { action } = this.props;
+      if (typeof action === 'function') {
+        return resolve(action(file));
+      }
+      resolve(action);
+    }).then(action => {
+      formNode.setAttribute('action', action);
+      formNode.submit();
+      dataSpan.innerHTML = '';
+      onStart(file);
+    });
   }
 
   saveIframe = (node) => {
