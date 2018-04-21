@@ -95,10 +95,9 @@ class AjaxUploader extends Component {
       before.then((processedFile) => {
         const processedFileType = Object.prototype.toString.call(processedFile);
         if (processedFileType === '[object File]' || processedFileType === '[object Blob]') {
-          this.post(processedFile);
-        } else {
-          this.post(file);
+          return this.post(processedFile);
         }
+        return this.post(file);
       }).catch(e => {
         console && console.log(e); // eslint-disable-line
       });
