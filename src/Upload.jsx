@@ -11,7 +11,10 @@ class Upload extends Component {
     component: PropTypes.string,
     style: PropTypes.object,
     prefixCls: PropTypes.string,
-    action: PropTypes.string,
+    action: PropTypes.oneOfType([
+      PropTypes.string,
+      PropTypes.func,
+    ]),
     name: PropTypes.string,
     multipart: PropTypes.bool,
     directory: PropTypes.bool,

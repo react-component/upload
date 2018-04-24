@@ -5,7 +5,7 @@ import PropTypes from 'prop-types';
 import classNames from 'classnames';
 import defaultRequest from './request';
 import getUid from './uid';
-import attrAccept from 'attr-accept';
+import attrAccept from './attr-accept';
 import traverseFileTree from './traverseFileTree';
 
 class AjaxUploader extends Component {
@@ -22,6 +22,10 @@ class AjaxUploader extends Component {
     onStart: PropTypes.func,
     data: PropTypes.oneOfType([
       PropTypes.object,
+      PropTypes.func,
+    ]),
+    action: PropTypes.oneOfType([
+      PropTypes.string,
       PropTypes.func,
     ]),
     headers: PropTypes.object,
@@ -102,10 +106,9 @@ class AjaxUploader extends Component {
       before.then((processedFile) => {
         const processedFileType = Object.prototype.toString.call(processedFile);
         if (processedFileType === '[object File]' || processedFileType === '[object Blob]') {
-          this.post(processedFile);
-        } else {
-          this.post(file);
+          return this.post(processedFile);
         }
+        return this.post(file);
       }).catch(e => {
         console && console.log(e); // eslint-disable-line
       });
@@ -124,28 +127,36 @@ class AjaxUploader extends Component {
     if (typeof data === 'function') {
       data = data(file);
     }
-    const { uid } = file;
-    const request = props.customRequest || defaultRequest;
-    this.reqs[uid] = request({
-      action: props.action,
-      filename: props.name,
-      file,
-      data,
-      headers: props.headers,
-      withCredentials: props.withCredentials,
-      onProgress: onProgress ? e => {
-        onProgress(e, file);
-      } : null,
-      onSuccess: (ret, xhr) => {
-        delete this.reqs[uid];
-        props.onSuccess(ret, file, xhr);
-      },
-      onError: (err, ret) => {
-        delete this.reqs[uid];
-        props.onError(err, ret, file);
-      },
+    new Promise(resolve => {
+      const { action } = props;
+      if (typeof action === 'function') {
+        return resolve(action(file));
+      }
+      resolve(action);
+    }).then(action => {
+      const { uid } = file;
+      const request = props.customRequest || defaultRequest;
+      this.reqs[uid] = request({
+        action,
+        filename: props.name,
+        file,
+        data,
+        headers: props.headers,
+        withCredentials: props.withCredentials,
+        onProgress: onProgress ? e => {
+          onProgress(e, file);
+        } : null,
+        onSuccess: (ret, xhr) => {
+          delete this.reqs[uid];
+          props.onSuccess(ret, file, xhr);
+        },
+        onError: (err, ret) => {
+          delete this.reqs[uid];
+          props.onError(err, ret, file);
+        },
+      });
+      onStart(file);
     });
-    onStart(file);
   }
 
   reset() {
