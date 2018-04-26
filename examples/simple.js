@@ -80,7 +80,6 @@ class Test extends React.Component {
         >
           <Upload
             {...this.uploaderProps}
-            directory
             component="div"
             style={{ display: 'inline-block' }}
           >
