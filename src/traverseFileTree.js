@@ -1,8 +1,12 @@
-const traverseFileTree = (files, callback) => {
+const traverseFileTree = (files, callback, judge) => {
   const _traverseFileTree = (item, path) => {
     path = path || '';
     if (item.isFile) {
-      item.file(file => callback([file]));
+      item.file((file) => {
+        if (judge(file)) {
+          callback([file]);
+        }
+      });
     } else if (item.isDirectory) {
       const dirReader = item.createReader();
 
