@@ -1,9 +1,9 @@
-const traverseFileTree = (files, callback, judge) => {
+const traverseFileTree = (files, callback, isAccepted) => {
   const _traverseFileTree = (item, path) => {
     path = path || '';
     if (item.isFile) {
       item.file((file) => {
-        if (judge(file)) {
+        if (isAccepted(file)) {
           callback([file]);
         }
       });
