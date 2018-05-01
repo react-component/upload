@@ -23,18 +23,18 @@ const makeFileSystemEntry = (item) => {
     },
     createReader: () => {
       return {
-        readEntries: handle => handle(item.children.map(makeFileSystemEntry))
+        readEntries: handle => handle(item.children.map(makeFileSystemEntry)),
       };
-    }
-  }
+    },
+  };
   return ret;
-}
+};
 
 const makeDataTransferItem = (item) => {
   return {
-    webkitGetAsEntry: () => makeFileSystemEntry(item)
+    webkitGetAsEntry: () => makeFileSystemEntry(item),
   };
-}
+};
 
 describe('uploader', () => {
   let requests;
