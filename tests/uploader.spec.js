@@ -8,6 +8,34 @@ import TestUtils from 'react-dom/test-utils';
 const { Simulate } = TestUtils;
 import sinon from 'sinon';
 
+function Item(name) {
+  this.name = name;
+  this.toString = () => this.name;
+}
+
+const makeFileSystemEntry = (item) => {
+  const isDirectory = Array.isArray(item.children);
+  const ret = {
+    isDirectory,
+    isFile: !isDirectory,
+    file: (handle) => {
+      handle(new Item(item.name));
+    },
+    createReader: () => {
+      return {
+        readEntries: handle => handle(item.children.map(makeFileSystemEntry))
+      };
+    }
+  }
+  return ret;
+}
+
+const makeDataTransferItem = (item) => {
+  return {
+    webkitGetAsEntry: () => makeFileSystemEntry(item)
+  };
+}
+
 describe('uploader', () => {
   let requests;
   let xhr;
@@ -167,6 +195,78 @@ describe('uploader', () => {
       }];
       files.item = (i) => files[i];
       Simulate.drop(input, { dataTransfer: { files } });
+      const mockStart = jest.fn();
+      handlers.onStart = mockStart;
+      setTimeout(() => {
+        expect(mockStart.mock.calls.length).to.be(0);
+        done();
+      }, 100);
+    });
+  });
+
+  describe('directory uploader', () => {
+    if (typeof FormData === 'undefined') {
+      return;
+    }
+
+    let node;
+    let uploader;
+    const handlers = {};
+
+    const props = {
+      action: '/test',
+      data: { a: 1, b: 2 },
+      directory: true,
+      accept: '.png',
+      onStart(file) {
+        console.log('onStart', file, file.name);
+        if (handlers.onStart) {
+          handlers.onStart(file);
+        }
+      },
+      onSuccess(ret, file) {
+        console.log('onSuccess', ret);
+        if (handlers.onSuccess) {
+          handlers.onSuccess(ret, file);
+        }
+      },
+      onProgress(step, file) {
+        console.log('onProgress', step, file);
+      },
+      onError(err, result, file) {
+        console.log('onError', err);
+        if (handlers.onError) {
+          handlers.onError(err, result, file);
+        }
+      },
+    };
+
+    beforeEach((done) => {
+      node = document.createElement('div');
+      document.body.appendChild(node);
+
+      ReactDOM.render(<Uploader {...props} />, node, function init() {
+        uploader = this;
+        done();
+      });
+    });
+
+    it('unaccepted type files to upload will not trigger onStart', (done) => {
+      const input = TestUtils.findRenderedDOMComponentWithTag(uploader, 'input');
+      const files = {
+        name: 'foo',
+        children: [
+          {
+            name: 'bar',
+            children: [
+              {
+                name: 'unaccepted.webp',
+              },
+            ],
+          },
+        ],
+      };
+      Simulate.drop(input, { dataTransfer: { items: [makeDataTransferItem(files)] } });
       const mockStart = jest.fn();
       handlers.onStart = mockStart;
       setTimeout(() => {
