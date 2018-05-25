@@ -6,6 +6,7 @@ import classNames from 'classnames';
 import defaultRequest from './request';
 import getUid from './uid';
 import attrAccept from './attr-accept';
+import traverseFileTree from './traverseFileTree';
 
 class AjaxUploader extends Component {
   static propTypes = {
@@ -14,6 +15,7 @@ class AjaxUploader extends Component {
     prefixCls: PropTypes.string,
     className: PropTypes.string,
     multiple: PropTypes.bool,
+    directory: PropTypes.bool,
     disabled: PropTypes.bool,
     accept: PropTypes.string,
     children: PropTypes.any,
@@ -58,16 +60,24 @@ class AjaxUploader extends Component {
   }
 
   onFileDrop = e => {
+    e.preventDefault();
+
     if (e.type === 'dragover') {
-      e.preventDefault();
       return;
     }
-    const files = Array.prototype.slice.call(e.dataTransfer.files).filter(
-      file => attrAccept(file, this.props.accept)
-    );
-    this.uploadFiles(files);
 
-    e.preventDefault();
+    if (this.props.directory) {
+      traverseFileTree(
+        e.dataTransfer.items,
+        this.uploadFiles,
+        _file => attrAccept(_file, this.props.accept)
+      );
+    } else {
+      const files = Array.prototype.slice.call(e.dataTransfer.files).filter(
+        file => attrAccept(file, this.props.accept)
+      );
+      this.uploadFiles(files);
+    }
   }
 
   componentDidMount() {
@@ -79,7 +89,7 @@ class AjaxUploader extends Component {
     this.abort();
   }
 
-  uploadFiles(files) {
+  uploadFiles = (files) => {
     const postFiles = Array.prototype.slice.call(files);
     postFiles.forEach((file) => {
       file.uid = getUid();
@@ -187,7 +197,7 @@ class AjaxUploader extends Component {
   render() {
     const {
       component: Tag, prefixCls, className, disabled,
-      style, multiple, accept, children,
+      style, multiple, accept, children, directory,
     } = this.props;
     const cls = classNames({
       [prefixCls]: true,
@@ -214,6 +224,8 @@ class AjaxUploader extends Component {
           key={this.state.uid}
           style={{ display: 'none' }}
           accept={accept}
+          directory={directory ? 'directory' : null}
+          webkitdirectory={directory ? 'webkitdirectory' : null}
           multiple={multiple}
           onChange={this.onChange}
         />

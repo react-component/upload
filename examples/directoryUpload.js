@@ -4,11 +4,6 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import Upload from 'rc-upload';
 
-const style = `
-        .rc-upload-disabled {
-           opacity:0.5;
-        `;
-
 class Test extends React.Component {
   constructor(props) {
     super(props);
@@ -18,7 +13,7 @@ class Test extends React.Component {
       headers: {
         Authorization: 'xxxxxxx',
       },
-      multiple: true,
+      directory: true,
       beforeUpload(file) {
         console.log('beforeUpload', file.name);
       },
@@ -36,59 +31,18 @@ class Test extends React.Component {
         console.log('onError', err);
       },
     };
-    this.state = {
-      destroyed: false,
-    };
-  }
-  destroy = () => {
-    this.setState({
-      destroyed: true,
-    });
   }
   render() {
-    if (this.state.destroyed) {
-      return null;
-    }
     return (<div
       style={{
         margin: 100,
       }}
     >
-      <h2>固定位置</h2>
-
-      <style>
-        {style}
-      </style>
 
       <div>
         <Upload {...this.uploaderProps} ref="inner"><a>开始上传</a></Upload>
       </div>
 
-      <h2>滚动</h2>
-
-      <div
-        style={{
-          height: 200,
-          overflow: 'auto',
-          border: '1px solid red',
-        }}
-      >
-        <div
-          style={{
-            height: 500,
-          }}
-        >
-          <Upload
-            {...this.uploaderProps}
-            component="div"
-            style={{ display: 'inline-block' }}
-          >
-            <a>开始上传2</a>
-          </Upload>
-        </div>
-      </div>
-
-      <button onClick={this.destroy}>destroy</button>
     </div>);
   }
 }
