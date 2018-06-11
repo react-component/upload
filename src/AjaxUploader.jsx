@@ -24,10 +24,6 @@ class AjaxUploader extends Component {
       PropTypes.object,
       PropTypes.func,
     ]),
-    action: PropTypes.oneOfType([
-      PropTypes.string,
-      PropTypes.func,
-    ]),
     headers: PropTypes.object,
     beforeUpload: PropTypes.func,
     customRequest: PropTypes.func,
@@ -130,36 +126,28 @@ class AjaxUploader extends Component {
     if (typeof data === 'function') {
       data = data(file);
     }
-    new Promise(resolve => {
-      const { action } = props;
-      if (typeof action === 'function') {
-        return resolve(action(file));
-      }
-      resolve(action);
-    }).then(action => {
-      const { uid } = file;
-      const request = props.customRequest || defaultRequest;
-      this.reqs[uid] = request({
-        action,
-        filename: props.name,
-        file,
-        data,
-        headers: props.headers,
-        withCredentials: props.withCredentials,
-        onProgress: onProgress ? e => {
-          onProgress(e, file);
-        } : null,
-        onSuccess: (ret, xhr) => {
-          delete this.reqs[uid];
-          props.onSuccess(ret, file, xhr);
-        },
-        onError: (err, ret) => {
-          delete this.reqs[uid];
-          props.onError(err, ret, file);
-        },
-      });
-      onStart(file);
+    const { uid } = file;
+    const request = props.customRequest || defaultRequest;
+    this.reqs[uid] = request({
+      action: props.action,
+      filename: props.name,
+      file,
+      data,
+      headers: props.headers,
+      withCredentials: props.withCredentials,
+      onProgress: onProgress ? e => {
+        onProgress(e, file);
+      } : null,
+      onSuccess: (ret, xhr) => {
+        delete this.reqs[uid];
+        props.onSuccess(ret, file, xhr);
+      },
+      onError: (err, ret) => {
+        delete this.reqs[uid];
+        props.onError(err, ret, file);
+      },
     });
+    onStart(file);
   }
 
   reset() {
