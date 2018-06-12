@@ -202,6 +202,37 @@ describe('uploader', () => {
         done();
       }, 100);
     });
+
+    it('support action is function returns Promise', (done) => {
+      const action = () => {
+        return new Promise((resolve) => {
+          setTimeout(() => {
+            resolve('/upload.do');
+          }, 1000);
+        });
+      };
+      ReactDOM.render(<Uploader action={action} />, node, function init() {
+        uploader = this;
+        const input = TestUtils.findRenderedDOMComponentWithTag(uploader, 'input');
+        const files = [{
+          name: 'success.png',
+          toString() {
+            return this.name;
+          },
+        }];
+        files.item = (i) => files[i];
+        Simulate.change(input, { target: { files } });
+        setTimeout(() => {
+          expect(requests.length).to.be(0);
+          setTimeout(() => {
+            console.log(requests);
+            expect(requests.length).to.be(1);
+            expect(requests[0].url).to.be('/upload.do');
+            done();
+          }, 1000);
+        }, 100);
+      });
+    });
   });
 
   describe('directory uploader', () => {
