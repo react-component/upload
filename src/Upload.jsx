@@ -89,7 +89,7 @@ class Upload extends Component {
       return null;
     }
     const ComponentUploader = this.getComponent();
-    return <ComponentUploader {...this.props} directory={this.props.directory} ref="inner"/>;
+    return <ComponentUploader {...this.props} ref={this.saveUploader} />;
   }
 }
 
