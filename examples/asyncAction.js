@@ -1,14 +1,14 @@
-webpackJsonp([4],{
+webpackJsonp([5],{
 
-/***/ 158:
+/***/ 157:
 /***/ (function(module, exports, __webpack_require__) {
 
-module.exports = __webpack_require__(74);
+module.exports = __webpack_require__(73);
 
 
 /***/ }),
 
-/***/ 74:
+/***/ 73:
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -24,9 +24,14 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 
 
 
-
 var props = {
-  action: '/upload.do',
+  action: function action() {
+    return new Promise(function (resolve) {
+      setTimeout(function () {
+        resolve('/upload.do');
+      }, 2000);
+    });
+  },
   multiple: true,
   onStart: function onStart(file) {
     console.log('onStart', file, file.name);
@@ -36,16 +41,6 @@ var props = {
   },
   onError: function onError(err) {
     console.log('onError', err);
-  },
-  beforeUpload: function beforeUpload(file, fileList) {
-    console.log(file, fileList);
-    return new Promise(function (resolve) {
-      console.log('start check');
-      setTimeout(function () {
-        console.log('check finshed');
-        resolve(file);
-      }, 3000);
-    });
   }
 };
 
@@ -77,5 +72,5 @@ __WEBPACK_IMPORTED_MODULE_1_react_dom___default.a.render(__WEBPACK_IMPORTED_MODU
 
 /***/ })
 
-},[158]);
-//# sourceMappingURL=beforeUpload.js.map
+},[157]);
+//# sourceMappingURL=asyncAction.js.map

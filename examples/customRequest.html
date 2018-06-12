@@ -2,7 +2,7 @@
 <html>
 
 <head>
-  <title>simple.js - example - rc-upload@2.5.0</title>
+  <title>customRequest.js - example - rc-upload@2.5.0</title>
   <meta name="viewport"
         content="width=device-width,initial-scale=1.0,minimum-scale=1.0,maximum-scale=1.0,user-scalable=no">
   <meta charset="utf-8"/>
@@ -270,101 +270,88 @@ Monokai Sublime style. Derived from Monokai by noformnocontent http://nn.mit-lic
     <div class="example" id="__react-content"></div>
 
     <div class="highlight"><pre><code language="js"><span class="hljs-comment">/* eslint no-console:0 */</span>
-
 <span class="hljs-keyword">import</span> React <span class="hljs-keyword">from</span> <span class="hljs-string">'react'</span>;
 <span class="hljs-keyword">import</span> ReactDOM <span class="hljs-keyword">from</span> <span class="hljs-string">'react-dom'</span>;
 <span class="hljs-keyword">import</span> Upload <span class="hljs-keyword">from</span> <span class="hljs-string">'rc-upload'</span>;
+<span class="hljs-keyword">import</span> axios <span class="hljs-keyword">from</span> <span class="hljs-string">'axios'</span>;
 
-<span class="hljs-keyword">const</span> style = <span class="hljs-string">`
-        .rc-upload-disabled {
-           opacity:0.5;
-        `</span>;
-
-<span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">Test</span> <span class="hljs-keyword">extends</span> <span class="hljs-title">React</span>.<span class="hljs-title">Component</span> </span>{
-  constructor(props) {
-    <span class="hljs-keyword">super</span>(props);
-    <span class="hljs-keyword">this</span>.uploaderProps = {
-      action: <span class="hljs-string">'/upload.do'</span>,
-      data: { a: <span class="hljs-number">1</span>, b: <span class="hljs-number">2</span> },
-      headers: {
-        Authorization: <span class="hljs-string">'xxxxxxx'</span>,
-      },
-      multiple: <span class="hljs-literal">true</span>,
-      beforeUpload(file) {
-        <span class="hljs-built_in">console</span>.log(<span class="hljs-string">'beforeUpload'</span>, file.name);
-      },
-      onStart: (file) =&gt; {
-        <span class="hljs-built_in">console</span>.log(<span class="hljs-string">'onStart'</span>, file.name);
-        <span class="hljs-comment">// this.refs.inner.abort(file);</span>
-      },
-      onSuccess(file) {
-        <span class="hljs-built_in">console</span>.log(<span class="hljs-string">'onSuccess'</span>, file);
-      },
-      onProgress(step, file) {
-        <span class="hljs-built_in">console</span>.log(<span class="hljs-string">'onProgress'</span>, <span class="hljs-built_in">Math</span>.round(step.percent), file.name);
-      },
-      onError(err) {
-        <span class="hljs-built_in">console</span>.log(<span class="hljs-string">'onError'</span>, err);
-      },
-    };
-    <span class="hljs-keyword">this</span>.state = {
-      destroyed: <span class="hljs-literal">false</span>,
-    };
-  }
-  destroy = () =&gt; {
-    <span class="hljs-keyword">this</span>.setState({
-      destroyed: <span class="hljs-literal">true</span>,
-    });
-  }
-  render() {
-    <span class="hljs-keyword">if</span> (<span class="hljs-keyword">this</span>.state.destroyed) {
-      <span class="hljs-keyword">return</span> <span class="hljs-literal">null</span>;
+<span class="hljs-keyword">const</span> uploadProps = {
+  action: <span class="hljs-string">'/upload.do'</span>,
+  multiple: <span class="hljs-literal">false</span>,
+  data: { a: <span class="hljs-number">1</span>, b: <span class="hljs-number">2</span> },
+  headers: {
+    Authorization: <span class="hljs-string">'$prefix $token'</span>,
+  },
+  onStart(file) {
+    <span class="hljs-built_in">console</span>.log(<span class="hljs-string">'onStart'</span>, file, file.name);
+  },
+  onSuccess(ret, file) {
+    <span class="hljs-built_in">console</span>.log(<span class="hljs-string">'onSuccess'</span>, ret, file.name);
+  },
+  onError(err) {
+    <span class="hljs-built_in">console</span>.log(<span class="hljs-string">'onError'</span>, err);
+  },
+  onProgress({ percent }, file) {
+    <span class="hljs-built_in">console</span>.log(<span class="hljs-string">'onProgress'</span>, <span class="hljs-string">`<span class="hljs-subst">${percent}</span>%`</span>, file.name);
+  },
+  customRequest({
+    action,
+    data,
+    file,
+    filename,
+    headers,
+    onError,
+    onProgress,
+    onSuccess,
+    withCredentials,
+  }) {
+    <span class="hljs-comment">// EXAMPLE: post form-data with 'axios'</span>
+    <span class="hljs-keyword">const</span> formData = <span class="hljs-keyword">new</span> FormData();
+    <span class="hljs-keyword">if</span> (data) {
+      <span class="hljs-built_in">Object</span>.keys(data).map(key =&gt; {
+        formData.append(key, data[key]);
+      });
     }
-    <span class="hljs-keyword">return</span> (<span class="xml"><span class="hljs-tag">&lt;<span class="hljs-title">div</span>
+    formData.append(filename, file);
+
+    axios
+      .post(action, formData, {
+        withCredentials,
+        headers,
+        onUploadProgress: ({ total, loaded }) =&gt; {
+          onProgress({ percent: <span class="hljs-built_in">Math</span>.round(loaded / total * <span class="hljs-number">100</span>).toFixed(<span class="hljs-number">2</span>) }, file);
+        },
+      })
+      .then(({ data: response }) =&gt; {
+        onSuccess(response, file);
+      })
+      .catch(onError);
+
+    <span class="hljs-keyword">return</span> {
+      abort() {
+        <span class="hljs-built_in">console</span>.log(<span class="hljs-string">'upload progress is aborted.'</span>);
+      },
+    };
+  },
+};
+
+<span class="hljs-keyword">const</span> Test = () =&gt; {
+  <span class="hljs-keyword">return</span> (
+    <span class="xml"><span class="hljs-tag">&lt;<span class="hljs-title">div</span>
       <span class="hljs-attribute">style</span>=<span class="hljs-value">{{</span>
         <span class="hljs-attribute">margin:</span> <span class="hljs-attribute">100</span>,
       }}
     &gt;</span>
-      <span class="hljs-tag">&lt;<span class="hljs-title">h2</span>&gt;</span>固定位置<span class="hljs-tag">&lt;/<span class="hljs-title">h2</span>&gt;</span>
-
-      <span class="hljs-tag">&lt;<span class="hljs-title">style</span>&gt;</span><span class="css">
-        <span class="hljs-rules">{style}</span>
-      </span><span class="hljs-tag">&lt;/<span class="hljs-title">style</span>&gt;</span>
-
       <span class="hljs-tag">&lt;<span class="hljs-title">div</span>&gt;</span>
-        <span class="hljs-tag">&lt;<span class="hljs-title">Upload</span> {<span class="hljs-attribute">...this.uploaderProps</span>} <span class="hljs-attribute">ref</span>=<span class="hljs-value">"inner"</span>&gt;</span><span class="hljs-tag">&lt;<span class="hljs-title">a</span>&gt;</span>开始上传<span class="hljs-tag">&lt;/<span class="hljs-title">a</span>&gt;</span><span class="hljs-tag">&lt;/<span class="hljs-title">Upload</span>&gt;</span>
+        <span class="hljs-tag">&lt;<span class="hljs-title">Upload</span> {<span class="hljs-attribute">...uploadProps</span>}&gt;</span>
+          <span class="hljs-tag">&lt;<span class="hljs-title">button</span>&gt;</span>开始上传<span class="hljs-tag">&lt;/<span class="hljs-title">button</span>&gt;</span>
+        <span class="hljs-tag">&lt;/<span class="hljs-title">Upload</span>&gt;</span>
       <span class="hljs-tag">&lt;/<span class="hljs-title">div</span>&gt;</span>
+    <span class="hljs-tag">&lt;/<span class="hljs-title">div</span>&gt;</span>
+  )</span>;
+};
 
-      <span class="hljs-tag">&lt;<span class="hljs-title">h2</span>&gt;</span>滚动<span class="hljs-tag">&lt;/<span class="hljs-title">h2</span>&gt;</span>
-
-      <span class="hljs-tag">&lt;<span class="hljs-title">div</span>
-        <span class="hljs-attribute">style</span>=<span class="hljs-value">{{</span>
-          <span class="hljs-attribute">height:</span> <span class="hljs-attribute">200</span>,
-          <span class="hljs-attribute">overflow:</span> '<span class="hljs-attribute">auto</span>',
-          <span class="hljs-attribute">border:</span> '<span class="hljs-attribute">1px</span> <span class="hljs-attribute">solid</span> <span class="hljs-attribute">red</span>',
-        }}
-      &gt;</span>
-        <span class="hljs-tag">&lt;<span class="hljs-title">div</span>
-          <span class="hljs-attribute">style</span>=<span class="hljs-value">{{</span>
-            <span class="hljs-attribute">height:</span> <span class="hljs-attribute">500</span>,
-          }}
-        &gt;</span>
-          <span class="hljs-tag">&lt;<span class="hljs-title">Upload</span>
-            {<span class="hljs-attribute">...this.uploaderProps</span>}
-            <span class="hljs-attribute">component</span>=<span class="hljs-value">"div"</span>
-            <span class="hljs-attribute">style</span>=<span class="hljs-value">{{</span> <span class="hljs-attribute">display:</span> '<span class="hljs-attribute">inline-block</span>' }}
-          &gt;</span>
-            <span class="hljs-tag">&lt;<span class="hljs-title">a</span>&gt;</span>开始上传2<span class="hljs-tag">&lt;/<span class="hljs-title">a</span>&gt;</span>
-          <span class="hljs-tag">&lt;/<span class="hljs-title">Upload</span>&gt;</span>
-        <span class="hljs-tag">&lt;/<span class="hljs-title">div</span>&gt;</span>
-      <span class="hljs-tag">&lt;/<span class="hljs-title">div</span>&gt;</span>
-
-      <span class="hljs-tag">&lt;<span class="hljs-title">button</span> <span class="hljs-attribute">onClick</span>=<span class="hljs-value">{this.destroy}</span>&gt;</span>destroy<span class="hljs-tag">&lt;/<span class="hljs-title">button</span>&gt;</span>
-    <span class="hljs-tag">&lt;/<span class="hljs-title">div</span>&gt;</span>)</span>;
-  }
-}
-
-ReactDOM.render(<span class="xml"><span class="hljs-tag">&lt;<span class="hljs-title">Test</span>/&gt;</span>, document.getElementById('__react-content'));
+ReactDOM.render(<span class="xml"><span class="hljs-tag">&lt;<span class="hljs-title">Test</span> /&gt;</span>, document.getElementById('__react-content'));
 </span></code></pre></div>
   </div>
   <a href="http://github.com/react-component/upload">
@@ -375,7 +362,7 @@ ReactDOM.render(<span class="xml"><span class="hljs-tag">&lt;<span class="hljs-t
   </a>
   <script>FastClick.attach(document.body);</script>
   <script src="../common.js?nowrap"></script>
-  <script src="simple.js?nowrap"></script>
+  <script src="customRequest.js?nowrap"></script>
 </body>
 
 </html>
