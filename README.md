@@ -61,6 +61,7 @@ React.render(<Upload />, container);
 |supportServerRender | boolean | false| whether to support server render |
 |onReady | function | | only call when supportServerRender is true, upload is rendered completely |
 |action| string &#124; function(file): string &#124; Promise&lt;string&gt; | | form action url |
+|directory| boolean | false | support upload whole directory |
 |data| object/function(file) | | other data object to post or a function which returns a data object |
 |headers| object | {} | http headers to post, available in modern browsers |
 |accept | string | | input accept attribute |
@@ -113,7 +114,7 @@ abort(file?: File) => void: abort the uploading file
 
 #### Download Popup Problem
 
-In iframe uploader way, the content-type of response should be `text/plain` or `text/html`. [See more about 
+In iframe uploader way, the content-type of response should be `text/plain` or `text/html`. [See more about
 Content-Type Negotiation](https://github.com/blueimp/jQuery-File-Upload/wiki/Setup#content-type-negotiation)
 
 What's more, in iframe mode, the response's status should always be `200 OK`, otherwise you might get an `Access is denied` error in IE 8/9.
