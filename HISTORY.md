@@ -1,6 +1,12 @@
 # History
 ----
 
+### 2.5.0 / 2018-06-12
+
+- Support upload directory. [#114](https://github.com/react-component/upload/pull/114)
+- Support `action={(file) => Promise}`. [#97](https://github.com/react-component/upload/pull/97)
+- Fix a bluebird promise warning. [#110](https://github.com/react-component/upload/pull/110)
+
 ### 2.4.0 / 2017-07-15
 
 - Add XHR for onSuccess callback by @xiangkaiy [!85](https://github.com/react-component/upload/pull/85)
