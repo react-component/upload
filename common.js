@@ -2697,7 +2697,7 @@ var Upload = function (_Component) {
         return null;
       }
       var ComponentUploader = this.getComponent();
-      return __WEBPACK_IMPORTED_MODULE_5_react___default.a.createElement(ComponentUploader, __WEBPACK_IMPORTED_MODULE_0_babel_runtime_helpers_extends___default()({}, this.props, { directory: this.props.directory, ref: 'inner' }));
+      return __WEBPACK_IMPORTED_MODULE_5_react___default.a.createElement(ComponentUploader, __WEBPACK_IMPORTED_MODULE_0_babel_runtime_helpers_extends___default()({}, this.props, { ref: this.saveUploader }));
     }
   }]);
 
