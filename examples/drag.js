@@ -26,6 +26,7 @@ class Test extends React.Component {
         console.log('onError', err);
       },
       style: { display: 'inline-block', width: 200, height: 200, background: '#eee' },
+      // openChooseDialogOnClick: false
     };
     return <Upload {...props} />;
   }

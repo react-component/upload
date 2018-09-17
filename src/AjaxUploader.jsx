@@ -33,6 +33,7 @@ class AjaxUploader extends Component {
     customRequest: PropTypes.func,
     onProgress: PropTypes.func,
     withCredentials: PropTypes.bool,
+    openChooseDialogOnClick: PropTypes.bool,
   }
 
   state = { uid: getUid() }
@@ -197,7 +198,7 @@ class AjaxUploader extends Component {
   render() {
     const {
       component: Tag, prefixCls, className, disabled,
-      style, multiple, accept, children, directory,
+      style, multiple, accept, children, directory, openChooseDialogOnClick,
     } = this.props;
     const cls = classNames({
       [prefixCls]: true,
@@ -205,7 +206,7 @@ class AjaxUploader extends Component {
       [className]: className,
     });
     const events = disabled ? {} : {
-      onClick: this.onClick,
+      onClick: openChooseDialogOnClick ? this.onClick : () => { },
       onKeyDown: this.onKeyDown,
       onDrop: this.onFileDrop,
       onDragOver: this.onFileDrop,
