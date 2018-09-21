@@ -73,7 +73,7 @@ React.render(<Upload />, container);
 |beforeUpload| function |null| before upload check, return false or a rejected Promise will stop upload, only for modern browsers|
 |customRequest | function | null | provide an override for the default xhr behavior for additional customization|
 |withCredentials | boolean | false | ajax upload with cookie send |
-|openChooseDialogOnClick | boolean | true |  |
+|openFileDialogOnClick | boolean | true |  |
 
 #### onError arguments
 
