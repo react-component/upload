@@ -1,6 +1,10 @@
 # History
 ----
 
+### 2.6.0 / 2018-09-21
+
+- Add `openFileDialogOnClick`.
+
 ### 2.5.0 / 2018-06-12
 
 - Support upload directory. [#114](https://github.com/react-component/upload/pull/114)
