@@ -2213,11 +2213,12 @@ var AjaxUploader = function (_Component) {
           multiple = _props.multiple,
           accept = _props.accept,
           children = _props.children,
-          directory = _props.directory;
+          directory = _props.directory,
+          openFileDialogOnClick = _props.openFileDialogOnClick;
 
       var cls = __WEBPACK_IMPORTED_MODULE_8_classnames___default()((_classNames = {}, __WEBPACK_IMPORTED_MODULE_1_babel_runtime_helpers_defineProperty___default()(_classNames, prefixCls, true), __WEBPACK_IMPORTED_MODULE_1_babel_runtime_helpers_defineProperty___default()(_classNames, prefixCls + '-disabled', disabled), __WEBPACK_IMPORTED_MODULE_1_babel_runtime_helpers_defineProperty___default()(_classNames, className, className), _classNames));
       var events = disabled ? {} : {
-        onClick: this.onClick,
+        onClick: openFileDialogOnClick ? this.onClick : function () {},
         onKeyDown: this.onKeyDown,
         onDrop: this.onFileDrop,
         onDragOver: this.onFileDrop,
@@ -2266,7 +2267,8 @@ AjaxUploader.propTypes = {
   beforeUpload: __WEBPACK_IMPORTED_MODULE_7_prop_types___default.a.func,
   customRequest: __WEBPACK_IMPORTED_MODULE_7_prop_types___default.a.func,
   onProgress: __WEBPACK_IMPORTED_MODULE_7_prop_types___default.a.func,
-  withCredentials: __WEBPACK_IMPORTED_MODULE_7_prop_types___default.a.bool
+  withCredentials: __WEBPACK_IMPORTED_MODULE_7_prop_types___default.a.bool,
+  openFileDialogOnClick: __WEBPACK_IMPORTED_MODULE_7_prop_types___default.a.bool
 };
 
 
@@ -2725,7 +2727,8 @@ Upload.propTypes = {
   customRequest: __WEBPACK_IMPORTED_MODULE_6_prop_types___default.a.func,
   onReady: __WEBPACK_IMPORTED_MODULE_6_prop_types___default.a.func,
   withCredentials: __WEBPACK_IMPORTED_MODULE_6_prop_types___default.a.bool,
-  supportServerRender: __WEBPACK_IMPORTED_MODULE_6_prop_types___default.a.bool
+  supportServerRender: __WEBPACK_IMPORTED_MODULE_6_prop_types___default.a.bool,
+  openFileDialogOnClick: __WEBPACK_IMPORTED_MODULE_6_prop_types___default.a.bool
 };
 Upload.defaultProps = {
   component: 'span',
@@ -2742,7 +2745,8 @@ Upload.defaultProps = {
   multiple: false,
   beforeUpload: null,
   customRequest: null,
-  withCredentials: false
+  withCredentials: false,
+  openFileDialogOnClick: true
 };
 
 

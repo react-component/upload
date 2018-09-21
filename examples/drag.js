@@ -71,6 +71,7 @@ var Test = function (_React$Component) {
         },
 
         style: { display: 'inline-block', width: 200, height: 200, background: '#eee' }
+        // openFileDialogOnClick: false
       };
       return __WEBPACK_IMPORTED_MODULE_4_react___default.a.createElement(__WEBPACK_IMPORTED_MODULE_6_rc_upload___default.a, props);
     }
