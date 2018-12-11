@@ -171,6 +171,11 @@ class IframeUploader extends Component {
   }
 
   initIframe() {
+    const arrayDomain = (document.domain && document.domain.split('.')) || [];
+    document.domain =
+      arrayDomain.length >= 2
+        ? arrayDomain.slice(-2).join('.')
+        : document.domain;
     const iframeNode = this.getIframeNode();
     let win = iframeNode.contentWindow;
     let doc;
@@ -179,11 +184,7 @@ class IframeUploader extends Component {
     try {
       doc = win.document;
     } catch (e) {
-      const arrayDomain = (document.domain && document.domain.split('.')) || [];
-      this.domain =
-        arrayDomain.length >= 2
-          ? arrayDomain.slice(-2).join('.')
-          : document.domain;
+      this.domain = document.domain;
       this.initIframeSrc();
       win = iframeNode.contentWindow;
       doc = win.document;
