@@ -179,7 +179,11 @@ class IframeUploader extends Component {
     try {
       doc = win.document;
     } catch (e) {
-      this.domain = document.domain;
+      const arrayDomain = (document.domain && document.domain.split('.')) || [];
+      this.domain =
+        arrayDomain.length >= 2
+          ? arrayDomain.slice(-2).join('.')
+          : document.domain;
       this.initIframeSrc();
       win = iframeNode.contentWindow;
       doc = win.document;
