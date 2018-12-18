@@ -10,6 +10,7 @@ import traverseFileTree from './traverseFileTree';
 
 class AjaxUploader extends Component {
   static propTypes = {
+    id: PropTypes.string,
     component: PropTypes.string,
     style: PropTypes.object,
     prefixCls: PropTypes.string,
@@ -197,7 +198,7 @@ class AjaxUploader extends Component {
 
   render() {
     const {
-      component: Tag, prefixCls, className, disabled,
+      component: Tag, prefixCls, className, disabled, id,
       style, multiple, accept, children, directory, openFileDialogOnClick,
     } = this.props;
     const cls = classNames({
@@ -220,6 +221,7 @@ class AjaxUploader extends Component {
         style={style}
       >
         <input
+          id={id}
           type="file"
           ref={this.saveFileInput}
           key={this.state.uid}
