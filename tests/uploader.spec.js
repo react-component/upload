@@ -101,6 +101,13 @@ describe('uploader', () => {
       ReactDOM.unmountComponentAtNode(node);
     });
 
+    it('with id', (done) => {
+      ReactDOM.render(<Uploader id="bamboo" />, node, function init() {
+        expect(TestUtils.findRenderedDOMComponentWithTag(this, 'input').id).to.be('bamboo');
+        done();
+      });
+    });
+
     it('create works', () => {
       expect(TestUtils.scryRenderedDOMComponentsWithTag(uploader, 'span').length).to.be(1);
     });
