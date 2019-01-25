@@ -68,10 +68,12 @@ class IframeUploader extends Component {
     const target = this.getFormInputNode();
     // ie8/9 don't support FileList Object
     // http://stackoverflow.com/questions/12830058/ie8-input-type-file-get-files
-    const file = this.file = {
+    const file = (this.file = {
       uid: getUid(),
-      name: target.value,
-    };
+      name:
+        target.value &&
+        target.value.substring(target.value.lastIndexOf('\\') + 1, target.value.length),
+    });
     this.startUpload();
     const { props } = this;
     if (!props.beforeUpload) {
