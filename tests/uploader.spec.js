@@ -22,8 +22,16 @@ const makeFileSystemEntry = (item) => {
       handle(new Item(item.name));
     },
     createReader: () => {
+      let first = true;
       return {
-        readEntries: handle => handle(item.children.map(makeFileSystemEntry)),
+        readEntries(handle) {
+          if (!first) {
+            return [];
+          }
+
+          first = false;
+          return handle(item.children.map(makeFileSystemEntry));
+        },
       };
     },
   };
