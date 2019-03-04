@@ -47,7 +47,7 @@
     "rc-tools": "6.x",
     "react": "^16.0.0",
     "react-dom": "^16.0.0",
-    "sinon": "2.0.0-pre.2"
+    "sinon": "7.2.7"
   },
   "pre-commit": [
     "lint"
