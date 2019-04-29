@@ -183,7 +183,7 @@ class AjaxUploader extends Component {
       }
     } else {
       Object.keys(reqs).forEach((uid) => {
-        if (reqs[uid]) {
+        if (reqs[uid] && res[uid].abort ) {
           reqs[uid].abort();
         }
 
