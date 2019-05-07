@@ -36,6 +36,7 @@ class Upload extends Component {
     withCredentials: PropTypes.bool,
     supportServerRender: PropTypes.bool,
     openFileDialogOnClick: PropTypes.bool,
+    openFileDialogOnEnter: PropTypes.bool,
   }
 
   static defaultProps = {
@@ -55,6 +56,7 @@ class Upload extends Component {
     customRequest: null,
     withCredentials: false,
     openFileDialogOnClick: true,
+    openFileDialogOnEnter: true,
   }
 
   state = {

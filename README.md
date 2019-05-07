@@ -74,6 +74,7 @@ React.render(<Upload />, container);
 |customRequest | function | null | provide an override for the default xhr behavior for additional customization|
 |withCredentials | boolean | false | ajax upload with cookie send |
 |openFileDialogOnClick | boolean | true |  |
+|openFileDialogOnEnter | boolean | true | useful for drag only upload as it does not trigger on enter key |
 
 #### onError arguments
 

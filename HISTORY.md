@@ -1,6 +1,8 @@
 # History
 ----
 
+- Add `openFileDialogOnEnter`.
+
 ### 2.6.0 / 2018-09-21
 
 - Add `openFileDialogOnClick`.
