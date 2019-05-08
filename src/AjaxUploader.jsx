@@ -183,7 +183,7 @@ class AjaxUploader extends Component {
       }
     } else {
       Object.keys(reqs).forEach((uid) => {
-        if (reqs[uid] && reqs[uid].abort ) {
+        if (reqs[uid] && reqs[uid].abort) {
           reqs[uid].abort();
         }
 
@@ -207,8 +207,8 @@ class AjaxUploader extends Component {
       [className]: className,
     });
     const events = disabled ? {} : {
-      onClick: openFileDialogOnClick ? this.onClick: () => { },
-      onKeyDown: openFileDialogOnClick ? this.onKeyDown: () => { },
+      onClick: openFileDialogOnClick ? this.onClick : () => { },
+      onKeyDown: openFileDialogOnClick ? this.onKeyDown : () => { },
       onDrop: this.onFileDrop,
       onDragOver: this.onFileDrop,
       tabIndex: '0',
