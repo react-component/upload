@@ -1,7 +1,9 @@
 # History
 ----
 
-- Changed `openFileDialogOnClick` to also prevent on Enter event.
+### 2.6.5
+
+- fix `openFileDialogOnClick={false}` not to prevent on Enter event.
 
 ### 2.6.0 / 2018-09-21
 
