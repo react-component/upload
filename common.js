@@ -1921,7 +1921,7 @@ var AjaxUploader = function (_Component) {
       var cls = __WEBPACK_IMPORTED_MODULE_8_classnames___default()((_classNames = {}, __WEBPACK_IMPORTED_MODULE_1_babel_runtime_helpers_defineProperty___default()(_classNames, prefixCls, true), __WEBPACK_IMPORTED_MODULE_1_babel_runtime_helpers_defineProperty___default()(_classNames, prefixCls + '-disabled', disabled), __WEBPACK_IMPORTED_MODULE_1_babel_runtime_helpers_defineProperty___default()(_classNames, className, className), _classNames));
       var events = disabled ? {} : {
         onClick: openFileDialogOnClick ? this.onClick : function () {},
-        onKeyDown: this.onKeyDown,
+        onKeyDown: openFileDialogOnClick ? this.onKeyDown : function () {},
         onDrop: this.onFileDrop,
         onDragOver: this.onFileDrop,
         tabIndex: '0'
