@@ -27,6 +27,18 @@ const traverseFileTree = (files, callback, isAccepted) => {
     if (item.isFile) {
       item.file((file) => {
         if (isAccepted(file)) {
+          // https://github.com/ant-design/ant-design/issues/16426
+          Object.defineProperties(file, {
+            webkitRelativePath: {
+              writable: true,
+            },
+          });
+          file.webkitRelativePath = file.webkitRelativePath || item.fullPath.replace(/^\//, '');
+          Object.defineProperties(file, {
+            webkitRelativePath: {
+              writable: false,
+            },
+          });
           callback([file]);
         }
       });
