@@ -93,11 +93,15 @@ class AjaxUploader extends Component {
 
   uploadFiles = (files) => {
     const postFiles = Array.prototype.slice.call(files);
-    postFiles.forEach((file) => {
-      file.uid = getUid();
-      this.upload(file, postFiles);
-    });
-  }
+    postFiles
+      .map(file => {
+        file.uid = getUid();
+        return file;
+      })
+      .forEach(file => {
+        this.upload(file, postFiles);
+      });
+  };
 
   upload(file, fileList) {
     const { props } = this;
