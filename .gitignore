@@ -29,3 +29,4 @@ yarn.lock
 es
 package-lock.json
 tmp/
+.history

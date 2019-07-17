@@ -2,7 +2,6 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 import Upload from 'rc-upload';
-import axios from 'axios';
 
 const uploadProps = {
   action: '/upload.do',
@@ -23,44 +22,21 @@ const uploadProps = {
   onProgress({ percent }, file) {
     console.log('onProgress', `${percent}%`, file.name);
   },
-  customRequest({
-    action,
-    data,
-    file,
-    filename,
-    headers,
-    onError,
-    onProgress,
-    onSuccess,
-    withCredentials,
-  }) {
-    // EXAMPLE: post form-data with 'axios'
-    const formData = new FormData();
-    if (data) {
-      Object.keys(data).forEach(key => {
-        formData.append(key, data[key]);
-      });
-    }
-    formData.append(filename, file);
-
-    axios
-      .post(action, formData, {
-        withCredentials,
-        headers,
-        onUploadProgress: ({ total, loaded }) => {
-          onProgress({ percent: Math.round(loaded / total * 100).toFixed(2) }, file);
-        },
-      })
-      .then(({ data: response }) => {
-        onSuccess(response, file);
-      })
-      .catch(onError);
-
-    return {
-      abort() {
-        console.log('upload progress is aborted.');
-      },
-    };
+  transformFile(file) {
+    return new Promise((resolve) => {
+      const reader = new FileReader();
+      reader.readAsDataURL(file);
+      reader.onload = () => {
+        const canvas = document.createElement('canvas');
+        const img = document.createElement('img');
+        img.src = reader.result;
+        img.onload = () => {
+          const ctx = canvas.getContext('2d');
+          ctx.drawImage(img, 0, 0);
+          canvas.toBlob(resolve);
+        };
+      };
+    });
   },
 };
 

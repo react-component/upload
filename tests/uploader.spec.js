@@ -321,4 +321,111 @@ describe('uploader', () => {
       }, 100);
     });
   });
+
+  describe('transform file before request', () => {
+    let node;
+    let uploader;
+    beforeEach((done) => {
+      node = document.createElement('div');
+      document.body.appendChild(node);
+
+      ReactDOM.render(<Uploader />, node, function init() {
+        uploader = this;
+        done();
+      });
+    });
+
+    afterEach(() => {
+      ReactDOM.unmountComponentAtNode(node);
+    });
+
+    it('receive transformed file after request', (done) => {
+      const handlers = {};
+      const props = {
+        action: '/test',
+        onStart(file, transformedFile) {
+          if (handlers.onStart) {
+            handlers.onStart(transformedFile);
+          }
+        },
+        onSuccess(ret, file, _, transformedFile) {
+          if (handlers.onSuccess) {
+            handlers.onSuccess(transformedFile);
+          }
+        },
+        transformFile(file) {
+          return Promise.resolve(Buffer.from(Array.from(file)));
+        },
+      };
+      ReactDOM.render(<Uploader {...props} />, node, function init() {
+        uploader = this;
+        const input = TestUtils.findRenderedDOMComponentWithTag(uploader, 'input');
+
+        const files = [{
+          name: 'success.png',
+          toString() {
+            return this.name;
+          },
+        }];
+
+        files.item = (i) => files[i];
+
+        handlers.onStart = (transformedFile) => {
+          expect(Buffer.isBuffer(transformedFile)).to.eql(true);
+        };
+
+        handlers.onSuccess = (transformedFile) => {
+          expect(Buffer.isBuffer(transformedFile)).to.eql(true);
+          done();
+        };
+
+        Simulate.change(input, { target: { files } });
+
+        setTimeout(() => {
+          requests[0].respond(200, {}, `["","${files[0].name}"]`);
+        }, 100);
+      });
+    });
+
+    it('noes not affect receive origin file when transform file is null', (done) => {
+      const handlers = {};
+      const props = {
+        action: '/test',
+        onSuccess(ret, file, _, transformedFile) {
+          if (handlers.onSuccess) {
+            handlers.onSuccess(ret, file, transformedFile);
+          }
+        },
+        transformFile() {
+          return null;
+        },
+      };
+      ReactDOM.render(<Uploader {...props} />, node, function init() {
+        uploader = this;
+        const input = TestUtils.findRenderedDOMComponentWithTag(uploader, 'input');
+
+        const files = [{
+          name: 'success.png',
+          toString() {
+            return this.name;
+          },
+        }];
+
+        files.item = (i) => files[i];
+
+        handlers.onSuccess = (ret, file, transformedFile) => {
+          expect(ret[1]).to.eql(file.name);
+          expect(file).to.have.property('uid');
+          expect(transformedFile).to.eql(null);
+          done();
+        };
+
+        Simulate.change(input, { target: { files } });
+
+        setTimeout(() => {
+          requests[0].respond(200, {}, `["","${files[0].name}"]`);
+        }, 100);
+      });
+    });
+  });
 });
