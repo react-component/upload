@@ -1,6 +1,6 @@
 webpackJsonp([4],{
 
-/***/ 154:
+/***/ 153:
 /***/ (function(module, exports, __webpack_require__) {
 
 module.exports = __webpack_require__(69);
@@ -77,5 +77,5 @@ __WEBPACK_IMPORTED_MODULE_1_react_dom___default.a.render(__WEBPACK_IMPORTED_MODU
 
 /***/ })
 
-},[154]);
+},[153]);
 //# sourceMappingURL=beforeUpload.js.map
