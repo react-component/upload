@@ -136,7 +136,7 @@ class AjaxUploader extends Component {
     const {
       onStart,
       onProgress,
-      transformFile = () => Promise.resolve(file),
+      transformFile = (originFile) => originFile,
     } = props;
 
     if (typeof data === 'function') {
