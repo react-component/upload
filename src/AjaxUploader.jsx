@@ -161,19 +161,19 @@ class AjaxUploader extends Component {
           headers: props.headers,
           withCredentials: props.withCredentials,
           onProgress: onProgress ? e => {
-            onProgress(e, file, transformedFile);
+            onProgress(e, file);
           } : null,
           onSuccess: (ret, xhr) => {
             delete this.reqs[uid];
-            props.onSuccess(ret, file, xhr, transformedFile);
+            props.onSuccess(ret, file, xhr);
           },
           onError: (err, ret) => {
             delete this.reqs[uid];
-            props.onError(err, ret, file, transformedFile);
+            props.onError(err, ret, file);
           },
         };
         this.reqs[uid] = request(requestOption);
-        onStart(file, transformedFile);
+        onStart(file);
       });
     });
   }
