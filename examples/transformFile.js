@@ -1,14 +1,14 @@
-webpackJsonp([6],{
+webpackJsonp([1],{
 
-/***/ 154:
+/***/ 160:
 /***/ (function(module, exports, __webpack_require__) {
 
-module.exports = __webpack_require__(68);
+module.exports = __webpack_require__(74);
 
 
 /***/ }),
 
-/***/ 68:
+/***/ 74:
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -24,23 +24,42 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 
 
 
-var props = {
-  action: function action() {
-    return new Promise(function (resolve) {
-      setTimeout(function () {
-        resolve('/upload.do');
-      }, 2000);
-    });
+var uploadProps = {
+  action: '/upload.do',
+  multiple: false,
+  data: { a: 1, b: 2 },
+  headers: {
+    Authorization: '$prefix $token'
   },
-  multiple: true,
   onStart: function onStart(file) {
     console.log('onStart', file, file.name);
   },
-  onSuccess: function onSuccess(ret) {
-    console.log('onSuccess', ret);
+  onSuccess: function onSuccess(ret, file) {
+    console.log('onSuccess', ret, file.name);
   },
   onError: function onError(err) {
     console.log('onError', err);
+  },
+  onProgress: function onProgress(_ref, file) {
+    var percent = _ref.percent;
+
+    console.log('onProgress', percent + '%', file.name);
+  },
+  transformFile: function transformFile(file) {
+    return new Promise(function (resolve) {
+      var reader = new FileReader();
+      reader.readAsDataURL(file);
+      reader.onload = function () {
+        var canvas = document.createElement('canvas');
+        var img = document.createElement('img');
+        img.src = reader.result;
+        img.onload = function () {
+          var ctx = canvas.getContext('2d');
+          ctx.drawImage(img, 0, 0);
+          canvas.toBlob(resolve);
+        };
+      };
+    });
   }
 };
 
@@ -57,9 +76,9 @@ var Test = function Test() {
       null,
       __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
         __WEBPACK_IMPORTED_MODULE_2_rc_upload___default.a,
-        props,
+        uploadProps,
         __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
-          'a',
+          'button',
           null,
           '\u5F00\u59CB\u4E0A\u4F20'
         )
@@ -72,5 +91,5 @@ __WEBPACK_IMPORTED_MODULE_1_react_dom___default.a.render(__WEBPACK_IMPORTED_MODU
 
 /***/ })
 
-},[154]);
-//# sourceMappingURL=asyncAction.js.map
+},[160]);
+//# sourceMappingURL=transformFile.js.map

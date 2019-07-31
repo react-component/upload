@@ -2,7 +2,7 @@
 <html>
 
 <head>
-  <title>asyncAction.js - example - rc-upload@2.7.0</title>
+  <title>transformFile.js - example - rc-upload@2.7.0</title>
   <meta name="viewport"
         content="width=device-width,initial-scale=1.0,minimum-scale=1.0,maximum-scale=1.0,user-scalable=no">
   <meta charset="utf-8"/>
@@ -274,23 +274,40 @@ Monokai Sublime style. Derived from Monokai by noformnocontent http://nn.mit-lic
 <span class="hljs-keyword">import</span> ReactDOM <span class="hljs-keyword">from</span> <span class="hljs-string">'react-dom'</span>;
 <span class="hljs-keyword">import</span> Upload <span class="hljs-keyword">from</span> <span class="hljs-string">'rc-upload'</span>;
 
-<span class="hljs-keyword">const</span> props = {
-  action: () =&gt; {
-    <span class="hljs-keyword">return</span> <span class="hljs-keyword">new</span> <span class="hljs-built_in">Promise</span>((resolve) =&gt; {
-      setTimeout(() =&gt; {
-        resolve(<span class="hljs-string">'/upload.do'</span>);
-      }, <span class="hljs-number">2000</span>);
-    });
+<span class="hljs-keyword">const</span> uploadProps = {
+  action: <span class="hljs-string">'/upload.do'</span>,
+  multiple: <span class="hljs-literal">false</span>,
+  data: { a: <span class="hljs-number">1</span>, b: <span class="hljs-number">2</span> },
+  headers: {
+    Authorization: <span class="hljs-string">'$prefix $token'</span>,
   },
-  multiple: <span class="hljs-literal">true</span>,
   onStart(file) {
     <span class="hljs-built_in">console</span>.log(<span class="hljs-string">'onStart'</span>, file, file.name);
   },
-  onSuccess(ret) {
-    <span class="hljs-built_in">console</span>.log(<span class="hljs-string">'onSuccess'</span>, ret);
+  onSuccess(ret, file) {
+    <span class="hljs-built_in">console</span>.log(<span class="hljs-string">'onSuccess'</span>, ret, file.name);
   },
   onError(err) {
     <span class="hljs-built_in">console</span>.log(<span class="hljs-string">'onError'</span>, err);
+  },
+  onProgress({ percent }, file) {
+    <span class="hljs-built_in">console</span>.log(<span class="hljs-string">'onProgress'</span>, <span class="hljs-string">`<span class="hljs-subst">${percent}</span>%`</span>, file.name);
+  },
+  transformFile(file) {
+    <span class="hljs-keyword">return</span> <span class="hljs-keyword">new</span> <span class="hljs-built_in">Promise</span>((resolve) =&gt; {
+      <span class="hljs-keyword">const</span> reader = <span class="hljs-keyword">new</span> FileReader();
+      reader.readAsDataURL(file);
+      reader.onload = () =&gt; {
+        <span class="hljs-keyword">const</span> canvas = <span class="hljs-built_in">document</span>.createElement(<span class="hljs-string">'canvas'</span>);
+        <span class="hljs-keyword">const</span> img = <span class="hljs-built_in">document</span>.createElement(<span class="hljs-string">'img'</span>);
+        img.src = reader.result;
+        img.onload = () =&gt; {
+          <span class="hljs-keyword">const</span> ctx = canvas.getContext(<span class="hljs-string">'2d'</span>);
+          ctx.drawImage(img, <span class="hljs-number">0</span>, <span class="hljs-number">0</span>);
+          canvas.toBlob(resolve);
+        };
+      };
+    });
   },
 };
 
@@ -302,13 +319,15 @@ Monokai Sublime style. Derived from Monokai by noformnocontent http://nn.mit-lic
       }}
     &gt;</span>
       <span class="hljs-tag">&lt;<span class="hljs-title">div</span>&gt;</span>
-        <span class="hljs-tag">&lt;<span class="hljs-title">Upload</span> {<span class="hljs-attribute">...props</span>}&gt;</span><span class="hljs-tag">&lt;<span class="hljs-title">a</span>&gt;</span>开始上传<span class="hljs-tag">&lt;/<span class="hljs-title">a</span>&gt;</span><span class="hljs-tag">&lt;/<span class="hljs-title">Upload</span>&gt;</span>
+        <span class="hljs-tag">&lt;<span class="hljs-title">Upload</span> {<span class="hljs-attribute">...uploadProps</span>}&gt;</span>
+          <span class="hljs-tag">&lt;<span class="hljs-title">button</span>&gt;</span>开始上传<span class="hljs-tag">&lt;/<span class="hljs-title">button</span>&gt;</span>
+        <span class="hljs-tag">&lt;/<span class="hljs-title">Upload</span>&gt;</span>
       <span class="hljs-tag">&lt;/<span class="hljs-title">div</span>&gt;</span>
     <span class="hljs-tag">&lt;/<span class="hljs-title">div</span>&gt;</span>
   )</span>;
 };
 
-ReactDOM.render(<span class="xml"><span class="hljs-tag">&lt;<span class="hljs-title">Test</span>/&gt;</span>, document.getElementById('__react-content'));
+ReactDOM.render(<span class="xml"><span class="hljs-tag">&lt;<span class="hljs-title">Test</span> /&gt;</span>, document.getElementById('__react-content'));
 </span></code></pre></div>
   </div>
   <a href="http://github.com/react-component/upload">
@@ -319,7 +338,7 @@ ReactDOM.render(<span class="xml"><span class="hljs-tag">&lt;<span class="hljs-t
   </a>
   <script>FastClick.attach(document.body);</script>
   <script src="../common.js?nowrap"></script>
-  <script src="asyncAction.js?nowrap"></script>
+  <script src="transformFile.js?nowrap"></script>
 </body>
 
 </html>
