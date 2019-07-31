@@ -35,6 +35,7 @@ class AjaxUploader extends Component {
     onProgress: PropTypes.func,
     withCredentials: PropTypes.bool,
     openFileDialogOnClick: PropTypes.bool,
+    transformFile: PropTypes.func,
   }
 
   state = { uid: getUid() }
@@ -132,7 +133,12 @@ class AjaxUploader extends Component {
     }
     const { props } = this;
     let { data } = props;
-    const { onStart, onProgress } = props;
+    const {
+      onStart,
+      onProgress,
+      transformFile = (originFile) => originFile,
+    } = props;
+
     if (typeof data === 'function') {
       data = data(file);
     }
@@ -145,26 +151,30 @@ class AjaxUploader extends Component {
     }).then(action => {
       const { uid } = file;
       const request = props.customRequest || defaultRequest;
-      this.reqs[uid] = request({
-        action,
-        filename: props.name,
-        file,
-        data,
-        headers: props.headers,
-        withCredentials: props.withCredentials,
-        onProgress: onProgress ? e => {
-          onProgress(e, file);
-        } : null,
-        onSuccess: (ret, xhr) => {
-          delete this.reqs[uid];
-          props.onSuccess(ret, file, xhr);
-        },
-        onError: (err, ret) => {
-          delete this.reqs[uid];
-          props.onError(err, ret, file);
-        },
+      const transform = Promise.resolve(transformFile(file));
+      transform.then((transformedFile) => {
+        const requestOption = {
+          action,
+          filename: props.name,
+          data,
+          file: transformedFile,
+          headers: props.headers,
+          withCredentials: props.withCredentials,
+          onProgress: onProgress ? e => {
+            onProgress(e, file);
+          } : null,
+          onSuccess: (ret, xhr) => {
+            delete this.reqs[uid];
+            props.onSuccess(ret, file, xhr);
+          },
+          onError: (err, ret) => {
+            delete this.reqs[uid];
+            props.onError(err, ret, file);
+          },
+        };
+        this.reqs[uid] = request(requestOption);
+        onStart(file);
       });
-      onStart(file);
     });
   }
 
