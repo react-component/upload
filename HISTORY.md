@@ -1,6 +1,10 @@
 # History
 ----
 
+### 2.7.0
+
+- Support `transformFile` props to handle file before upload.
+
 ### 2.6.5
 
 - fix `openFileDialogOnClick={false}` not to prevent on Enter event.
