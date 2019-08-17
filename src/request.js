@@ -1,8 +1,8 @@
 function getError(option, xhr) {
-  const msg = `cannot post ${option.action} ${xhr.status}'`;
+  const msg = `cannot ${option.method} ${option.action} ${xhr.status}'`;
   const err = new Error(msg);
   err.status = xhr.status;
-  err.method = 'post';
+  err.method = option.method;
   err.url = option.action;
   return err;
 }
@@ -68,7 +68,7 @@ export default function upload(option) {
   };
 
 
-  xhr.open('post', option.action, true);
+  xhr.open(option.method, option.action, true);
 
   // Has to be after `.open()`. See https://github.com/enyo/dropzone/issues/179
   if (option.withCredentials && 'withCredentials' in xhr) {

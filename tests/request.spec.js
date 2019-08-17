@@ -16,6 +16,7 @@ const option = {
   filename: 'a.png',
   file: 'foo',
   headers: { from: 'hello' },
+  method: 'post',
 };
 
 describe('request', () => {

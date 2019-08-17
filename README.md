@@ -61,6 +61,7 @@ React.render(<Upload />, container);
 |supportServerRender | boolean | false| whether to support server render |
 |onReady | function | | only call when supportServerRender is true, upload is rendered completely |
 |action| string &#124; function(file): string &#124; Promise&lt;string&gt; | | form action url |
+|method | string | post | request method |
 |directory| boolean | false | support upload whole directory |
 |data| object/function(file) | | other data object to post or a function which returns a data object |
 |headers| object | {} | http headers to post, available in modern browsers |
