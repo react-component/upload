@@ -168,6 +168,7 @@ class AjaxUploader extends Component {
           file: transformedFile,
           headers: props.headers,
           withCredentials: props.withCredentials,
+          method: props.method || 'post',
           onProgress: onProgress ? e => {
             onProgress(e, file);
           } : null,
