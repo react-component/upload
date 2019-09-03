@@ -13,12 +13,12 @@ function Item(name) {
   this.toString = () => this.name;
 }
 
-const makeFileSystemEntry = (item) => {
+const makeFileSystemEntry = item => {
   const isDirectory = Array.isArray(item.children);
   const ret = {
     isDirectory,
     isFile: !isDirectory,
-    file: (handle) => {
+    file: handle => {
       handle(new Item(item.name));
     },
     createReader: () => {
@@ -38,7 +38,7 @@ const makeFileSystemEntry = (item) => {
   return ret;
 };
 
-const makeDataTransferItem = (item) => {
+const makeDataTransferItem = item => {
   return {
     webkitGetAsEntry: () => makeFileSystemEntry(item),
   };
@@ -95,7 +95,7 @@ describe('uploader', () => {
       },
     };
 
-    beforeEach((done) => {
+    beforeEach(done => {
       node = document.createElement('div');
       document.body.appendChild(node);
 
@@ -109,7 +109,7 @@ describe('uploader', () => {
       ReactDOM.unmountComponentAtNode(node);
     });
 
-    it('with id', (done) => {
+    it('with id', done => {
       ReactDOM.render(<Uploader id="bamboo" />, node, function init() {
         expect(TestUtils.findRenderedDOMComponentWithTag(this, 'input').id).to.be('bamboo');
         done();
@@ -120,16 +120,18 @@ describe('uploader', () => {
       expect(TestUtils.scryRenderedDOMComponentsWithTag(uploader, 'span').length).to.be(1);
     });
 
-    it('upload success', (done) => {
+    it('upload success', done => {
       const input = TestUtils.findRenderedDOMComponentWithTag(uploader, 'input');
 
-      const files = [{
-        name: 'success.png',
-        toString() {
-          return this.name;
+      const files = [
+        {
+          name: 'success.png',
+          toString() {
+            return this.name;
+          },
         },
-      }];
-      files.item = (i) => files[i];
+      ];
+      files.item = i => files[i];
 
       handlers.onSuccess = (ret, file) => {
         expect(ret[1]).to.eql(file.name);
@@ -137,7 +139,7 @@ describe('uploader', () => {
         done();
       };
 
-      handlers.onError = (err) => {
+      handlers.onError = err => {
         done(err);
       };
 
@@ -148,16 +150,18 @@ describe('uploader', () => {
       }, 100);
     });
 
-    it('upload error', (done) => {
+    it('upload error', done => {
       const input = TestUtils.findRenderedDOMComponentWithTag(uploader, 'input');
 
-      const files = [{
-        name: 'error.png',
-        toString() {
-          return this.name;
+      const files = [
+        {
+          name: 'error.png',
+          toString() {
+            return this.name;
+          },
         },
-      }];
-      files.item = (i) => files[i];
+      ];
+      files.item = i => files[i];
 
       handlers.onError = (err, ret) => {
         expect(err instanceof Error).to.equal(true);
@@ -172,16 +176,18 @@ describe('uploader', () => {
       }, 100);
     });
 
-    it('drag to upload', (done) => {
+    it('drag to upload', done => {
       const input = TestUtils.findRenderedDOMComponentWithTag(uploader, 'input');
 
-      const files = [{
-        name: 'success.png',
-        toString() {
-          return this.name;
+      const files = [
+        {
+          name: 'success.png',
+          toString() {
+            return this.name;
+          },
         },
-      }];
-      files.item = (i) => files[i];
+      ];
+      files.item = i => files[i];
 
       handlers.onSuccess = (ret, file) => {
         expect(ret[1]).to.eql(file.name);
@@ -189,7 +195,7 @@ describe('uploader', () => {
         done();
       };
 
-      handlers.onError = (err) => {
+      handlers.onError = err => {
         done(err);
       };
 
@@ -200,15 +206,17 @@ describe('uploader', () => {
       }, 100);
     });
 
-    it('drag unaccepted type files to upload will not trigger onStart', (done) => {
+    it('drag unaccepted type files to upload will not trigger onStart', done => {
       const input = TestUtils.findRenderedDOMComponentWithTag(uploader, 'input');
-      const files = [{
-        name: 'success.jpg',
-        toString() {
-          return this.name;
+      const files = [
+        {
+          name: 'success.jpg',
+          toString() {
+            return this.name;
+          },
         },
-      }];
-      files.item = (i) => files[i];
+      ];
+      files.item = i => files[i];
       Simulate.drop(input, { dataTransfer: { files } });
       const mockStart = jest.fn();
       handlers.onStart = mockStart;
@@ -218,9 +226,62 @@ describe('uploader', () => {
       }, 100);
     });
 
-    it('support action is function returns Promise', (done) => {
+    it('drag files with multiple false', done => {
+      ReactDOM.unmountComponentAtNode(node);
+
+      // Create new one
+      node = document.createElement('div');
+      document.body.appendChild(node);
+
+      ReactDOM.render(<Uploader {...props} multiple={false} />, node, function init() {
+        uploader = this;
+
+        const input = TestUtils.findRenderedDOMComponentWithTag(uploader, 'input');
+
+        const files = [
+          {
+            name: 'success.png',
+            toString() {
+              return this.name;
+            },
+          },
+          {
+            name: 'filtered.png',
+            toString() {
+              return this.name;
+            },
+          },
+        ];
+        files.item = i => files[i];
+
+        // Only can trigger once
+        let triggerTimes = 0;
+        handlers.onStart = () => {
+          triggerTimes += 1;
+        };
+
+        handlers.onSuccess = (ret, file) => {
+          expect(ret[1]).to.eql(file.name);
+          expect(file).to.have.property('uid');
+          expect(triggerTimes).to.eql(1);
+          done();
+        };
+
+        handlers.onError = err => {
+          done(err);
+        };
+
+        Simulate.drop(input, { dataTransfer: { files } });
+
+        setTimeout(() => {
+          requests[0].respond(200, {}, `["","${files[0].name}"]`);
+        }, 100);
+      });
+    });
+
+    it('support action is function returns Promise', done => {
       const action = () => {
-        return new Promise((resolve) => {
+        return new Promise(resolve => {
           setTimeout(() => {
             resolve('/upload.do');
           }, 1000);
@@ -229,13 +290,15 @@ describe('uploader', () => {
       ReactDOM.render(<Uploader action={action} />, node, function init() {
         uploader = this;
         const input = TestUtils.findRenderedDOMComponentWithTag(uploader, 'input');
-        const files = [{
-          name: 'success.png',
-          toString() {
-            return this.name;
+        const files = [
+          {
+            name: 'success.png',
+            toString() {
+              return this.name;
+            },
           },
-        }];
-        files.item = (i) => files[i];
+        ];
+        files.item = i => files[i];
         Simulate.change(input, { target: { files } });
         setTimeout(() => {
           expect(requests.length).to.be(0);
@@ -287,7 +350,7 @@ describe('uploader', () => {
       },
     };
 
-    beforeEach((done) => {
+    beforeEach(done => {
       node = document.createElement('div');
       document.body.appendChild(node);
 
@@ -297,7 +360,7 @@ describe('uploader', () => {
       });
     });
 
-    it('unaccepted type files to upload will not trigger onStart', (done) => {
+    it('unaccepted type files to upload will not trigger onStart', done => {
       const input = TestUtils.findRenderedDOMComponentWithTag(uploader, 'input');
       const files = {
         name: 'foo',
@@ -325,7 +388,7 @@ describe('uploader', () => {
   describe('transform file before request', () => {
     let node;
     let uploader;
-    beforeEach((done) => {
+    beforeEach(done => {
       node = document.createElement('div');
       document.body.appendChild(node);
 
@@ -339,7 +402,7 @@ describe('uploader', () => {
       ReactDOM.unmountComponentAtNode(node);
     });
 
-    it('noes not affect receive origin file when transform file is null', (done) => {
+    it('noes not affect receive origin file when transform file is null', done => {
       const handlers = {};
       const props = {
         action: '/test',
@@ -356,14 +419,16 @@ describe('uploader', () => {
         uploader = this;
         const input = TestUtils.findRenderedDOMComponentWithTag(uploader, 'input');
 
-        const files = [{
-          name: 'success.png',
-          toString() {
-            return this.name;
+        const files = [
+          {
+            name: 'success.png',
+            toString() {
+              return this.name;
+            },
           },
-        }];
+        ];
 
-        files.item = (i) => files[i];
+        files.item = i => files[i];
 
         handlers.onSuccess = (ret, file) => {
           expect(ret[1]).to.eql(file.name);

@@ -63,6 +63,8 @@ class AjaxUploader extends Component {
   }
 
   onFileDrop = e => {
+    const { multiple } = this.props;
+
     e.preventDefault();
 
     if (e.type === 'dragover') {
@@ -76,9 +78,14 @@ class AjaxUploader extends Component {
         _file => attrAccept(_file, this.props.accept)
       );
     } else {
-      const files = Array.prototype.slice.call(e.dataTransfer.files).filter(
-        file => attrAccept(file, this.props.accept)
-      );
+      let files = Array.prototype.slice
+        .call(e.dataTransfer.files)
+        .filter(file => attrAccept(file, this.props.accept));
+
+      if (multiple === false) {
+        files = files.slice(0, 1);
+      }
+
       this.uploadFiles(files);
     }
   }
