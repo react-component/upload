@@ -1,6 +1,10 @@
 # History
 ----
 
+### 2.8.0
+
+- `multiple` will works on drag upload.
+
 ### 2.7.0
 
 - Support `transformFile` props to handle file before upload.
