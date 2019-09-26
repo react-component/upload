@@ -157,7 +157,6 @@ class AjaxUploader extends Component {
       const request = props.customRequest || defaultRequest;
       const transform = Promise.resolve(transformFile(file));
       transform.then((transformedFile) => {
-
         if (typeof data === 'function') {
           data = data(file);
         }
