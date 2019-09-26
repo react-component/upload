@@ -146,9 +146,6 @@ class AjaxUploader extends Component {
       transformFile = (originFile) => originFile,
     } = props;
 
-    if (typeof data === 'function') {
-      data = data(file);
-    }
     new Promise(resolve => {
       const { action } = props;
       if (typeof action === 'function') {
@@ -160,6 +157,11 @@ class AjaxUploader extends Component {
       const request = props.customRequest || defaultRequest;
       const transform = Promise.resolve(transformFile(file));
       transform.then((transformedFile) => {
+
+        if (typeof data === 'function') {
+          data = data(file);
+        }
+
         const requestOption = {
           action,
           filename: props.name,
