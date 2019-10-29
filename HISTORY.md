@@ -1,6 +1,10 @@
 # History
 ----
 
+### 2.9.0
+
+- Support `method`. #197
+
 ### 2.8.0
 
 - `multiple` will works on drag upload.
