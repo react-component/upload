@@ -1859,7 +1859,10 @@ var AjaxUploader = function (_Component) {
         var uid = file.uid;
 
         var request = props.customRequest || __WEBPACK_IMPORTED_MODULE_9__request__["a" /* default */];
-        var transform = Promise.resolve(transformFile(file));
+        var transform = Promise.resolve(transformFile(file))['catch'](function (e) {
+          console.error(e); // eslint-disable-line no-console
+        });
+
         transform.then(function (transformedFile) {
           if (typeof data === 'function') {
             data = data(file);
