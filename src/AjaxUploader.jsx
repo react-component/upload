@@ -155,7 +155,10 @@ class AjaxUploader extends Component {
     }).then(action => {
       const { uid } = file;
       const request = props.customRequest || defaultRequest;
-      const transform = Promise.resolve(transformFile(file)).catch(e => console.error(e));
+      const transform = Promise.resolve(transformFile(file)).catch(e => {
+        console.error(e); // eslint-disable-line no-console
+      });
+
       transform.then((transformedFile) => {
         if (typeof data === 'function') {
           data = data(file);
