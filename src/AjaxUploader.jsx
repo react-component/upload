@@ -249,6 +249,7 @@ class AjaxUploader extends Component {
           id={id}
           type="file"
           ref={this.saveFileInput}
+          onClick={e => e.stopPropagation()} // https://github.com/ant-design/ant-design/issues/19948
           key={this.state.uid}
           style={{ display: 'none' }}
           accept={accept}
