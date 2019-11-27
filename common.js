@@ -1960,7 +1960,10 @@ var AjaxUploader = function (_Component) {
           id: id,
           type: 'file',
           ref: this.saveFileInput,
-          key: this.state.uid,
+          onClick: function onClick(e) {
+            return e.stopPropagation();
+          } // https://github.com/ant-design/ant-design/issues/19948
+          , key: this.state.uid,
           style: { display: 'none' },
           accept: accept,
           directory: directory ? 'directory' : null,
