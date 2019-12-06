@@ -12,7 +12,7 @@ const empty = () => {
 const option = {
   onSuccess: empty,
   action: 'upload.do',
-  data: { a: 1, b: 2 },
+  data: { a: 1, b: 2, c: [3, 4] },
   filename: 'a.png',
   file: 'foo',
   headers: { from: 'hello' },
@@ -39,6 +39,7 @@ describe('request', () => {
     option.onError = done;
     option.onSuccess = ret => {
       expect(ret).to.eql({ success: true });
+      expect(requests[0].requestBody.getAll('c[]')).to.eql([3, 4]);
       done();
     };
     request(option);
