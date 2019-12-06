@@ -47,6 +47,17 @@ export default function upload(option) {
 
   if (option.data) {
     Object.keys(option.data).forEach(key => {
+      const value = option.data[key];
+      // support key-value array data
+      if (Array.isArray(value)) {
+        value.forEach(item => {
+          // { list: [ 11, 22 ] }
+          // formData.append('list[]', 11);
+          formData.append(`${key}[]`, item);
+        });
+        return;
+      }
+
       formData.append(key, option.data[key]);
     });
   }
