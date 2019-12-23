@@ -1,6 +1,10 @@
 # History
 ----
 
+### 3.0.0
+
+- Drop support of IE8/9.
+
 ### 2.9.0
 
 - Support `method`. #197
