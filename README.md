@@ -33,7 +33,7 @@ online example: http://react-component.github.io/upload/examples/simple.html
 
 ## Feature
 
-* support ie8,ie8+,chrome,firefox,safari
+* support IE11+, Chrome, Firefox, Safari
 
 ## install
 
@@ -58,7 +58,6 @@ React.render(<Upload />, container);
 |className | string | - | root component className |
 |disabled | boolean | false | whether disabled |
 |component | "div"|"span" | "span"| wrap component name |
-|supportServerRender | boolean | false| whether to support server render |
 |onReady | function | | only call when supportServerRender is true, upload is rendered completely |
 |action| string &#124; function(file): string &#124; Promise&lt;string&gt; | | form action url |
 |method | string | post | request method |
@@ -111,28 +110,6 @@ customRequest callback is passed an object with:
 ### methods
 
 abort(file?: File) => void: abort the uploading file
-
-
-### IE8/9 Note
-
-#### Download Popup Problem
-
-In iframe uploader way, the content-type of response should be `text/plain` or `text/html`. [See more about
-Content-Type Negotiation](https://github.com/blueimp/jQuery-File-Upload/wiki/Setup#content-type-negotiation)
-
-What's more, in iframe mode, the response's status should always be `200 OK`, otherwise you might get an `Access is denied` error in IE 8/9.
-
-#### Domain Problem
-
-If the Page set document.domain, then server should output document.domain according to _documentDomain parameter.
-
-```js
-var ret = '';
-if (postData._documentDomain) {
-  ret += '<script>document.domain="'+postData._documentDomain+'";</script>';
-}
-this.body = ret + '{"url":"xx.jpq"}';
-```
 
 ## License
 

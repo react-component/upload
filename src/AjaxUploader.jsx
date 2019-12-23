@@ -1,7 +1,5 @@
-/* eslint react/no-is-mounted:0 react/sort-comp:0 */
-
+/* eslint react/no-is-mounted:0,react/sort-comp:0,react/prop-types:0 */
 import React, { Component } from 'react';
-import PropTypes from 'prop-types';
 import classNames from 'classnames';
 import defaultRequest from './request';
 import getUid from './uid';
@@ -9,35 +7,6 @@ import attrAccept from './attr-accept';
 import traverseFileTree from './traverseFileTree';
 
 class AjaxUploader extends Component {
-  static propTypes = {
-    id: PropTypes.string,
-    component: PropTypes.string,
-    style: PropTypes.object,
-    prefixCls: PropTypes.string,
-    className: PropTypes.string,
-    multiple: PropTypes.bool,
-    directory: PropTypes.bool,
-    disabled: PropTypes.bool,
-    accept: PropTypes.string,
-    children: PropTypes.any,
-    onStart: PropTypes.func,
-    data: PropTypes.oneOfType([
-      PropTypes.object,
-      PropTypes.func,
-    ]),
-    action: PropTypes.oneOfType([
-      PropTypes.string,
-      PropTypes.func,
-    ]),
-    headers: PropTypes.object,
-    beforeUpload: PropTypes.func,
-    customRequest: PropTypes.func,
-    onProgress: PropTypes.func,
-    withCredentials: PropTypes.bool,
-    openFileDialogOnClick: PropTypes.bool,
-    transformFile: PropTypes.func,
-  }
-
   state = { uid: getUid() }
 
   reqs = {}
