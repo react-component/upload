@@ -54,9 +54,7 @@
   ],
   "dependencies": {
     "babel-runtime": "6.x",
-    "classnames": "^2.2.5",
-    "prop-types": "^15.5.7",
-    "warning": "4.x"
+    "classnames": "^2.2.5"
   },
   "jest": {
     "collectCoverageFrom": [
