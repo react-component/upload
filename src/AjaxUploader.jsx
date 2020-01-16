@@ -19,6 +19,12 @@ class AjaxUploader extends Component {
 
   onClick = () => {
     const el = this.fileInput;
+    const parent = el.parentNode;
+    const childrenType = this.props.children.type;
+    if (childrenType === 'button') {
+      parent.focus();
+      parent.querySelector('button').blur();
+    }
     if (!el) {
       return;
     }
