@@ -49,7 +49,7 @@
     "rc-tools": "6.x",
     "react": "^16.0.0",
     "react-dom": "^16.0.0",
-    "sinon": "8.0.4",
+    "sinon": "8.1.0",
     "vinyl-fs": "^3.0.3"
   },
   "pre-commit": [
