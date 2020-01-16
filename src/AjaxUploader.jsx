@@ -22,6 +22,11 @@ class AjaxUploader extends Component {
     if (!el) {
       return;
     }
+    const { children } = this.props;
+    if (children && children.type === 'button') {
+      el.parentNode.focus();
+      el.parentNode.querySelector('button').blur();
+    }
     el.click();
   }
 
