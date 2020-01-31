@@ -46,7 +46,7 @@
     "jest": "^20.0.1",
     "pre-commit": "1.x",
     "raf": "^3.4.0",
-    "rc-tools": "6.x",
+    "rc-tools": "9.x",
     "react": "^16.0.0",
     "react-dom": "^16.0.0",
     "sinon": "8.1.1",
