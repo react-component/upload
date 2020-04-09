@@ -5,33 +5,18 @@ import defaultRequest from './request';
 import getUid from './uid';
 import attrAccept from './attr-accept';
 import traverseFileTree from './traverseFileTree';
-import omit from 'omit.js';
 
-const omitProps = [
-  'onClick',
-  'onKeyDown',
-  'onDrop',
-  'onDragOver',
-  'tabIndex',
-  'data',
-  'onStart',
-  'onProgress',
-  'transformFile',
-  'children',
-  'multiple',
-  'beforeUpload',
-  'directory',
-  'accept',
-  'customRequest',
-  'action',
-  'name',
-  'method',
-  'onSuccess',
-  'onError',
-  'withCredentials',
-  'onReady',
-  'multipart',
-];
+const dataOrAriaAttributeProps = (props) => {
+  return Object.keys(props).reduce(
+    (acc, key) => {
+      if (key.substr(0, 5) === 'data-' || key.substr(0, 5) === 'aria-' || key === 'role') {
+        acc[key] = props[key];
+      }
+      return acc;
+    },
+    {},
+  );
+};
 
 class AjaxUploader extends Component {
   state = { uid: getUid() }
@@ -248,7 +233,7 @@ class AjaxUploader extends Component {
         style={style}
       >
         <input
-          {...omit(otherProps, omitProps)}
+          {...dataOrAriaAttributeProps(otherProps)}
           id={id}
           type="file"
           ref={this.saveFileInput}
