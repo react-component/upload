@@ -5,6 +5,33 @@ import defaultRequest from './request';
 import getUid from './uid';
 import attrAccept from './attr-accept';
 import traverseFileTree from './traverseFileTree';
+import omit from 'omit.js';
+
+const omitProps = [
+  'onClick',
+  'onKeyDown',
+  'onDrop',
+  'onDragOver',
+  'tabIndex',
+  'data',
+  'onStart',
+  'onProgress',
+  'transformFile',
+  'children',
+  'multiple',
+  'beforeUpload',
+  'directory',
+  'accept',
+  'customRequest',
+  'action',
+  'name',
+  'method',
+  'onSuccess',
+  'onError',
+  'withCredentials',
+  'onReady',
+  'multipart',
+];
 
 class AjaxUploader extends Component {
   state = { uid: getUid() }
@@ -199,6 +226,7 @@ class AjaxUploader extends Component {
     const {
       component: Tag, prefixCls, className, disabled, id,
       style, multiple, accept, children, directory, openFileDialogOnClick,
+      ...otherProps,
     } = this.props;
     const cls = classNames({
       [prefixCls]: true,
@@ -220,6 +248,7 @@ class AjaxUploader extends Component {
         style={style}
       >
         <input
+          {...omit(otherProps, omitProps)}
           id={id}
           type="file"
           ref={this.saveFileInput}
