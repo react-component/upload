@@ -5,6 +5,7 @@ import Uploader from '../index';
 import React from 'react';
 import ReactDOM from 'react-dom';
 import TestUtils from 'react-dom/test-utils';
+import { format } from 'util';
 const { Simulate } = TestUtils;
 import sinon from 'sinon';
 
@@ -47,15 +48,24 @@ const makeDataTransferItem = item => {
 describe('uploader', () => {
   let requests;
   let xhr;
+  let errorMock;
 
   beforeEach(() => {
     xhr = sinon.useFakeXMLHttpRequest();
     requests = [];
     xhr.onCreate = req => requests.push(req);
+
+    const originalConsoleError = global.console.error;
+    errorMock = jest.spyOn(global.console, 'error');
+    errorMock.mockImplementation((message, ...otherParams) => {
+      originalConsoleError(message, ...otherParams);
+      throw new Error(format(message, ...otherParams));
+    });
   });
 
   afterEach(() => {
     xhr.restore();
+    errorMock.mockRestore();
   });
 
   describe('ajax uploader', () => {
@@ -114,6 +124,55 @@ describe('uploader', () => {
         expect(TestUtils.findRenderedDOMComponentWithTag(this, 'input').id).to.be('bamboo');
         done();
       });
+    });
+
+    it('should pass through data attributes', done => {
+      ReactDOM.render(
+        (
+          <Uploader
+            data-testid="data-testid"
+            data-my-custom-attr="custom data attribute"
+          />
+        ),
+        node,
+        function init() {
+          expect(TestUtils.findRenderedDOMComponentWithTag(this, 'input')
+            .getAttribute('data-testid'))
+            .to.be('data-testid');
+          expect(TestUtils.findRenderedDOMComponentWithTag(this, 'input')
+            .getAttribute('data-my-custom-attr'))
+            .to.be('custom data attribute');
+          done();
+        }
+      );
+    });
+
+    it('should pass through aria attributes', done => {
+      ReactDOM.render(<Uploader aria-label="Upload a file"/>, node, function init() {
+        expect(TestUtils.findRenderedDOMComponentWithTag(this, 'input')
+          .getAttribute('aria-label'))
+          .to.be('Upload a file');
+        done();
+      });
+    });
+
+    it('should pass through role attributes', done => {
+      ReactDOM.render(<Uploader role="button"/>, node, function init() {
+        expect(TestUtils.findRenderedDOMComponentWithTag(this, 'input')
+          .getAttribute('role'))
+          .to.be('button');
+        done();
+      });
+    });
+
+    it('should not pass through unknown props', done => {
+      ReactDOM.render(<Uploader customProp="This shouldn't be rendered to DOM"/>,
+        node,
+        () => {
+          // Fails when React reports unrecognized prop is added to DOM in console.error
+          done();
+        }
+      );
     });
 
     it('create works', () => {
