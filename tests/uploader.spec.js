@@ -156,6 +156,25 @@ describe('uploader', () => {
       });
     });
 
+    it('should pass through role attributes', done => {
+      ReactDOM.render(<Uploader role="button"/>, node, function init() {
+        expect(TestUtils.findRenderedDOMComponentWithTag(this, 'input')
+          .getAttribute('role'))
+          .to.be('button');
+        done();
+      });
+    });
+
+    it('should not pass through unknown props', done => {
+      ReactDOM.render(<Uploader customProp="This shouldn't be rendered to DOM"/>,
+        node,
+        () => {
+          // Fails when React reports unrecognized prop is added to DOM in console.error
+          done();
+        }
+      );
+    });
+
     it('create works', () => {
       expect(TestUtils.scryRenderedDOMComponentsWithTag(uploader, 'span').length).to.be(1);
     });
