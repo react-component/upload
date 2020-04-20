@@ -2011,7 +2011,7 @@ function upload(option) {
     });
   }
 
-  formData.append(option.filename, option.file);
+  formData.append(option.filename, option.file, option.file && option.file.name);
 
   xhr.onerror = function error(e) {
     option.onError(e);
