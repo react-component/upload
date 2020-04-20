@@ -62,7 +62,11 @@ export default function upload(option) {
     });
   }
 
-  formData.append(option.filename, option.file, option.file instanceof Blob && option.file.name);
+  if (option.file instanceof Blob) {
+    formData.append(option.filename, option.file, option.file.name);
+  } else {
+    formData.append(option.filename, option.file);
+  }
 
   xhr.onerror = function error(e) {
     option.onError(e);

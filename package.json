@@ -1,6 +1,6 @@
 {
   "name": "rc-upload",
-  "version": "3.0.3",
+  "version": "3.0.4",
   "description": "upload ui component for react",
   "keywords": [
     "react",
@@ -33,7 +33,7 @@
     "compile": "rc-tools run compile --babel-runtime",
     "pub": "rc-tools run pub --babel-runtime",
     "lint": "rc-tools run lint",
-    "test": "jest  --setupTestFrameworkScriptFile=raf/polyfill",
+    "test": "jest --setupTestFrameworkScriptFile=raf/polyfill",
     "coverage": "jest --coverage && cat ./coverage/lcov.info | coveralls"
   },
   "devDependencies": {
