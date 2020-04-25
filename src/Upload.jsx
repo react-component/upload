@@ -19,6 +19,7 @@ class Upload extends Component {
     onSuccess: empty,
     multiple: false,
     beforeUpload: null,
+    beforeMultipleUpload: null,
     customRequest: null,
     withCredentials: false,
     openFileDialogOnClick: true,

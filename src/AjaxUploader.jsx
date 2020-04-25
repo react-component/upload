@@ -1,4 +1,5 @@
 /* eslint react/no-is-mounted:0,react/sort-comp:0,react/prop-types:0 */
+/* eslint no-shadow: 0 */
 import React, { Component } from 'react';
 import classNames from 'classnames';
 import defaultRequest from './request';
@@ -86,36 +87,68 @@ class AjaxUploader extends Component {
   }
 
   uploadFiles = (files) => {
+    const { props } = this;
     const postFiles = Array.prototype.slice.call(files);
-    postFiles
-      .map(file => {
-        file.uid = getUid();
-        return file;
-      })
-      .forEach(file => {
+    postFiles.forEach((file) => {
+      file.uid = getUid();
+    });
+    if (props.beforeMultipleUpload) {
+      this.upload(null, postFiles);
+    } else {
+      postFiles.forEach((file) => {
         this.upload(file, postFiles);
       });
+    }
   };
 
   upload(file, fileList) {
     const { props } = this;
-    if (!props.beforeUpload) {
+    if (props.beforeMultipleUpload) {
+      const beforeMultiple = props.beforeMultipleUpload(fileList);
+      if (beforeMultiple && beforeMultiple.then) {
+        beforeMultiple
+          .then((processedFiles) => {
+            const isProcessedFilesTypeCorrect = processedFiles.every((processedFile) => {
+              const processedFileType = Object.prototype.toString.call(processedFile);
+              return processedFileType === '[object File]' || processedFileType === '[object Blob]';
+            });
+            if (isProcessedFilesTypeCorrect) {
+              processedFiles.forEach((processedFile) => {
+                this.post(processedFile);
+              });
+            } else {
+              fileList.forEach((file) => {
+                this.post(file);
+              });
+            }
+          })
+          .catch((e) => {
+            console && console.log(e); // eslint-disable-line
+          });
+      } else if (beforeMultiple !== false) {
+        fileList.forEach((file) => {
+          setTimeout(() => this.post(file), 0);
+        });
+      }
+    } else if (props.beforeUpload) {
+      const before = props.beforeUpload(file, fileList);
+      if (before && before.then) {
+        before
+          .then((processedFile) => {
+            const processedFileType = Object.prototype.toString.call(processedFile);
+            if (processedFileType === '[object File]' || processedFileType === '[object Blob]') {
+              return this.post(processedFile);
+            }
+            return this.post(file);
+          })
+          .catch((e) => {
+            console && console.log(e); // eslint-disable-line
+          });
+      } else if (before !== false) {
+        setTimeout(() => this.post(file), 0);
+      }
+    } else {
       // always async in case use react state to keep fileList
-      return setTimeout(() => this.post(file), 0);
-    }
-
-    const before = props.beforeUpload(file, fileList);
-    if (before && before.then) {
-      before.then((processedFile) => {
-        const processedFileType = Object.prototype.toString.call(processedFile);
-        if (processedFileType === '[object File]' || processedFileType === '[object Blob]') {
-          return this.post(processedFile);
-        }
-        return this.post(file);
-      }).catch(e => {
-        console && console.log(e); // eslint-disable-line
-      });
-    } else if (before !== false) {
       setTimeout(() => this.post(file), 0);
     }
   }
