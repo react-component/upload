@@ -58,7 +58,6 @@ React.render(<Upload />, container);
 |className | string | - | root component className |
 |disabled | boolean | false | whether disabled |
 |component | "div"|"span" | "span"| wrap component name |
-|onReady | function | | only call when supportServerRender is true, upload is rendered completely |
 |action| string &#124; function(file): string &#124; Promise&lt;string&gt; | | form action url |
 |method | string | post | request method |
 |directory| boolean | false | support upload whole directory |
