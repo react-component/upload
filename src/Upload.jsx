@@ -13,7 +13,6 @@ class Upload extends Component {
     headers: {},
     name: 'file',
     multipart: false,
-    onReady: empty,
     onStart: empty,
     onError: empty,
     onSuccess: empty,
@@ -22,10 +21,6 @@ class Upload extends Component {
     customRequest: null,
     withCredentials: false,
     openFileDialogOnClick: true,
-  }
-
-  componentDidMount() {
-    this.props.onReady();
   }
 
   abort(file) {
