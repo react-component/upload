@@ -1,6 +1,10 @@
 # History
 ----
 
+### 3.1.0
+
+- `data` could return Promise.
+
 ### 3.0.0
 
 - Drop support of IE8/9.
