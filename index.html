@@ -7,7 +7,7 @@
   <meta charset="utf-8"/>
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <link href="//cdnjs.cloudflare.com/ajax/libs/normalize/3.0.3/normalize.css" rel="stylesheet"/>
-  <title>rc-upload@3.0.4 - upload ui component for react</title>
+  <title>rc-upload@3.1.0 - upload ui component for react</title>
   <style>
     @font-face {
       font-family: octicons-anchor;
@@ -737,7 +737,7 @@
 
 <body>
 <div class="header">
-  <h1>rc-upload@3.0.4</h1>
+  <h1>rc-upload@3.1.0</h1>
 </div>
 <div class="examples">
   <h3>EXAMPLES</h3>
@@ -821,12 +821,6 @@ React.render(<span class="xml"><span class="hljs-tag">&lt;<span class="hljs-titl
 <td>wrap component name</td>
 </tr>
 <tr>
-<td>onReady</td>
-<td>function</td>
-<td></td>
-<td>only call when supportServerRender is true, upload is rendered completely</td>
-</tr>
-<tr>
 <td>action</td>
 <td>string &#124; function(file): string &#124; Promise&lt;string&gt;</td>
 <td></td>
@@ -848,7 +842,7 @@ React.render(<span class="xml"><span class="hljs-tag">&lt;<span class="hljs-titl
 <td>data</td>
 <td>object/function(file)</td>
 <td></td>
-<td>other data object to post or a function which returns a data object</td>
+<td>other data object to post or a function which returns a data object(a promise object which resolve a data object)</td>
 </tr>
 <tr>
 <td>headers</td>
