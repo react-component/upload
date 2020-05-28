@@ -1,13 +1,13 @@
 /* eslint no-console:0 */
-
 import expect from 'expect.js';
-import Uploader from '../index';
 import React from 'react';
 import ReactDOM from 'react-dom';
 import TestUtils from 'react-dom/test-utils';
 import { format } from 'util';
-const { Simulate } = TestUtils;
 import sinon from 'sinon';
+import Uploader from '../index';
+
+const { Simulate } = TestUtils;
 
 function Item(name) {
   this.name = name;

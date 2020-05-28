@@ -32,6 +32,7 @@ function getBody(xhr) {
 //  headers: Object,
 // }
 export default function upload(option) {
+  // eslint-disable-next-line no-undef
   const xhr = new XMLHttpRequest();
 
   if (option.onProgress && xhr.upload) {
@@ -43,6 +44,7 @@ export default function upload(option) {
     };
   }
 
+  // eslint-disable-next-line no-undef
   const formData = new FormData();
 
   if (option.data) {
@@ -62,6 +64,7 @@ export default function upload(option) {
     });
   }
 
+  // eslint-disable-next-line no-undef
   if (option.file instanceof Blob) {
     formData.append(option.filename, option.file, option.file.name);
   } else {
@@ -79,9 +82,8 @@ export default function upload(option) {
       return option.onError(getError(option, xhr), getBody(xhr));
     }
 
-    option.onSuccess(getBody(xhr), xhr);
+    return option.onSuccess(getBody(xhr), xhr);
   };
-
 
   xhr.open(option.method, option.action, true);
 
@@ -98,11 +100,12 @@ export default function upload(option) {
     xhr.setRequestHeader('X-Requested-With', 'XMLHttpRequest');
   }
 
-  for (const h in headers) {
-    if (headers.hasOwnProperty(h) && headers[h] !== null) {
+  Object.keys(headers).forEach(h => {
+    if (headers[h] !== null) {
       xhr.setRequestHeader(h, headers[h]);
-    }
-  }
+    } 
+  });
+
   xhr.send(formData);
 
   return {

@@ -113,11 +113,13 @@ class AjaxUploader extends Component {
         }
         return this.post(file);
       }).catch(e => {
-        console && console.log(e); // eslint-disable-line
+        // eslint-disable-next-line no-console
+        console.log(e);
       });
     } else if (before !== false) {
       setTimeout(() => this.post(file), 0);
     }
+    return undefined;
   }
 
   post(file) {
@@ -209,7 +211,7 @@ class AjaxUploader extends Component {
     const {
       component: Tag, prefixCls, className, disabled, id,
       style, multiple, accept, children, directory, openFileDialogOnClick,
-      ...otherProps,
+      ...otherProps
     } = this.props;
     const cls = classNames({
       [prefixCls]: true,

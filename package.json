@@ -30,8 +30,8 @@
     "build": "rc-tools run build",
     "gh-pages": "rc-tools run gh-pages",
     "start": "node server",
-    "compile": "rc-tools run compile --babel-runtime",
-    "pub": "rc-tools run pub --babel-runtime",
+    "compile": "rc-tools run compile",
+    "pub": "rc-tools run pub",
     "lint": "rc-tools run lint",
     "test": "jest --setupTestFrameworkScriptFile=raf/polyfill",
     "coverage": "jest --coverage && cat ./coverage/lcov.info | coveralls"
@@ -46,17 +46,16 @@
     "jest": "^20.0.1",
     "pre-commit": "1.x",
     "raf": "^3.4.0",
-    "rc-tools": "6.x",
+    "rc-tools": "8.x",
     "react": "^16.0.0",
     "react-dom": "^16.0.0",
-    "sinon": "9.0.2",
+    "sinon": "^9.0.2",
     "vinyl-fs": "^3.0.3"
   },
   "pre-commit": [
     "lint"
   ],
   "dependencies": {
-    "babel-runtime": "6.x",
     "classnames": "^2.2.5"
   },
   "jest": {

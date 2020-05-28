@@ -24,7 +24,6 @@ class Test extends React.Component {
       },
       onStart: (file) => {
         console.log('onStart', file.name);
-        // this.refs.inner.abort(file);
       },
       onSuccess(file) {
         console.log('onSuccess', file);
@@ -61,7 +60,7 @@ class Test extends React.Component {
       </style>
 
       <div>
-        <Upload {...this.uploaderProps} ref="inner"><a>开始上传</a></Upload>
+        <Upload {...this.uploaderProps}><a>开始上传</a></Upload>
       </div>
 
       <h2>滚动</h2>

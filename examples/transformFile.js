@@ -24,6 +24,7 @@ const uploadProps = {
   },
   transformFile(file) {
     return new Promise((resolve) => {
+      // eslint-disable-next-line no-undef
       const reader = new FileReader();
       reader.readAsDataURL(file);
       reader.onload = () => {

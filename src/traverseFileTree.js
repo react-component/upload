@@ -52,9 +52,9 @@ const traverseFileTree = (files, callback, isAccepted) => {
       });
     }
   };
-  for (const file of files) {
+  files.forEach(file => {
     _traverseFileTree(file.webkitGetAsEntry());
-  }
+  });
 };
 
 export default traverseFileTree;

@@ -35,6 +35,7 @@ const uploadProps = {
     withCredentials,
   }) {
     // EXAMPLE: post form-data with 'axios'
+    // eslint-disable-next-line no-undef
     const formData = new FormData();
     if (data) {
       Object.keys(data).forEach(key => {

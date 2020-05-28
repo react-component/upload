@@ -1,8 +1,7 @@
 /* eslint no-console:0 */
-
 import expect from 'expect.js';
-import request from '../src/request';
 import sinon from 'sinon';
+import request from '../src/request';
 
 let xhr;
 let requests;
