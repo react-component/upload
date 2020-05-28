@@ -61,7 +61,7 @@ React.render(<Upload />, container);
 |action| string &#124; function(file): string &#124; Promise&lt;string&gt; | | form action url |
 |method | string | post | request method |
 |directory| boolean | false | support upload whole directory |
-|data| object/function(file) | | other data object to post or a function which returns a data object |
+|data| object/function(file) | | other data object to post or a function which returns a data object(a promise object which resolve a data object) |
 |headers| object | {} | http headers to post, available in modern browsers |
 |accept | string | | input accept attribute |
 |multiple | boolean | false | only support ie10+|

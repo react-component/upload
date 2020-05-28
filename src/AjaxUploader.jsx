@@ -125,7 +125,6 @@ class AjaxUploader extends Component {
       return;
     }
     const { props } = this;
-    let { data } = props;
     const {
       onStart,
       onProgress,
@@ -133,12 +132,15 @@ class AjaxUploader extends Component {
     } = props;
 
     new Promise(resolve => {
-      const { action } = props;
+      let { data, action } = props;
       if (typeof action === 'function') {
-        return resolve(action(file));
+        action = action(file);
       }
-      resolve(action);
-    }).then(action => {
+      if (typeof data === 'function') {
+        data = data(file);
+      }
+      resolve(Promise.all([action, data]));
+    }).then(([action, data]) => {
       const { uid } = file;
       const request = props.customRequest || defaultRequest;
       const transform = Promise.resolve(transformFile(file)).catch(e => {
@@ -146,10 +148,6 @@ class AjaxUploader extends Component {
       });
 
       transform.then((transformedFile) => {
-        if (typeof data === 'function') {
-          data = data(file);
-        }
-
         const requestOption = {
           action,
           filename: props.name,
