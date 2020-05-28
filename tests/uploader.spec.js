@@ -338,7 +338,7 @@ describe('uploader', () => {
       });
     });
 
-    it('support action is function returns Promise', done => {
+    it('support action and data is function returns Promise', done => {
       const action = () => {
         return new Promise(resolve => {
           setTimeout(() => {
@@ -346,7 +346,14 @@ describe('uploader', () => {
           }, 1000);
         });
       };
-      ReactDOM.render(<Uploader action={action} />, node, function init() {
+      const data = () => {
+        return new Promise(resolve => {
+          setTimeout(() => {
+            resolve({ field1: 'a' });
+          }, 1000);
+        });
+      };
+      ReactDOM.render(<Uploader data={ data } action={action} />, node, function init() {
         uploader = this;
         const input = TestUtils.findRenderedDOMComponentWithTag(uploader, 'input');
         const files = [
@@ -365,6 +372,7 @@ describe('uploader', () => {
             console.log(requests);
             expect(requests.length).to.be(1);
             expect(requests[0].url).to.be('/upload.do');
+            expect(requests[0].requestBody.get('field1')).to.be('a');
             done();
           }, 1000);
         }, 100);
