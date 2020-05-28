@@ -2,7 +2,7 @@
 <html>
 
 <head>
-  <title>directoryUpload.js - example - rc-upload@3.1.0</title>
+  <title>directoryUpload.js - example - rc-upload@3.1.1</title>
   <meta name="viewport"
         content="width=device-width,initial-scale=1.0,minimum-scale=1.0,maximum-scale=1.0,user-scalable=no">
   <meta charset="utf-8"/>
@@ -263,7 +263,7 @@ Monokai Sublime style. Derived from Monokai by noformnocontent http://nn.mit-lic
 <body>
   <div class="container">
     <div class="header">
-      <h1>rc-upload@3.1.0</h1>
+      <h1>rc-upload@3.1.1</h1>
 
       <p>upload ui component for react</p>
     </div>
@@ -290,7 +290,6 @@ Monokai Sublime style. Derived from Monokai by noformnocontent http://nn.mit-lic
       },
       onStart: (file) =&gt; {
         <span class="hljs-built_in">console</span>.log(<span class="hljs-string">'onStart'</span>, file.name);
-        <span class="hljs-comment">// this.refs.inner.abort(file);</span>
       },
       onSuccess(file) {
         <span class="hljs-built_in">console</span>.log(<span class="hljs-string">'onSuccess'</span>, file);
@@ -311,7 +310,7 @@ Monokai Sublime style. Derived from Monokai by noformnocontent http://nn.mit-lic
     &gt;</span>
 
       <span class="hljs-tag">&lt;<span class="hljs-title">div</span>&gt;</span>
-        <span class="hljs-tag">&lt;<span class="hljs-title">Upload</span> {<span class="hljs-attribute">...this.uploaderProps</span>} <span class="hljs-attribute">ref</span>=<span class="hljs-value">"inner"</span>&gt;</span><span class="hljs-tag">&lt;<span class="hljs-title">a</span>&gt;</span>开始上传<span class="hljs-tag">&lt;/<span class="hljs-title">a</span>&gt;</span><span class="hljs-tag">&lt;/<span class="hljs-title">Upload</span>&gt;</span>
+        <span class="hljs-tag">&lt;<span class="hljs-title">Upload</span> {<span class="hljs-attribute">...this.uploaderProps</span>}&gt;</span><span class="hljs-tag">&lt;<span class="hljs-title">a</span>&gt;</span>开始上传<span class="hljs-tag">&lt;/<span class="hljs-title">a</span>&gt;</span><span class="hljs-tag">&lt;/<span class="hljs-title">Upload</span>&gt;</span>
       <span class="hljs-tag">&lt;/<span class="hljs-title">div</span>&gt;</span>
 
     <span class="hljs-tag">&lt;/<span class="hljs-title">div</span>&gt;</span>)</span>;

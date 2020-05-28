@@ -2,7 +2,7 @@
 <html>
 
 <head>
-  <title>drag.js - example - rc-upload@3.1.0</title>
+  <title>drag.js - example - rc-upload@3.1.1</title>
   <meta name="viewport"
         content="width=device-width,initial-scale=1.0,minimum-scale=1.0,maximum-scale=1.0,user-scalable=no">
   <meta charset="utf-8"/>
@@ -263,7 +263,7 @@ Monokai Sublime style. Derived from Monokai by noformnocontent http://nn.mit-lic
 <body>
   <div class="container">
     <div class="header">
-      <h1>rc-upload@3.1.0</h1>
+      <h1>rc-upload@3.1.1</h1>
 
       <p>upload ui component for react</p>
     </div>
@@ -275,35 +275,30 @@ Monokai Sublime style. Derived from Monokai by noformnocontent http://nn.mit-lic
 <span class="hljs-keyword">import</span> ReactDOM <span class="hljs-keyword">from</span> <span class="hljs-string">'react-dom'</span>;
 <span class="hljs-keyword">import</span> Upload <span class="hljs-keyword">from</span> <span class="hljs-string">'rc-upload'</span>;
 
-<span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">Test</span> <span class="hljs-keyword">extends</span> <span class="hljs-title">React</span>.<span class="hljs-title">Component</span> </span>{
-  render() {
-    <span class="hljs-keyword">const</span> props = {
-      action: <span class="hljs-string">'/upload.do'</span>,
-      type: <span class="hljs-string">'drag'</span>,
-      accept: <span class="hljs-string">'.png'</span>,
-      beforeUpload(file) {
-        <span class="hljs-built_in">console</span>.log(<span class="hljs-string">'beforeUpload'</span>, file.name);
-      },
-      onStart: (file) =&gt; {
-        <span class="hljs-built_in">console</span>.log(<span class="hljs-string">'onStart'</span>, file.name);
-      },
-      onSuccess(file) {
-        <span class="hljs-built_in">console</span>.log(<span class="hljs-string">'onSuccess'</span>, file);
-      },
-      onProgress(step, file) {
-        <span class="hljs-built_in">console</span>.log(<span class="hljs-string">'onProgress'</span>, <span class="hljs-built_in">Math</span>.round(step.percent), file.name);
-      },
-      onError(err) {
-        <span class="hljs-built_in">console</span>.log(<span class="hljs-string">'onError'</span>, err);
-      },
-      style: { display: <span class="hljs-string">'inline-block'</span>, width: <span class="hljs-number">200</span>, height: <span class="hljs-number">200</span>, background: <span class="hljs-string">'#eee'</span> },
-      <span class="hljs-comment">// openFileDialogOnClick: false</span>
-    };
-    <span class="hljs-keyword">return</span> <span class="xml"><span class="hljs-tag">&lt;<span class="hljs-title">Upload</span> {<span class="hljs-attribute">...props</span>} /&gt;</span>;</span>
-  }
-}
+<span class="hljs-keyword">const</span> props = {
+  action: <span class="hljs-string">'/upload.do'</span>,
+  type: <span class="hljs-string">'drag'</span>,
+  accept: <span class="hljs-string">'.png'</span>,
+  beforeUpload(file) {
+    <span class="hljs-built_in">console</span>.log(<span class="hljs-string">'beforeUpload'</span>, file.name);
+  },
+  onStart: (file) =&gt; {
+    <span class="hljs-built_in">console</span>.log(<span class="hljs-string">'onStart'</span>, file.name);
+  },
+  onSuccess(file) {
+    <span class="hljs-built_in">console</span>.log(<span class="hljs-string">'onSuccess'</span>, file);
+  },
+  onProgress(step, file) {
+    <span class="hljs-built_in">console</span>.log(<span class="hljs-string">'onProgress'</span>, <span class="hljs-built_in">Math</span>.round(step.percent), file.name);
+  },
+  onError(err) {
+    <span class="hljs-built_in">console</span>.log(<span class="hljs-string">'onError'</span>, err);
+  },
+  style: { display: <span class="hljs-string">'inline-block'</span>, width: <span class="hljs-number">200</span>, height: <span class="hljs-number">200</span>, background: <span class="hljs-string">'#eee'</span> },
+  <span class="hljs-comment">// openFileDialogOnClick: false</span>
+};
 
-ReactDOM.render(<span class="xml"><span class="hljs-tag">&lt;<span class="hljs-title">Test</span> /&gt;</span>, document.getElementById('__react-content'));
+ReactDOM.render(<span class="xml"><span class="hljs-tag">&lt;<span class="hljs-title">Upload</span> {<span class="hljs-attribute">...props</span>} /&gt;</span>, document.getElementById('__react-content'));
 </span></code></pre></div>
   </div>
   <a href="http://github.com/react-component/upload">
