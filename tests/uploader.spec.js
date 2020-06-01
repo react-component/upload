@@ -374,7 +374,7 @@ describe('uploader', () => {
             expect(requests[0].url).to.be('/upload.do');
             expect(requests[0].requestBody.get('field1')).to.be('a');
             done();
-          }, 1000);
+          }, 2000);
         }, 100);
       });
     });
@@ -467,6 +467,53 @@ describe('uploader', () => {
 
     afterEach(() => {
       ReactDOM.unmountComponentAtNode(node);
+    });
+
+    it('transform file function should be called before data function', done => {
+      const props = {
+        action: '/test',
+        data (file) {
+          return new Promise((resolve) => {
+            setTimeout(() => {
+              resolve({
+                url: file.url
+              })
+            }, 500)
+          })
+        },
+        transformFile (file) {
+          return new Promise((resolve) => {
+            setTimeout(() => {
+              file.url = 'this is file url';
+              resolve(file);
+            }, 500);
+          });
+        },
+      };
+      ReactDOM.render(<Uploader {...props} />, node, function init() {
+        uploader = this;
+        const input = TestUtils.findRenderedDOMComponentWithTag(uploader, 'input');
+
+        const files = [
+          {
+            name: 'success.png',
+            toString() {
+              return this.name;
+            },
+          },
+        ];
+
+        files.item = i => files[i];
+
+        Simulate.change(input, { target: { files } });
+
+        setTimeout(() => {
+          setTimeout(() => {
+            expect(requests[0].requestBody.get('url')).to.be('this is file url');
+            done();
+          }, 1000);
+        }, 100);
+      });
     });
 
     it('noes not affect receive origin file when transform file is null', done => {
