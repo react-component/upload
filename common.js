@@ -29343,7 +29343,7 @@ var AjaxUploader = function (_Component) {
       }
 
       if (_this.props.directory) {
-        Object(__WEBPACK_IMPORTED_MODULE_5__traverseFileTree__["a" /* default */])(e.dataTransfer.items, _this.uploadFiles, function (_file) {
+        Object(__WEBPACK_IMPORTED_MODULE_5__traverseFileTree__["a" /* default */])(Array.prototype.slice.call(e.dataTransfer.items), _this.uploadFiles, function (_file) {
           return Object(__WEBPACK_IMPORTED_MODULE_4__attr_accept__["a" /* default */])(_file, _this.props.accept);
         });
       } else {
@@ -29432,29 +29432,32 @@ var AjaxUploader = function (_Component) {
 
 
       new Promise(function (resolve) {
-        var data = props.data,
-            action = props.action;
+        var action = props.action;
 
         if (typeof action === 'function') {
           action = action(file);
         }
-        if (typeof data === 'function') {
-          data = data(file);
-        }
-        resolve(Promise.all([action, data]));
-      }).then(function (_ref2) {
-        var _ref3 = _slicedToArray(_ref2, 2),
-            action = _ref3[0],
-            data = _ref3[1];
-
+        return resolve(action);
+      }).then(function (action) {
         var uid = file.uid;
 
         var request = props.customRequest || __WEBPACK_IMPORTED_MODULE_2__request__["a" /* default */];
-        var transform = Promise.resolve(transformFile(file))['catch'](function (e) {
+        var transform = Promise.resolve(transformFile(file)).then(function (transformedFile) {
+          var data = props.data;
+
+          if (typeof data === 'function') {
+            data = data(transformedFile);
+          }
+          return Promise.all([transformedFile, data]);
+        })['catch'](function (e) {
           console.error(e); // eslint-disable-line no-console
         });
 
-        transform.then(function (transformedFile) {
+        transform.then(function (_ref2) {
+          var _ref3 = _slicedToArray(_ref2, 2),
+              transformedFile = _ref3[0],
+              data = _ref3[1];
+
           var requestOption = {
             action: action,
             filename: props.name,
