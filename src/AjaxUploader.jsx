@@ -59,7 +59,8 @@ class AjaxUploader extends Component {
 
     if (this.props.directory) {
       traverseFileTree(
-        e.dataTransfer.items,
+        Array.prototype.slice
+        .call(e.dataTransfer.items),
         this.uploadFiles,
         _file => attrAccept(_file, this.props.accept)
       );
