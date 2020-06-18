@@ -29316,18 +29316,23 @@ var AjaxUploader = function (_Component) {
       var files = e.target.files;
       _this.uploadFiles(files);
       _this.reset();
-    }, _this.onClick = function () {
+    }, _this.onClick = function (e) {
       var el = _this.fileInput;
       if (!el) {
         return;
       }
-      var children = _this.props.children;
+      var _this$props = _this.props,
+          children = _this$props.children,
+          onClick = _this$props.onClick;
 
       if (children && children.type === 'button') {
         el.parentNode.focus();
         el.parentNode.querySelector('button').blur();
       }
       el.click();
+      if (onClick) {
+        onClick(e);
+      }
     }, _this.onKeyDown = function (e) {
       if (e.key === 'Enter') {
         _this.onClick();
@@ -29530,12 +29535,16 @@ var AjaxUploader = function (_Component) {
           children = _props.children,
           directory = _props.directory,
           openFileDialogOnClick = _props.openFileDialogOnClick,
-          otherProps = _objectWithoutProperties(_props, ['component', 'prefixCls', 'className', 'disabled', 'id', 'style', 'multiple', 'accept', 'children', 'directory', 'openFileDialogOnClick']);
+          onMouseEnter = _props.onMouseEnter,
+          onMouseLeave = _props.onMouseLeave,
+          otherProps = _objectWithoutProperties(_props, ['component', 'prefixCls', 'className', 'disabled', 'id', 'style', 'multiple', 'accept', 'children', 'directory', 'openFileDialogOnClick', 'onMouseEnter', 'onMouseLeave']);
 
       var cls = __WEBPACK_IMPORTED_MODULE_1_classnames___default()((_classNames = {}, _defineProperty(_classNames, prefixCls, true), _defineProperty(_classNames, prefixCls + '-disabled', disabled), _defineProperty(_classNames, className, className), _classNames));
       var events = disabled ? {} : {
         onClick: openFileDialogOnClick ? this.onClick : function () {},
         onKeyDown: openFileDialogOnClick ? this.onKeyDown : function () {},
+        onMouseEnter: onMouseEnter,
+        onMouseLeave: onMouseLeave,
         onDrop: this.onFileDrop,
         onDragOver: this.onFileDrop,
         tabIndex: '0'
