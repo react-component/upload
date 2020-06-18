@@ -29,17 +29,20 @@ class AjaxUploader extends Component {
     this.reset();
   }
 
-  onClick = () => {
+  onClick = (e) => {
     const el = this.fileInput;
     if (!el) {
       return;
     }
-    const { children } = this.props;
+    const { children, onClick } = this.props;
     if (children && children.type === 'button') {
       el.parentNode.focus();
       el.parentNode.querySelector('button').blur();
     }
     el.click();
+    if (onClick) {
+      onClick(e);
+    }
   }
 
   onKeyDown = e => {
@@ -216,6 +219,7 @@ class AjaxUploader extends Component {
     const {
       component: Tag, prefixCls, className, disabled, id,
       style, multiple, accept, children, directory, openFileDialogOnClick,
+      onMouseEnter, onMouseLeave,
       ...otherProps
     } = this.props;
     const cls = classNames({
@@ -224,8 +228,10 @@ class AjaxUploader extends Component {
       [className]: className,
     });
     const events = disabled ? {} : {
-      onClick: openFileDialogOnClick ? this.onClick : () => { },
-      onKeyDown: openFileDialogOnClick ? this.onKeyDown : () => { },
+      onClick: openFileDialogOnClick ? this.onClick : () => {},
+      onKeyDown: openFileDialogOnClick ? this.onKeyDown : () => {},
+      onMouseEnter,
+      onMouseLeave,
       onDrop: this.onFileDrop,
       onDragOver: this.onFileDrop,
       tabIndex: '0',

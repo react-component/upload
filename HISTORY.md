@@ -1,6 +1,10 @@
 # History
 ----
 
+### 3.2.0
+
+- support `onClick` `onMouseEnter` `onMouseLeave`.
+
 ### 3.1.0
 
 - `data` could return Promise.
