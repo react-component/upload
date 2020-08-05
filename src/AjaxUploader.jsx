@@ -218,7 +218,7 @@ class AjaxUploader extends Component {
   render() {
     const {
       component: Tag, prefixCls, className, disabled, id,
-      style, multiple, accept, children, directory, openFileDialogOnClick,
+      style, multiple, accept, capture, children, directory, openFileDialogOnClick,
       onMouseEnter, onMouseLeave,
       ...otherProps
     } = this.props;
@@ -252,6 +252,7 @@ class AjaxUploader extends Component {
           key={this.state.uid}
           style={{ display: 'none' }}
           accept={accept}
+          capture={capture}
           directory={directory ? 'directory' : null}
           webkitdirectory={directory ? 'webkitdirectory' : null}
           multiple={multiple}
