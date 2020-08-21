@@ -1,8 +1,7 @@
 /* eslint no-console:0 */
 import React from 'react';
-import ReactDOM from 'react-dom';
-import Upload from 'rc-upload';
 import axios from 'axios';
+import Upload from '../src/index';
 
 const uploadProps = {
   action: '/upload.do',
@@ -49,7 +48,7 @@ const uploadProps = {
         withCredentials,
         headers,
         onUploadProgress: ({ total, loaded }) => {
-          onProgress({ percent: Math.round(loaded / total * 100).toFixed(2) }, file);
+          onProgress({ percent: Math.round((loaded / total) * 100).toFixed(2) }, file);
         },
       })
       .then(({ data: response }) => {
@@ -81,4 +80,4 @@ const Test = () => {
   );
 };
 
-ReactDOM.render(<Test />, document.getElementById('__react-content'));
+export default Test;

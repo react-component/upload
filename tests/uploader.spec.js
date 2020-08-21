@@ -1,5 +1,4 @@
 /* eslint no-console:0 */
-import expect from 'expect.js';
 import React from 'react';
 import ReactDOM from 'react-dom';
 import TestUtils from 'react-dom/test-utils';
@@ -121,62 +120,56 @@ describe('uploader', () => {
 
     it('with id', done => {
       ReactDOM.render(<Uploader id="bamboo" />, node, function init() {
-        expect(TestUtils.findRenderedDOMComponentWithTag(this, 'input').id).to.be('bamboo');
+        expect(TestUtils.findRenderedDOMComponentWithTag(this, 'input').id).toBe('bamboo');
         done();
       });
     });
 
     it('should pass through data attributes', done => {
       ReactDOM.render(
-        (
-          <Uploader
-            data-testid="data-testid"
-            data-my-custom-attr="custom data attribute"
-          />
-        ),
+        <Uploader data-testid="data-testid" data-my-custom-attr="custom data attribute" />,
         node,
         function init() {
-          expect(TestUtils.findRenderedDOMComponentWithTag(this, 'input')
-            .getAttribute('data-testid'))
-            .to.be('data-testid');
-          expect(TestUtils.findRenderedDOMComponentWithTag(this, 'input')
-            .getAttribute('data-my-custom-attr'))
-            .to.be('custom data attribute');
+          expect(
+            TestUtils.findRenderedDOMComponentWithTag(this, 'input').getAttribute('data-testid'),
+          ).toBe('data-testid');
+          expect(
+            TestUtils.findRenderedDOMComponentWithTag(this, 'input').getAttribute(
+              'data-my-custom-attr',
+            ),
+          ).toBe('custom data attribute');
           done();
-        }
+        },
       );
     });
 
     it('should pass through aria attributes', done => {
-      ReactDOM.render(<Uploader aria-label="Upload a file"/>, node, function init() {
-        expect(TestUtils.findRenderedDOMComponentWithTag(this, 'input')
-          .getAttribute('aria-label'))
-          .to.be('Upload a file');
+      ReactDOM.render(<Uploader aria-label="Upload a file" />, node, function init() {
+        expect(
+          TestUtils.findRenderedDOMComponentWithTag(this, 'input').getAttribute('aria-label'),
+        ).toBe('Upload a file');
         done();
       });
     });
 
     it('should pass through role attributes', done => {
-      ReactDOM.render(<Uploader role="button"/>, node, function init() {
-        expect(TestUtils.findRenderedDOMComponentWithTag(this, 'input')
-          .getAttribute('role'))
-          .to.be('button');
+      ReactDOM.render(<Uploader role="button" />, node, function init() {
+        expect(TestUtils.findRenderedDOMComponentWithTag(this, 'input').getAttribute('role')).toBe(
+          'button',
+        );
         done();
       });
     });
 
     it('should not pass through unknown props', done => {
-      ReactDOM.render(<Uploader customProp="This shouldn't be rendered to DOM"/>,
-        node,
-        () => {
-          // Fails when React reports unrecognized prop is added to DOM in console.error
-          done();
-        }
-      );
+      ReactDOM.render(<Uploader customProp="This shouldn't be rendered to DOM" />, node, () => {
+        // Fails when React reports unrecognized prop is added to DOM in console.error
+        done();
+      });
     });
 
     it('create works', () => {
-      expect(TestUtils.scryRenderedDOMComponentsWithTag(uploader, 'span').length).to.be(1);
+      expect(TestUtils.scryRenderedDOMComponentsWithTag(uploader, 'span').length).toBe(1);
     });
 
     it('upload success', done => {
@@ -193,8 +186,8 @@ describe('uploader', () => {
       files.item = i => files[i];
 
       handlers.onSuccess = (ret, file) => {
-        expect(ret[1]).to.eql(file.name);
-        expect(file).to.have.property('uid');
+        expect(ret[1]).toEqual(file.name);
+        expect(file).toHaveProperty('uid');
         done();
       };
 
@@ -223,9 +216,9 @@ describe('uploader', () => {
       files.item = i => files[i];
 
       handlers.onError = (err, ret) => {
-        expect(err instanceof Error).to.equal(true);
-        expect(err.status).to.equal(400);
-        expect(ret).to.equal('error 400');
+        expect(err instanceof Error).toEqual(true);
+        expect(err.status).toEqual(400);
+        expect(ret).toEqual('error 400');
         done();
       };
 
@@ -249,8 +242,8 @@ describe('uploader', () => {
       files.item = i => files[i];
 
       handlers.onSuccess = (ret, file) => {
-        expect(ret[1]).to.eql(file.name);
-        expect(file).to.have.property('uid');
+        expect(ret[1]).toEqual(file.name);
+        expect(file).toHaveProperty('uid');
         done();
       };
 
@@ -280,7 +273,7 @@ describe('uploader', () => {
       const mockStart = jest.fn();
       handlers.onStart = mockStart;
       setTimeout(() => {
-        expect(mockStart.mock.calls.length).to.be(0);
+        expect(mockStart.mock.calls.length).toBe(0);
         done();
       }, 100);
     });
@@ -320,9 +313,9 @@ describe('uploader', () => {
         };
 
         handlers.onSuccess = (ret, file) => {
-          expect(ret[1]).to.eql(file.name);
-          expect(file).to.have.property('uid');
-          expect(triggerTimes).to.eql(1);
+          expect(ret[1]).toEqual(file.name);
+          expect(file).toHaveProperty('uid');
+          expect(triggerTimes).toEqual(1);
           done();
         };
 
@@ -353,7 +346,7 @@ describe('uploader', () => {
           }, 1000);
         });
       };
-      ReactDOM.render(<Uploader data={ data } action={action} />, node, function init() {
+      ReactDOM.render(<Uploader data={data} action={action} />, node, function init() {
         uploader = this;
         const input = TestUtils.findRenderedDOMComponentWithTag(uploader, 'input');
         const files = [
@@ -367,12 +360,12 @@ describe('uploader', () => {
         files.item = i => files[i];
         Simulate.change(input, { target: { files } });
         setTimeout(() => {
-          expect(requests.length).to.be(0);
+          expect(requests.length).toBe(0);
           setTimeout(() => {
             console.log(requests);
-            expect(requests.length).to.be(1);
-            expect(requests[0].url).to.be('/upload.do');
-            expect(requests[0].requestBody.get('field1')).to.be('a');
+            expect(requests.length).toBe(1);
+            expect(requests[0].url).toBe('/upload.do');
+            expect(requests[0].requestBody.get('field1')).toBe('a');
             done();
           }, 2000);
         }, 100);
@@ -446,7 +439,7 @@ describe('uploader', () => {
       const mockStart = jest.fn();
       handlers.onStart = mockStart;
       setTimeout(() => {
-        expect(mockStart.mock.calls.length).to.be(0);
+        expect(mockStart.mock.calls.length).toBe(0);
         done();
       }, 100);
     });
@@ -472,17 +465,17 @@ describe('uploader', () => {
     it('transform file function should be called before data function', done => {
       const props = {
         action: '/test',
-        data (file) {
-          return new Promise((resolve) => {
+        data(file) {
+          return new Promise(resolve => {
             setTimeout(() => {
               resolve({
-                url: file.url
-              })
-            }, 500)
-          })
+                url: file.url,
+              });
+            }, 500);
+          });
         },
-        transformFile (file) {
-          return new Promise((resolve) => {
+        transformFile(file) {
+          return new Promise(resolve => {
             setTimeout(() => {
               file.url = 'this is file url';
               resolve(file);
@@ -509,7 +502,7 @@ describe('uploader', () => {
 
         setTimeout(() => {
           setTimeout(() => {
-            expect(requests[0].requestBody.get('url')).to.be('this is file url');
+            expect(requests[0].requestBody.get('url')).toBe('this is file url');
             done();
           }, 1000);
         }, 100);
@@ -545,8 +538,8 @@ describe('uploader', () => {
         files.item = i => files[i];
 
         handlers.onSuccess = (ret, file) => {
-          expect(ret[1]).to.eql(file.name);
-          expect(file).to.have.property('uid');
+          expect(ret[1]).toEqual(file.name);
+          expect(file).toHaveProperty('uid');
           done();
         };
 

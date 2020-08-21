@@ -1,8 +1,6 @@
 /* eslint no-console:0 */
-
 import React from 'react';
-import ReactDOM from 'react-dom';
-import Upload from 'rc-upload';
+import Upload from '../src/index';
 
 const props = {
   action: '/upload.do',
@@ -11,7 +9,7 @@ const props = {
   beforeUpload(file) {
     console.log('beforeUpload', file.name);
   },
-  onStart: (file) => {
+  onStart: file => {
     console.log('onStart', file.name);
   },
   onSuccess(file) {
@@ -27,4 +25,20 @@ const props = {
   // openFileDialogOnClick: false
 };
 
-ReactDOM.render(<Upload {...props} />, document.getElementById('__react-content'));
+const Test = () => {
+  return (
+    <div
+      style={{
+        margin: 100,
+      }}
+    >
+      <div>
+        <Upload {...props}>
+          <a>开始上传</a>
+        </Upload>
+      </div>
+    </div>
+  );
+};
+
+export default Test;

@@ -15,7 +15,8 @@ export default (file, acceptedFiles) => {
       const validType = type.trim();
       if (validType.charAt(0) === '.') {
         return endsWith(fileName.toLowerCase(), validType.toLowerCase());
-      } else if (/\/\*$/.test(validType)) {
+      }
+      if (/\/\*$/.test(validType)) {
         // This is something like a image/* mime type
         return baseMimeType === validType.replace(/\/.*$/, '');
       }
