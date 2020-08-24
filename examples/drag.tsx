@@ -1,6 +1,6 @@
 /* eslint no-console:0 */
 import React from 'react';
-import Upload from '../src/index';
+import Upload from '..';
 
 const props = {
   action: '/upload.do',
