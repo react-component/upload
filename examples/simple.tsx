@@ -12,7 +12,7 @@ const uploaderProps = {
   action: '/upload.do',
   data: { a: 1, b: 2 },
   headers: {
-    Authorization: 'xxxxxxx',
+    Authorization: 'xxxxxxx-simple',
   },
   multiple: true,
   beforeUpload(file) {
