@@ -7,9 +7,6 @@ const Test = () => {
   const uploaderProps = {
     action: '/upload.do',
     data: { a: 1, b: 2 },
-    headers: {
-      Authorization: 'xxxxxxx-directory',
-    },
     directory: true,
     beforeUpload(file) {
       console.log('beforeUpload', file.name);
