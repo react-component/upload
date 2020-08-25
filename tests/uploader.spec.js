@@ -1,12 +1,9 @@
 /* eslint no-console:0 */
 import React from 'react';
-import ReactDOM from 'react-dom';
-import TestUtils from 'react-dom/test-utils';
 import { format } from 'util';
+import { mount } from 'enzyme';
 import sinon from 'sinon';
 import Uploader from '../index';
-
-const { Simulate } = TestUtils;
 
 function Item(name) {
   this.name = name;
@@ -72,7 +69,6 @@ describe('uploader', () => {
       return;
     }
 
-    let node;
     let uploader;
     const handlers = {};
 
@@ -104,77 +100,48 @@ describe('uploader', () => {
       },
     };
 
-    beforeEach(done => {
-      node = document.createElement('div');
-      document.body.appendChild(node);
-
-      ReactDOM.render(<Uploader {...props} />, node, function init() {
-        uploader = this;
-        done();
-      });
+    beforeEach(() => {
+      uploader = mount(<Uploader {...props} />);
     });
 
     afterEach(() => {
-      ReactDOM.unmountComponentAtNode(node);
+      uploader.unmount();
     });
 
-    it('with id', done => {
-      ReactDOM.render(<Uploader id="bamboo" />, node, function init() {
-        expect(TestUtils.findRenderedDOMComponentWithTag(this, 'input').id).toBe('bamboo');
-        done();
-      });
+    it('with id', () => {
+      const wrapper = mount(<Uploader id="bamboo" />);
+      expect(wrapper.find('input').props().id).toBe('bamboo');
     });
 
-    it('should pass through data attributes', done => {
-      ReactDOM.render(
-        <Uploader data-testid="data-testid" data-my-custom-attr="custom data attribute" />,
-        node,
-        function init() {
-          expect(
-            TestUtils.findRenderedDOMComponentWithTag(this, 'input').getAttribute('data-testid'),
-          ).toBe('data-testid');
-          expect(
-            TestUtils.findRenderedDOMComponentWithTag(this, 'input').getAttribute(
-              'data-my-custom-attr',
-            ),
-          ).toBe('custom data attribute');
-          done();
-        },
+    it('should pass through data & aria attributes', () => {
+      const wrapper = mount(
+        <Uploader
+          data-testid="data-testid"
+          data-my-custom-attr="custom data attribute"
+          aria-label="Upload a file"
+        />,
       );
+      expect(wrapper.find('input').props()['data-testid']).toBe('data-testid');
+      expect(wrapper.find('input').props()['data-my-custom-attr']).toBe('custom data attribute');
+      expect(wrapper.find('input').props()['aria-label']).toBe('Upload a file');
     });
 
-    it('should pass through aria attributes', done => {
-      ReactDOM.render(<Uploader aria-label="Upload a file" />, node, function init() {
-        expect(
-          TestUtils.findRenderedDOMComponentWithTag(this, 'input').getAttribute('aria-label'),
-        ).toBe('Upload a file');
-        done();
-      });
+    it('should pass through role attributes', () => {
+      const wrapper = mount(<Uploader role="button" />);
+      expect(wrapper.find('input').props().role).toBe('button');
     });
 
-    it('should pass through role attributes', done => {
-      ReactDOM.render(<Uploader role="button" />, node, function init() {
-        expect(TestUtils.findRenderedDOMComponentWithTag(this, 'input').getAttribute('role')).toBe(
-          'button',
-        );
-        done();
-      });
-    });
-
-    it('should not pass through unknown props', done => {
-      ReactDOM.render(<Uploader customProp="This shouldn't be rendered to DOM" />, node, () => {
-        // Fails when React reports unrecognized prop is added to DOM in console.error
-        done();
-      });
+    it('should not pass through unknown props', () => {
+      const wrapper = mount(<Uploader customProp="This shouldn't be rendered to DOM" />);
+      expect(wrapper.find('input').props().customProp).toBeUndefined();
     });
 
     it('create works', () => {
-      expect(TestUtils.scryRenderedDOMComponentsWithTag(uploader, 'span').length).toBe(1);
+      expect(uploader.find('span').length).toBeTruthy();
     });
 
     it('upload success', done => {
-      const input = TestUtils.findRenderedDOMComponentWithTag(uploader, 'input');
-
+      const input = uploader.find('input').first();
       const files = [
         {
           name: 'success.png',
@@ -194,16 +161,14 @@ describe('uploader', () => {
       handlers.onError = err => {
         done(err);
       };
-
-      Simulate.change(input, { target: { files } });
-
+      input.simulate('change', { target: { files } });
       setTimeout(() => {
         requests[0].respond(200, {}, `["","${files[0].name}"]`);
       }, 100);
     });
 
     it('upload error', done => {
-      const input = TestUtils.findRenderedDOMComponentWithTag(uploader, 'input');
+      const input = uploader.find('input').first();
 
       const files = [
         {
@@ -222,14 +187,14 @@ describe('uploader', () => {
         done();
       };
 
-      Simulate.change(input, { target: { files } });
+      input.simulate('change', { target: { files } });
       setTimeout(() => {
         requests[0].respond(400, {}, `error 400`);
       }, 100);
     });
 
     it('drag to upload', done => {
-      const input = TestUtils.findRenderedDOMComponentWithTag(uploader, 'input');
+      const input = uploader.find('input').first();
 
       const files = [
         {
@@ -251,7 +216,7 @@ describe('uploader', () => {
         done(err);
       };
 
-      Simulate.drop(input, { dataTransfer: { files } });
+      input.simulate('drop', { dataTransfer: { files } });
 
       setTimeout(() => {
         requests[0].respond(200, {}, `["","${files[0].name}"]`);
@@ -259,7 +224,7 @@ describe('uploader', () => {
     });
 
     it('drag unaccepted type files to upload will not trigger onStart', done => {
-      const input = TestUtils.findRenderedDOMComponentWithTag(uploader, 'input');
+      const input = uploader.find('input').first();
       const files = [
         {
           name: 'success.jpg',
@@ -269,7 +234,7 @@ describe('uploader', () => {
         },
       ];
       files.item = i => files[i];
-      Simulate.drop(input, { dataTransfer: { files } });
+      input.simulate('drop', { dataTransfer: { files } });
       const mockStart = jest.fn();
       handlers.onStart = mockStart;
       setTimeout(() => {
@@ -279,56 +244,47 @@ describe('uploader', () => {
     });
 
     it('drag files with multiple false', done => {
-      ReactDOM.unmountComponentAtNode(node);
+      const wrapper = mount(<Uploader {...props} multiple={false} />);
+      const input = wrapper.find('input').first();
 
-      // Create new one
-      node = document.createElement('div');
-      document.body.appendChild(node);
-
-      ReactDOM.render(<Uploader {...props} multiple={false} />, node, function init() {
-        uploader = this;
-
-        const input = TestUtils.findRenderedDOMComponentWithTag(uploader, 'input');
-
-        const files = [
-          {
-            name: 'success.png',
-            toString() {
-              return this.name;
-            },
+      const files = [
+        {
+          name: 'success.png',
+          toString() {
+            return this.name;
           },
-          {
-            name: 'filtered.png',
-            toString() {
-              return this.name;
-            },
+        },
+        {
+          name: 'filtered.png',
+          toString() {
+            return this.name;
           },
-        ];
-        files.item = i => files[i];
+        },
+      ];
+      files.item = i => files[i];
 
-        // Only can trigger once
-        let triggerTimes = 0;
-        handlers.onStart = () => {
-          triggerTimes += 1;
-        };
+      // Only can trigger once
+      let triggerTimes = 0;
+      handlers.onStart = () => {
+        triggerTimes += 1;
+      };
 
-        handlers.onSuccess = (ret, file) => {
-          expect(ret[1]).toEqual(file.name);
-          expect(file).toHaveProperty('uid');
-          expect(triggerTimes).toEqual(1);
-          done();
-        };
+      handlers.onSuccess = (ret, file) => {
+        expect(ret[1]).toEqual(file.name);
+        expect(file).toHaveProperty('uid');
+        expect(triggerTimes).toEqual(1);
+        done();
+      };
 
-        handlers.onError = err => {
-          done(err);
-        };
+      handlers.onError = err => {
+        done(err);
+      };
 
-        Simulate.drop(input, { dataTransfer: { files } });
+      input.simulate('drop', { dataTransfer: { files } });
 
-        setTimeout(() => {
-          requests[0].respond(200, {}, `["","${files[0].name}"]`);
-        }, 100);
-      });
+      setTimeout(() => {
+        requests[0].respond(200, {}, `["","${files[0].name}"]`);
+      }, 100);
     });
 
     it('support action and data is function returns Promise', done => {
@@ -346,30 +302,29 @@ describe('uploader', () => {
           }, 1000);
         });
       };
-      ReactDOM.render(<Uploader data={data} action={action} />, node, function init() {
-        uploader = this;
-        const input = TestUtils.findRenderedDOMComponentWithTag(uploader, 'input');
-        const files = [
-          {
-            name: 'success.png',
-            toString() {
-              return this.name;
-            },
+      const wrapper = mount(<Uploader data={data} action={action} />);
+      const input = wrapper.find('input').first();
+
+      const files = [
+        {
+          name: 'success.png',
+          toString() {
+            return this.name;
           },
-        ];
-        files.item = i => files[i];
-        Simulate.change(input, { target: { files } });
+        },
+      ];
+      files.item = i => files[i];
+      input.simulate('change', { target: { files } });
+      setTimeout(() => {
+        expect(requests.length).toBe(0);
         setTimeout(() => {
-          expect(requests.length).toBe(0);
-          setTimeout(() => {
-            console.log(requests);
-            expect(requests.length).toBe(1);
-            expect(requests[0].url).toBe('/upload.do');
-            expect(requests[0].requestBody.get('field1')).toBe('a');
-            done();
-          }, 2000);
-        }, 100);
-      });
+          console.log(requests);
+          expect(requests.length).toBe(1);
+          expect(requests[0].url).toBe('/upload.do');
+          expect(requests[0].requestBody.get('field1')).toBe('a');
+          done();
+        }, 2000);
+      }, 100);
     });
   });
 
@@ -378,7 +333,6 @@ describe('uploader', () => {
       return;
     }
 
-    let node;
     let uploader;
     const handlers = {};
 
@@ -410,18 +364,12 @@ describe('uploader', () => {
       },
     };
 
-    beforeEach(done => {
-      node = document.createElement('div');
-      document.body.appendChild(node);
-
-      ReactDOM.render(<Uploader {...props} />, node, function init() {
-        uploader = this;
-        done();
-      });
+    beforeEach(() => {
+      uploader = mount(<Uploader {...props} />);
     });
 
     it('unaccepted type files to upload will not trigger onStart', done => {
-      const input = TestUtils.findRenderedDOMComponentWithTag(uploader, 'input');
+      const input = uploader.find('input').first();
       const files = {
         name: 'foo',
         children: [
@@ -435,7 +383,7 @@ describe('uploader', () => {
           },
         ],
       };
-      Simulate.drop(input, { dataTransfer: { items: [makeDataTransferItem(files)] } });
+      input.simulate('drop', { dataTransfer: { items: [makeDataTransferItem(files)] } });
       const mockStart = jest.fn();
       handlers.onStart = mockStart;
       setTimeout(() => {
@@ -446,20 +394,13 @@ describe('uploader', () => {
   });
 
   describe('transform file before request', () => {
-    let node;
     let uploader;
-    beforeEach(done => {
-      node = document.createElement('div');
-      document.body.appendChild(node);
-
-      ReactDOM.render(<Uploader />, node, function init() {
-        uploader = this;
-        done();
-      });
+    beforeEach(() => {
+      uploader = mount(<Uploader />);
     });
 
     afterEach(() => {
-      ReactDOM.unmountComponentAtNode(node);
+      uploader.unmount();
     });
 
     it('transform file function should be called before data function', done => {
@@ -477,36 +418,35 @@ describe('uploader', () => {
         transformFile(file) {
           return new Promise(resolve => {
             setTimeout(() => {
+              // eslint-disable-next-line no-param-reassign
               file.url = 'this is file url';
               resolve(file);
             }, 500);
           });
         },
       };
-      ReactDOM.render(<Uploader {...props} />, node, function init() {
-        uploader = this;
-        const input = TestUtils.findRenderedDOMComponentWithTag(uploader, 'input');
+      const wrapper = mount(<Uploader {...props} />);
+      const input = wrapper.find('input').first();
 
-        const files = [
-          {
-            name: 'success.png',
-            toString() {
-              return this.name;
-            },
+      const files = [
+        {
+          name: 'success.png',
+          toString() {
+            return this.name;
           },
-        ];
+        },
+      ];
 
-        files.item = i => files[i];
+      files.item = i => files[i];
 
-        Simulate.change(input, { target: { files } });
+      input.simulate('change', { target: { files } });
 
+      setTimeout(() => {
         setTimeout(() => {
-          setTimeout(() => {
-            expect(requests[0].requestBody.get('url')).toBe('this is file url');
-            done();
-          }, 1000);
-        }, 100);
-      });
+          expect(requests[0].requestBody.get('url')).toBe('this is file url');
+          done();
+        }, 1000);
+      }, 100);
     });
 
     it('noes not affect receive origin file when transform file is null', done => {
@@ -522,33 +462,31 @@ describe('uploader', () => {
           return null;
         },
       };
-      ReactDOM.render(<Uploader {...props} />, node, function init() {
-        uploader = this;
-        const input = TestUtils.findRenderedDOMComponentWithTag(uploader, 'input');
+      const wrapper = mount(<Uploader {...props} />);
+      const input = wrapper.find('input').first();
 
-        const files = [
-          {
-            name: 'success.png',
-            toString() {
-              return this.name;
-            },
+      const files = [
+        {
+          name: 'success.png',
+          toString() {
+            return this.name;
           },
-        ];
+        },
+      ];
 
-        files.item = i => files[i];
+      files.item = i => files[i];
 
-        handlers.onSuccess = (ret, file) => {
-          expect(ret[1]).toEqual(file.name);
-          expect(file).toHaveProperty('uid');
-          done();
-        };
+      handlers.onSuccess = (ret, file) => {
+        expect(ret[1]).toEqual(file.name);
+        expect(file).toHaveProperty('uid');
+        done();
+      };
 
-        Simulate.change(input, { target: { files } });
+      input.simulate('change', { target: { files } });
 
-        setTimeout(() => {
-          requests[0].respond(200, {}, `["","${files[0].name}"]`);
-        }, 100);
-      });
+      setTimeout(() => {
+        requests[0].respond(200, {}, `["","${files[0].name}"]`);
+      }, 100);
     });
   });
 });
