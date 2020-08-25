@@ -87,6 +87,7 @@ class AjaxUploader extends Component {
     const postFiles = Array.prototype.slice.call(files);
     postFiles
       .map(file => {
+        // eslint-disable-next-line no-param-reassign
         file.uid = getUid();
         return file;
       })
@@ -189,10 +190,7 @@ class AjaxUploader extends Component {
   abort(file) {
     const { reqs } = this;
     if (file) {
-      let uid = file;
-      if (file && file.uid) {
-        uid = file.uid;
-      }
+      const uid = file && file.uid ? file.uid : file;
       if (reqs[uid] && reqs[uid].abort) {
         reqs[uid].abort();
       }

@@ -4,7 +4,6 @@ module.exports = {
   ...base,
   rules: {
     ...base.rules,
-    "arrow-parens": 0,
     "react/no-array-index-key": 0,
     "react/sort-comp": 0,
     "@typescript-eslint/no-explicit-any": 0,
@@ -12,14 +11,11 @@ module.exports = {
     "@typescript-eslint/no-inferrable-types": 0,
     "react/no-find-dom-node": 0,
     "react/require-default-props": 0,
-    "react/button-has-type": 0,
     "no-confusing-arrow": 0,
     "import/no-named-as-default-member": 0,
     "jsx-a11y/label-has-for": 0,
     "jsx-a11y/label-has-associated-control": 0,
     "import/no-extraneous-dependencies": 0,
-    "prefer-destructuring": 0,
     "no-underscore-dangle": 0,
-    "no-param-reassign": 0,
   },
 };

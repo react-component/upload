@@ -49,7 +49,7 @@ const Test = () => {
     >
       <div>
         <Upload {...uploadProps}>
-          <button>开始上传</button>
+          <button type="button">开始上传</button>
         </Upload>
       </div>
     </div>

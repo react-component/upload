@@ -24,6 +24,7 @@ function loopFiles(item, callback) {
 const traverseFileTree = (files, callback, isAccepted) => {
   // eslint-disable-next-line @typescript-eslint/naming-convention
   const _traverseFileTree = (item, path) => {
+    // eslint-disable-next-line no-param-reassign
     path = path || '';
     if (item.isFile) {
       item.file(file => {
@@ -35,6 +36,7 @@ const traverseFileTree = (files, callback, isAccepted) => {
                 writable: true,
               },
             });
+            // eslint-disable-next-line no-param-reassign
             file.webkitRelativePath = item.fullPath.replace(/^\//, '');
             Object.defineProperties(file, {
               webkitRelativePath: {

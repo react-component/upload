@@ -66,7 +66,9 @@ const Test = () => {
           <a>开始上传2</a>
         </Upload>
       </div>
-      <button onClick={destroy}>destroy</button>
+      <button type="button" onClick={destroy}>
+        destroy
+      </button>
     </div>
   );
 };
