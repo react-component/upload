@@ -5,6 +5,7 @@ import defaultRequest from './request';
 import getUid from './uid';
 import attrAccept from './attr-accept';
 import traverseFileTree from './traverseFileTree';
+import { UploadProps } from './Upload';
 
 const dataOrAriaAttributeProps = props => {
   return Object.keys(props).reduce((acc, key) => {
@@ -15,10 +16,14 @@ const dataOrAriaAttributeProps = props => {
   }, {});
 };
 
-class AjaxUploader extends Component {
+class AjaxUploader extends Component<UploadProps> {
   state = { uid: getUid() };
 
   reqs = {};
+
+  private fileInput: any;
+
+  private _isMounted: boolean;
 
   onChange = e => {
     const { files } = e.target;
@@ -44,7 +49,7 @@ class AjaxUploader extends Component {
 
   onKeyDown = e => {
     if (e.key === 'Enter') {
-      this.onClick();
+      this.onClick(e);
     }
   };
 
@@ -80,7 +85,7 @@ class AjaxUploader extends Component {
 
   componentWillUnmount() {
     this._isMounted = false;
-    this.abort();
+    this.abort('');
   }
 
   uploadFiles = files => {
