@@ -29483,8 +29483,9 @@ var AjaxUploader = function (_Component) {
               props.onError(err, ret, file);
             }
           };
-          _this3.reqs[uid] = request(requestOption);
+
           onStart(file);
+          _this3.reqs[uid] = request(requestOption);
         });
       });
     }
