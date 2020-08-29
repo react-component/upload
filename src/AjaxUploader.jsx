@@ -178,8 +178,9 @@ class AjaxUploader extends Component {
             props.onError(err, ret, file);
           },
         };
-        this.reqs[uid] = request(requestOption);
+
         onStart(file);
+        this.reqs[uid] = request(requestOption);
       });
     });
   }
