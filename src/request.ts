@@ -1,13 +1,15 @@
-function getError(option, xhr) {
+import { UploadRequestOption, UploadRequestError, UploadProgressEvent } from './interface';
+
+function getError(option: UploadRequestOption, xhr: XMLHttpRequest) {
   const msg = `cannot ${option.method} ${option.action} ${xhr.status}'`;
-  const err = new Error(msg);
+  const err = new Error(msg) as UploadRequestError;
   err.status = xhr.status;
   err.method = option.method;
   err.url = option.action;
   return err;
 }
 
-function getBody(xhr) {
+function getBody(xhr: XMLHttpRequest) {
   const text = xhr.responseText || xhr.response;
   if (!text) {
     return text;
@@ -20,25 +22,14 @@ function getBody(xhr) {
   }
 }
 
-// option {
-//  onProgress: (event: { percent: number }): void,
-//  onError: (event: Error, body?: Object): void,
-//  onSuccess: (body: Object): void,
-//  data: Object,
-//  filename: String,
-//  file: File,
-//  withCredentials: Boolean,
-//  action: String,
-//  headers: Object,
-// }
-export default function upload(option) {
+export default function upload(option: UploadRequestOption) {
   // eslint-disable-next-line no-undef
   const xhr = new XMLHttpRequest();
 
   if (option.onProgress && xhr.upload) {
-    xhr.upload.onprogress = function progress(e) {
+    xhr.upload.onprogress = function progress(e: UploadProgressEvent) {
       if (e.total > 0) {
-        e.percent = e.loaded / e.total * 100;
+        e.percent = (e.loaded / e.total) * 100;
       }
       option.onProgress(e);
     };
@@ -103,7 +94,7 @@ export default function upload(option) {
   Object.keys(headers).forEach(h => {
     if (headers[h] !== null) {
       xhr.setRequestHeader(h, headers[h]);
-    } 
+    }
   });
 
   xhr.send(formData);

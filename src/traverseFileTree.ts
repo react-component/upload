@@ -1,9 +1,19 @@
-function loopFiles(item, callback) {
+interface InternalDataTransferItem extends DataTransferItem {
+  isFile: boolean;
+  file: (cd: (file: File & { webkitRelativePath?: string }) => void) => void;
+  createReader: () => any;
+  fullPath: string;
+  isDirectory: boolean;
+  name: string;
+  path: string;
+}
+
+function loopFiles(item: InternalDataTransferItem, callback) {
   const dirReader = item.createReader();
   let fileList = [];
 
   function sequence() {
-    dirReader.readEntries(entries => {
+    dirReader.readEntries((entries: Array<InternalDataTransferItem>) => {
       const entryList = Array.prototype.slice.apply(entries);
       fileList = fileList.concat(entryList);
 
@@ -21,11 +31,11 @@ function loopFiles(item, callback) {
   sequence();
 }
 
-const traverseFileTree = (files, callback, isAccepted) => {
+const traverseFileTree = (files: Array<InternalDataTransferItem>, callback, isAccepted) => {
   // eslint-disable-next-line @typescript-eslint/naming-convention
-  const _traverseFileTree = (item, path) => {
+  const _traverseFileTree = (item: InternalDataTransferItem, path?: string) => {
     // eslint-disable-next-line no-param-reassign
-    path = path || '';
+    item.path = path || '';
     if (item.isFile) {
       item.file(file => {
         if (isAccepted(file)) {
@@ -48,7 +58,7 @@ const traverseFileTree = (files, callback, isAccepted) => {
         }
       });
     } else if (item.isDirectory) {
-      loopFiles(item, entries => {
+      loopFiles(item, (entries: Array<InternalDataTransferItem>) => {
         entries.forEach(entryItem => {
           _traverseFileTree(entryItem, `${path}${item.name}/`);
         });

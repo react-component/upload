@@ -1,8 +1,8 @@
-function endsWith(str, suffix) {
+function endsWith(str: string, suffix: string) {
   return str.indexOf(suffix, str.length - suffix.length) !== -1;
 }
 
-export default (file, acceptedFiles) => {
+export default (file: File, acceptedFiles: string | Array<string>) => {
   if (file && acceptedFiles) {
     const acceptedFilesArray = Array.isArray(acceptedFiles)
       ? acceptedFiles
