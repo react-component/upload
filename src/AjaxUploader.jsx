@@ -48,6 +48,7 @@ class AjaxUploader extends Component {
   onKeyDown = e => {
     if (e.key === 'Enter') {
       this.onClick();
+      e.preventDefault();
     }
   }
 
