@@ -179,7 +179,7 @@ class AjaxUploader extends Component {
           },
         };
         this.reqs[uid] = request(requestOption);
-        onStart(file);
+        onStart(transformedFile);
       });
     });
   }
