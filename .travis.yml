@@ -16,8 +16,6 @@ before_install:
       echo "Only docs were updated, stopping build process."
       exit
     fi
-    npm install npm@6.x -g
-    phantomjs --version
 script:
 - |
     if [ "$TEST_TYPE" = test ]; then
