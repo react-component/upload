@@ -23,7 +23,7 @@ class Upload extends Component<UploadProps> {
     openFileDialogOnClick: true,
   };
 
-  private uploader: any;
+  private uploader: AjaxUpload;
 
   abort(file: RcFile) {
     this.uploader.abort(file);
