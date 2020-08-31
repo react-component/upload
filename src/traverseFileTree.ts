@@ -1,6 +1,8 @@
+import { RcFile } from './interface';
+
 interface InternalDataTransferItem extends DataTransferItem {
   isFile: boolean;
-  file: (cd: (file: File & { webkitRelativePath?: string }) => void) => void;
+  file: (cd: (file: RcFile & { webkitRelativePath?: string }) => void) => void;
   createReader: () => any;
   fullPath: string;
   isDirectory: boolean;

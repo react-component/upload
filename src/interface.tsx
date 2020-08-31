@@ -1,3 +1,5 @@
+import * as React from 'react';
+
 export interface UploadProps
   extends Omit<React.InputHTMLAttributes<HTMLInputElement>, 'onError' | 'onProgress'> {
   name?: string;
@@ -5,22 +7,22 @@ export interface UploadProps
   className?: string;
   disabled?: boolean;
   component?: React.JSXElementConstructor<any>;
-  action?: string | ((file: File) => string);
+  action?: string | ((file: RcFile) => string);
   method?: UploadRequestMethod;
   directory?: boolean;
-  data?: object | ((file: File | string | Blob) => object);
+  data?: object | ((file: RcFile | string | Blob) => object);
   headers?: UploadRequestHeader;
   accept?: string;
   multiple?: boolean;
-  onStart?: (file: File) => void;
-  onError?: (error: Error, ret: object, file: File) => void;
-  onSuccess?: (response: object, file: File, xhr: object) => void;
-  onProgress?: (event: UploadProgressEvent, file: File) => void;
-  beforeUpload?: (file: File, FileList: File[]) => boolean | Promise<File>;
+  onStart?: (file: RcFile) => void;
+  onError?: (error: Error, ret: object, file: RcFile) => void;
+  onSuccess?: (response: object, file: RcFile, xhr: object) => void;
+  onProgress?: (event: UploadProgressEvent, file: RcFile) => void;
+  beforeUpload?: (file: RcFile, FileList: RcFile[]) => boolean | Promise<RcFile>;
   customRequest?: () => void;
   withCredentials?: boolean;
   openFileDialogOnClick?: boolean;
-  transformFile?: (file: File) => string | Blob | File | PromiseLike<string | Blob | File>;
+  transformFile?: (file: RcFile) => string | Blob | RcFile | PromiseLike<string | Blob | RcFile>;
   prefixCls?: string;
   id?: string;
   onMouseEnter?: (e: React.MouseEvent<HTMLDivElement>) => void;
@@ -50,9 +52,15 @@ export interface UploadRequestOption<T = any> {
   onSuccess?: (body: T, xhr: XMLHttpRequest) => void;
   data?: object;
   filename?: string;
-  file: File;
+  file: RcFile;
   withCredentials?: boolean;
   action: string;
   headers?: UploadRequestHeader;
   method: UploadRequestMethod;
+}
+
+export interface RcFile extends File {
+  uid: string;
+  readonly lastModifiedDate: Date;
+  readonly webkitRelativePath: string;
 }

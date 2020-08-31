@@ -1,20 +1,12 @@
 /* eslint react/no-is-mounted:0,react/sort-comp:0,react/prop-types:0 */
 import React, { Component, ReactElement } from 'react';
 import classNames from 'classnames';
+import pickAttrs from 'rc-util/lib/pickAttrs';
 import defaultRequest from './request';
 import getUid from './uid';
 import attrAccept from './attr-accept';
 import traverseFileTree from './traverseFileTree';
-import { UploadProps, UploadProgressEvent, UploadRequestError } from './interface';
-
-const dataOrAriaAttributeProps = (props: React.AriaAttributes | React.DataHTMLAttributes<any>) => {
-  return Object.keys(props).reduce((acc, key) => {
-    if (key.substr(0, 5) === 'data-' || key.substr(0, 5) === 'aria-' || key === 'role') {
-      acc[key] = props[key];
-    }
-    return acc;
-  }, {});
-};
+import { UploadProps, UploadProgressEvent, UploadRequestError, RcFile } from './interface';
 
 class AjaxUploader extends Component<UploadProps> {
   state = { uid: getUid() };
@@ -67,12 +59,12 @@ class AjaxUploader extends Component<UploadProps> {
       traverseFileTree(
         Array.prototype.slice.call(e.dataTransfer.items),
         this.uploadFiles,
-        (_file: File) => attrAccept(_file, this.props.accept),
+        (_file: RcFile) => attrAccept(_file, this.props.accept),
       );
     } else {
       let files = Array.prototype.slice
         .call(e.dataTransfer.files)
-        .filter((file: File) => attrAccept(file, this.props.accept));
+        .filter((file: RcFile) => attrAccept(file, this.props.accept));
 
       if (multiple === false) {
         files = files.slice(0, 1);
@@ -88,13 +80,13 @@ class AjaxUploader extends Component<UploadProps> {
 
   componentWillUnmount() {
     this._isMounted = false;
-    this.abort('');
+    this.abort();
   }
 
   uploadFiles = (files: FileList) => {
-    const postFiles: Array<File> = Array.prototype.slice.call(files);
+    const postFiles: Array<RcFile> = Array.prototype.slice.call(files);
     postFiles
-      .map((file: File & { uid?: string }) => {
+      .map((file: RcFile & { uid?: string }) => {
         // eslint-disable-next-line no-param-reassign
         file.uid = getUid();
         return file;
@@ -104,7 +96,7 @@ class AjaxUploader extends Component<UploadProps> {
       });
   };
 
-  upload(file: File, fileList: Array<File>) {
+  upload(file: RcFile, fileList: Array<RcFile>) {
     const { props } = this;
     if (!props.beforeUpload) {
       // always async in case use react state to keep fileList
@@ -131,7 +123,7 @@ class AjaxUploader extends Component<UploadProps> {
     return undefined;
   }
 
-  post(file: File) {
+  post(file: RcFile) {
     if (!this._isMounted) {
       return;
     }
@@ -159,7 +151,7 @@ class AjaxUploader extends Component<UploadProps> {
           console.error(e); // eslint-disable-line no-console
         });
 
-      transform.then(([transformedFile, data]: [File, object]) => {
+      transform.then(([transformedFile, data]: [RcFile, object]) => {
         const requestOption = {
           action,
           filename: props.name,
@@ -195,7 +187,7 @@ class AjaxUploader extends Component<UploadProps> {
     });
   }
 
-  abort(file: any) {
+  abort(file?: any) {
     const { reqs } = this;
     if (file) {
       const uid = file && file.uid ? file.uid : file;
@@ -257,7 +249,7 @@ class AjaxUploader extends Component<UploadProps> {
     return (
       <Tag {...events} className={cls} role="button" style={style}>
         <input
-          {...dataOrAriaAttributeProps(otherProps)}
+          {...pickAttrs(otherProps, { aria: true, data: true })}
           id={id}
           type="file"
           ref={this.saveFileInput}
