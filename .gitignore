@@ -30,3 +30,5 @@ es
 package-lock.json
 tmp/
 .history
+.storybook
+.doc
