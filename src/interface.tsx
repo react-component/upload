@@ -61,6 +61,4 @@ export interface UploadRequestOption<T = any> {
 
 export interface RcFile extends File {
   uid: string;
-  readonly lastModifiedDate: Date;
-  readonly webkitRelativePath: string;
 }

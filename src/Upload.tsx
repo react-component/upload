@@ -1,7 +1,7 @@
 /* eslint react/prop-types:0 */
 import React, { Component } from 'react';
 import AjaxUpload from './AjaxUploader';
-import { UploadProps } from './interface';
+import { UploadProps, RcFile } from './interface';
 
 function empty() {}
 
@@ -25,11 +25,11 @@ class Upload extends Component<UploadProps> {
 
   private uploader: any;
 
-  abort(file) {
+  abort(file: RcFile) {
     this.uploader.abort(file);
   }
 
-  saveUploader = node => {
+  saveUploader = (node: AjaxUpload) => {
     this.uploader = node;
   };
 
