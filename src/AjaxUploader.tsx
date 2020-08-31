@@ -190,7 +190,7 @@ class AjaxUploader extends Component<UploadProps> {
   abort(file?: any) {
     const { reqs } = this;
     if (file) {
-      const uid = file && file.uid ? file.uid : file;
+      const uid = file.uid ? file.uid : file;
       if (reqs[uid] && reqs[uid].abort) {
         reqs[uid].abort();
       }
