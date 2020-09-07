@@ -100,7 +100,10 @@ class AjaxUploader extends Component<UploadProps> {
     const { props } = this;
     if (!props.beforeUpload) {
       // always async in case use react state to keep fileList
-      return setTimeout(() => this.post(file), 0);
+      Promise.resolve().then(() => {
+        this.post(file);
+      });
+      return;
     }
 
     const before = props.beforeUpload(file, fileList);
@@ -109,18 +112,20 @@ class AjaxUploader extends Component<UploadProps> {
         .then(processedFile => {
           const processedFileType = Object.prototype.toString.call(processedFile);
           if (processedFileType === '[object File]' || processedFileType === '[object Blob]') {
-            return this.post(processedFile);
+            this.post(processedFile);
+            return;
           }
-          return this.post(file);
+          this.post(file);
         })
         .catch(e => {
           // eslint-disable-next-line no-console
           console.log(e);
         });
     } else if (before !== false) {
-      setTimeout(() => this.post(file), 0);
+      Promise.resolve().then(() => {
+        this.post(file);
+      });
     }
-    return undefined;
   }
 
   post(file: RcFile) {
