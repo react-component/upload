@@ -1,11 +1,10 @@
 /* eslint no-console:0 */
 import React from 'react';
-import ReactDOM from 'react-dom';
-import Upload from 'rc-upload';
+import Upload from '..';
 
 const props = {
   action: () => {
-    return new Promise((resolve) => {
+    return new Promise(resolve => {
       setTimeout(() => {
         resolve('/upload.do');
       }, 2000);
@@ -31,10 +30,12 @@ const Test = () => {
       }}
     >
       <div>
-        <Upload {...props}><a>开始上传</a></Upload>
+        <Upload {...props}>
+          <a>开始上传</a>
+        </Upload>
       </div>
     </div>
   );
 };
 
-ReactDOM.render(<Test/>, document.getElementById('__react-content'));
+export default Test;

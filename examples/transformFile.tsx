@@ -1,7 +1,6 @@
 /* eslint no-console:0 */
 import React from 'react';
-import ReactDOM from 'react-dom';
-import Upload from 'rc-upload';
+import Upload from '..';
 
 const uploadProps = {
   action: '/upload.do',
@@ -23,7 +22,7 @@ const uploadProps = {
     console.log('onProgress', `${percent}%`, file.name);
   },
   transformFile(file) {
-    return new Promise((resolve) => {
+    return new Promise(resolve => {
       // eslint-disable-next-line no-undef
       const reader = new FileReader();
       reader.readAsDataURL(file);
@@ -50,11 +49,11 @@ const Test = () => {
     >
       <div>
         <Upload {...uploadProps}>
-          <button>开始上传</button>
+          <button type="button">开始上传</button>
         </Upload>
       </div>
     </div>
   );
 };
 
-ReactDOM.render(<Test />, document.getElementById('__react-content'));
+export default Test;

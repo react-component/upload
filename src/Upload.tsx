@@ -1,11 +1,11 @@
 /* eslint react/prop-types:0 */
 import React, { Component } from 'react';
 import AjaxUpload from './AjaxUploader';
+import { UploadProps, RcFile } from './interface';
 
-function empty() {
-}
+function empty() {}
 
-class Upload extends Component {
+class Upload extends Component<UploadProps> {
   static defaultProps = {
     component: 'span',
     prefixCls: 'rc-upload',
@@ -21,15 +21,17 @@ class Upload extends Component {
     customRequest: null,
     withCredentials: false,
     openFileDialogOnClick: true,
-  }
+  };
 
-  abort(file) {
+  private uploader: AjaxUpload;
+
+  abort(file: RcFile) {
     this.uploader.abort(file);
   }
 
-  saveUploader = (node) => {
+  saveUploader = (node: AjaxUpload) => {
     this.uploader = node;
-  }
+  };
 
   render() {
     return <AjaxUpload {...this.props} ref={this.saveUploader} />;

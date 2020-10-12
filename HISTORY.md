@@ -1,6 +1,12 @@
 # History
 ----
 
+### 3.3.0
+
+`2020-08-31`
+
+- chore: use father. [#268](https://github.com/react-component/upload/pull/268)
+
 ### 3.2.0
 
 - support `onClick` `onMouseEnter` `onMouseLeave`.

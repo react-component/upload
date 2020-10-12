@@ -1,8 +1,7 @@
 /* eslint no-console:0 */
 
 import React from 'react';
-import ReactDOM from 'react-dom';
-import Upload from 'rc-upload';
+import Upload from '..';
 
 const props = {
   action: '/upload.do',
@@ -18,7 +17,7 @@ const props = {
   },
   beforeUpload(file, fileList) {
     console.log(file, fileList);
-    return new Promise((resolve) => {
+    return new Promise(resolve => {
       console.log('start check');
       setTimeout(() => {
         console.log('check finshed');
@@ -36,10 +35,12 @@ const Test = () => {
       }}
     >
       <div>
-        <Upload {...props}><a>开始上传</a></Upload>
+        <Upload {...props}>
+          <a>开始上传</a>
+        </Upload>
       </div>
     </div>
   );
 };
 
-ReactDOM.render(<Test/>, document.getElementById('__react-content'));
+export default Test;

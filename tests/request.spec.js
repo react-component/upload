@@ -1,13 +1,11 @@
 /* eslint no-console:0 */
-import expect from 'expect.js';
 import sinon from 'sinon';
 import request from '../src/request';
 
 let xhr;
 let requests;
 
-const empty = () => {
-};
+const empty = () => {};
 const option = {
   onSuccess: empty,
   action: 'upload.do',
@@ -37,8 +35,8 @@ describe('request', () => {
   it('upload request success', done => {
     option.onError = done;
     option.onSuccess = ret => {
-      expect(ret).to.eql({ success: true });
-      expect(requests[0].requestBody.getAll('c[]')).to.eql([3, 4]);
+      expect(ret).toEqual({ success: true });
+      expect(requests[0].requestBody.getAll('c[]')).toEqual(['3', '4']);
       done();
     };
     request(option);
@@ -47,7 +45,7 @@ describe('request', () => {
 
   it('40x code should be error', done => {
     option.onError = e => {
-      expect(e.toString()).to.contain('404');
+      expect(e.toString()).toContain('404');
       done();
     };
 
@@ -59,7 +57,7 @@ describe('request', () => {
   it('2xx code should be success', done => {
     option.onError = done;
     option.onSuccess = ret => {
-      expect(ret).to.equal('');
+      expect(ret).toEqual('');
       done();
     };
     request(option);
@@ -68,7 +66,7 @@ describe('request', () => {
 
   it('get headers', () => {
     request(option);
-    expect(requests[0].requestHeaders).to.eql({
+    expect(requests[0].requestHeaders).toEqual({
       'X-Requested-With': 'XMLHttpRequest',
       from: 'hello',
     });
@@ -77,6 +75,6 @@ describe('request', () => {
   it('can empty X-Requested-With', () => {
     option.headers['X-Requested-With'] = null;
     request(option);
-    expect(requests[0].requestHeaders).to.eql({ from: 'hello' });
+    expect(requests[0].requestHeaders).toEqual({ from: 'hello' });
   });
 });
