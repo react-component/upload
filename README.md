@@ -39,7 +39,7 @@ npm start
 
 http://localhost:8020/examples/
 
-online example: http://react-component.github.io/upload/examples/simple.html
+online example: https://react-component.github.io/upload/
 
 
 ## Feature
