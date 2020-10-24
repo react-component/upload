@@ -76,5 +76,9 @@
       "\\.tsx?$": "./node_modules/rc-tools/scripts/jestPreprocessor.js",
       "\\.jsx?$": "./node_modules/rc-tools/scripts/jestPreprocessor.js"
     }
+  },
+  "peerDependencies": {
+    "react": ">=16.9.0",
+    "react-dom": ">=16.9.0"
   }
 }
