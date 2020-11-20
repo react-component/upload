@@ -143,10 +143,10 @@ class AjaxUploader extends Component<UploadProps> {
       return resolve(action);
     }).then((action: string) => {
       const { uid } = file;
-      const request = props.customRequest || defaultRequest;
+      const request = this.props.customRequest || defaultRequest;
       const transform = Promise.resolve(transformFile(file))
         .then(transformedFile => {
-          let { data } = props;
+          let { data } = this.props;
           if (typeof data === 'function') {
             data = data(transformedFile);
           }
@@ -172,11 +172,11 @@ class AjaxUploader extends Component<UploadProps> {
             : null,
           onSuccess: (ret: any, xhr: XMLHttpRequest) => {
             delete this.reqs[uid];
-            props.onSuccess(ret, file, xhr);
+            this.props.onSuccess(ret, file, xhr);
           },
           onError: (err: UploadRequestError, ret: any) => {
             delete this.reqs[uid];
-            props.onError(err, ret, file);
+            this.props.onError(err, ret, file);
           },
         };
 
