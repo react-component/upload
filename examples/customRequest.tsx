@@ -13,8 +13,8 @@ const uploadProps = {
   onStart(file) {
     console.log('onStart', file, file.name);
   },
-  onSuccess(ret, file) {
-    console.log('onSuccess', ret, file.name);
+  onSuccess(res, file) {
+    console.log('onSuccess', res, file.name);
   },
   onError(err) {
     console.log('onError', err);
