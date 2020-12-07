@@ -24,16 +24,17 @@
   "main": "./lib/index",
   "module": "./es/index",
   "scripts": {
-    "start": "cross-env NODE_ENV=development father doc dev --storybook",
-    "build": "father doc build --storybook",
+    "start": "dumi dev",
+    "docs:build": "dumi build",
+    "docs:deploy": "gh-pages -d .doc",
     "compile": "father build",
-    "gh-pages": "npm run build && father doc deploy",
     "prepublishOnly": "npm run compile && np --yolo --no-publish",
     "postpublish": "npm run gh-pages",
     "lint": "eslint src/ --ext .ts,.tsx,.jsx,.js,.md",
     "prettier": "prettier --write \"**/*.{ts,tsx,js,jsx,json,md}\"",
     "test": "father test",
-    "coverage": "father test --coverage"
+    "coverage": "father test --coverage",
+    "now-build": "npm run docs:build"
   },
   "devDependencies": {
     "@types/jest": "^26.0.0",
@@ -44,6 +45,7 @@
     "co-busboy": "^1.3.0",
     "coveralls": "^3.0.3",
     "cross-env": "^7.0.0",
+    "dumi": "^1.0.37",
     "enzyme": "^3.1.1",
     "enzyme-adapter-react-16": "^1.0.1",
     "enzyme-to-json": "^3.1.2",
