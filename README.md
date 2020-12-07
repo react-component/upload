@@ -32,8 +32,7 @@ npm start
 
 http://localhost:8000/
 
-online example: https://react-component.github.io/upload/
-
+online example: https://upload.react-component.vercel.app/
 
 ## Feature
 
