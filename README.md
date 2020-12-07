@@ -1,15 +1,8 @@
 # rc-upload
----
 
 React Upload
 
-[![NPM version][npm-image]][npm-url]
-[![build status][travis-image]][travis-url]
-[![Test coverage][coveralls-image]][coveralls-url]
-[![Dependencies][david-image]][david-url]
-[![DevDependencies][david-dev-image]][david-dev-url]
-[![npm download][download-image]][download-url]
-[![bundle size][bundlephobia-image]][bundlephobia-url]
+[![NPM version][npm-image]][npm-url] [![dumi](https://img.shields.io/badge/docs%20by-dumi-blue?style=flat-square)](https://github.com/umijs/dumi) [![build status][travis-image]][travis-url] [![Test coverage][coveralls-image]][coveralls-url] [![Dependencies][david-image]][david-url] [![DevDependencies][david-dev-image]][david-dev-url] [![npm download][download-image]][download-url] [![bundle size][bundlephobia-image]][bundlephobia-url]
 
 [npm-image]: https://img.shields.io/npm/v/rc-upload.svg?style=flat-square
 [npm-url]: http://npmjs.org/package/rc-upload
@@ -37,7 +30,7 @@ npm start
 
 ## Example
 
-http://localhost:8020/examples/
+http://localhost:8000/
 
 online example: https://react-component.github.io/upload/
 
