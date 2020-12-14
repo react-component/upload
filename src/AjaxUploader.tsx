@@ -135,6 +135,8 @@ class AjaxUploader extends Component<UploadProps> {
     const { props } = this;
     const { onStart, onProgress, transformFile = originFile => originFile } = props;
 
+    onStart(file);
+
     new Promise(resolve => {
       let { action } = props;
       if (typeof action === 'function') {
@@ -180,7 +182,6 @@ class AjaxUploader extends Component<UploadProps> {
           },
         };
 
-        onStart(file);
         this.reqs[uid] = request(requestOption);
       });
     });
