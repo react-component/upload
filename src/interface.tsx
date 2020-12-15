@@ -14,6 +14,8 @@ export interface UploadProps
   headers?: UploadRequestHeader;
   accept?: string;
   multiple?: boolean;
+  /** @private Trigger when a batch of files upload. Internal usage, do not use in your production! */
+  onBatchUpload?: (files: RcFile[]) => void;
   onStart?: (file: RcFile) => void;
   onError?: (error: Error, ret: object, file: RcFile) => void;
   onSuccess?: (response: object, file: RcFile, xhr: object) => void;
