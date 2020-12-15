@@ -2,12 +2,12 @@
 
 React Upload
 
-[![NPM version][npm-image]][npm-url] [![dumi](https://img.shields.io/badge/docs%20by-dumi-blue?style=flat-square)](https://github.com/umijs/dumi) [![build status][travis-image]][travis-url] [![Test coverage][coveralls-image]][coveralls-url] [![Dependencies][david-image]][david-url] [![DevDependencies][david-dev-image]][david-dev-url] [![npm download][download-image]][download-url] [![bundle size][bundlephobia-image]][bundlephobia-url]
+[![NPM version][npm-image]][npm-url] [![dumi](https://img.shields.io/badge/docs%20by-dumi-blue?style=flat-square)](https://github.com/umijs/dumi) [![build status][github-actions-image]][github-actions-url] [![Test coverage][coveralls-image]][coveralls-url] [![Dependencies][david-image]][david-url] [![DevDependencies][david-dev-image]][david-dev-url] [![npm download][download-image]][download-url] [![bundle size][bundlephobia-image]][bundlephobia-url]
 
 [npm-image]: https://img.shields.io/npm/v/rc-upload.svg?style=flat-square
 [npm-url]: http://npmjs.org/package/rc-upload
-[travis-image]: https://img.shields.io/travis/react-component/upload/master?style=flat-square
-[travis-url]: https://travis-ci.org/react-component/upload
+[github-actions-image]: https://github.com/react-component/upload/workflows/CI/badge.svg
+[github-actions-url]: https://github.com/react-component/upload/actions
 [circleci-image]: https://img.shields.io/circleci/react-component/upload/master?style=flat-square
 [circleci-url]: https://circleci.com/gh/react-component/upload
 [coveralls-image]: https://img.shields.io/coveralls/react-component/upload.svg?style=flat-square
