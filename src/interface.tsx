@@ -7,7 +7,7 @@ export interface UploadProps
   className?: string;
   disabled?: boolean;
   component?: React.JSXElementConstructor<any>;
-  action?: string | ((file: RcFile) => string);
+  action?: string | ((file: RcFile) => string | PromiseLike<string>);
   method?: UploadRequestMethod;
   directory?: boolean;
   data?: object | ((file: RcFile | string | Blob) => object);
