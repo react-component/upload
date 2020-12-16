@@ -84,104 +84,115 @@ class AjaxUploader extends Component<UploadProps> {
   }
 
   uploadFiles = (files: FileList) => {
+    const { onBatchUpload } = this.props;
     const postFiles: Array<RcFile> = Array.prototype.slice.call(files);
-    postFiles
+    const startPromiseList = postFiles
       .map((file: RcFile & { uid?: string }) => {
         // eslint-disable-next-line no-param-reassign
         file.uid = getUid();
         return file;
       })
-      .forEach(file => {
-        this.upload(file, postFiles);
-      });
+      .map(file => this.upload(file, postFiles));
+
+    // Trigger when all files has started
+    Promise.all(startPromiseList).then(parsedFiles => {
+      onBatchUpload?.(parsedFiles.filter(f => f));
+    });
   };
 
-  upload(file: RcFile, fileList: Array<RcFile>) {
+  upload(file: RcFile, fileList: Array<RcFile>): Promise<RcFile> {
     const { props } = this;
-    if (!props.beforeUpload) {
+    const { beforeUpload } = this.props;
+    if (!beforeUpload) {
       // always async in case use react state to keep fileList
-      Promise.resolve().then(() => {
-        this.post(file);
-      });
-      return;
+      return Promise.resolve().then(() => this.post(file));
     }
 
-    const before = props.beforeUpload(file, fileList);
+    const before = beforeUpload(file, fileList);
     if (before && typeof before !== 'boolean' && before.then) {
-      before
+      return before
         .then(processedFile => {
           const processedFileType = Object.prototype.toString.call(processedFile);
           if (processedFileType === '[object File]' || processedFileType === '[object Blob]') {
-            this.post(processedFile);
-            return;
+            return this.post(processedFile);
           }
-          this.post(file);
+          return this.post(file);
         })
         .catch(e => {
           // eslint-disable-next-line no-console
           console.log(e);
+
+          return null;
         });
-    } else if (before !== false) {
-      Promise.resolve().then(() => {
-        this.post(file);
-      });
     }
+
+    if (before !== false) {
+      return Promise.resolve().then(() => this.post(file));
+    }
+
+    return Promise.resolve(file);
   }
 
-  post(file: RcFile) {
+  post(file: RcFile): Promise<RcFile> {
     if (!this._isMounted) {
-      return;
+      return null;
     }
     const { props } = this;
     const { onStart, onProgress, transformFile = originFile => originFile } = props;
 
-    new Promise(resolve => {
-      let { action } = props;
-      if (typeof action === 'function') {
-        action = action(file);
-      }
-      return resolve(action);
-    }).then((action: string) => {
-      const { uid } = file;
-      const request = props.customRequest || defaultRequest;
-      const transform = Promise.resolve(transformFile(file))
-        .then(transformedFile => {
-          let { data } = props;
-          if (typeof data === 'function') {
-            data = data(transformedFile);
-          }
-          return Promise.all([transformedFile, data]);
-        })
-        .catch(e => {
-          console.error(e); // eslint-disable-line no-console
+    return new Promise(resolveStartFile => {
+      new Promise(resolveAction => {
+        let { action } = props;
+        if (typeof action === 'function') {
+          action = action(file);
+        }
+        return resolveAction(action);
+      }).then((action: string) => {
+        const { uid } = file;
+        const request = props.customRequest || defaultRequest;
+        const transform = Promise.resolve(transformFile(file))
+          .then(transformedFile => {
+            let { data } = props;
+            if (typeof data === 'function') {
+              data = data(transformedFile);
+            }
+            return Promise.all([transformedFile, data]);
+          })
+          .catch(e => {
+            console.error(e); // eslint-disable-line no-console
+          });
+
+        transform.then(([transformedFile, data]: [RcFile, object]) => {
+          const requestOption = {
+            action,
+            filename: props.name,
+            data,
+            file: transformedFile,
+            headers: props.headers,
+            withCredentials: props.withCredentials,
+            method: props.method || 'post',
+            onProgress: onProgress
+              ? (e: UploadProgressEvent) => {
+                  onProgress(e, file);
+                }
+              : null,
+            onSuccess: (ret: any, xhr: XMLHttpRequest) => {
+              delete this.reqs[uid];
+              props.onSuccess(ret, file, xhr);
+            },
+            onError: (err: UploadRequestError, ret: any) => {
+              delete this.reqs[uid];
+              props.onError(err, ret, file);
+            },
+          };
+
+          onStart(file);
+
+          this.reqs[uid] = request(requestOption);
+
+          // Tell root we have finish start
+          resolveStartFile(file);
         });
-
-      transform.then(([transformedFile, data]: [RcFile, object]) => {
-        const requestOption = {
-          action,
-          filename: props.name,
-          data,
-          file: transformedFile,
-          headers: props.headers,
-          withCredentials: props.withCredentials,
-          method: props.method || 'post',
-          onProgress: onProgress
-            ? (e: UploadProgressEvent) => {
-                onProgress(e, file);
-              }
-            : null,
-          onSuccess: (ret: any, xhr: XMLHttpRequest) => {
-            delete this.reqs[uid];
-            props.onSuccess(ret, file, xhr);
-          },
-          onError: (err: UploadRequestError, ret: any) => {
-            delete this.reqs[uid];
-            props.onError(err, ret, file);
-          },
-        };
-
-        onStart(file);
-        this.reqs[uid] = request(requestOption);
       });
     });
   }
