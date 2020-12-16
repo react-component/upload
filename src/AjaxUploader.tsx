@@ -6,7 +6,7 @@ import defaultRequest from './request';
 import getUid from './uid';
 import attrAccept from './attr-accept';
 import traverseFileTree from './traverseFileTree';
-import { UploadProps, UploadProgressEvent, UploadRequestError, RcFile } from './interface';
+import { UploadProps, UploadProgressEvent, UploadRequestError, RcFile, Action } from './interface';
 
 class AjaxUploader extends Component<UploadProps> {
   state = { uid: getUid() };
@@ -136,11 +136,11 @@ class AjaxUploader extends Component<UploadProps> {
     const { onStart, onProgress, transformFile = originFile => originFile } = props;
 
     new Promise(resolve => {
-      let { action } = props;
-      if (typeof action === 'function') {
-        action = action(file);
+      let actionRet: Action | PromiseLike<string> = props.action;
+      if (typeof actionRet === 'function') {
+        actionRet = actionRet(file);
       }
-      return resolve(action);
+      return resolve(actionRet);
     }).then((action: string) => {
       const { uid } = file;
       const request = props.customRequest || defaultRequest;

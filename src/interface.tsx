@@ -1,5 +1,7 @@
 import * as React from 'react';
 
+export type Action = string | ((file: RcFile) => string | PromiseLike<string>);
+
 export interface UploadProps
   extends Omit<React.InputHTMLAttributes<HTMLInputElement>, 'onError' | 'onProgress'> {
   name?: string;
@@ -7,7 +9,7 @@ export interface UploadProps
   className?: string;
   disabled?: boolean;
   component?: React.JSXElementConstructor<any>;
-  action?: string | ((file: RcFile) => string | PromiseLike<string>);
+  action?: Action;
   method?: UploadRequestMethod;
   directory?: boolean;
   data?: object | ((file: RcFile | string | Blob) => object);
