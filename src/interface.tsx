@@ -20,8 +20,8 @@ export interface UploadProps
   onError?: (error: Error, ret: object, file: RcFile) => void;
   onSuccess?: (response: object, file: RcFile, xhr: object) => void;
   onProgress?: (event: UploadProgressEvent, file: RcFile) => void;
-  beforeUpload?: (file: RcFile, FileList: RcFile[]) => boolean | Promise<RcFile>;
-  customRequest?: () => void;
+  beforeUpload?: (file: RcFile, FileList: RcFile[]) => boolean | Promise<void | File | Blob>;
+  customRequest?: (option: UploadRequestOption) => void;
   withCredentials?: boolean;
   openFileDialogOnClick?: boolean;
   transformFile?: (file: RcFile) => string | Blob | RcFile | PromiseLike<string | Blob | RcFile>;

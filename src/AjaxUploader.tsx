@@ -112,7 +112,7 @@ class AjaxUploader extends Component<UploadProps> {
         .then(processedFile => {
           const processedFileType = Object.prototype.toString.call(processedFile);
           if (processedFileType === '[object File]' || processedFileType === '[object Blob]') {
-            this.post(processedFile);
+            this.post(processedFile as RcFile);
             return;
           }
           this.post(file);
