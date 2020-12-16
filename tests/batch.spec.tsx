@@ -6,6 +6,8 @@ import sinon from 'sinon';
 import Upload from '../src';
 import { UploadProps, RcFile } from '../src/interface';
 
+const delay = (timeout = 0) => new Promise(resolve => setTimeout(resolve, timeout));
+
 describe('Upload.Batch', () => {
   function getFile(name: string): RcFile {
     return {
@@ -64,60 +66,85 @@ describe('Upload.Batch', () => {
       }, 10);
     });
 
-    it('beforeUpload return false', done => {
-      const onBatchUpload = jest.fn();
+    describe('beforeUpload', () => {
+      it('return false', done => {
+        const onBatchUpload = jest.fn();
 
-      const wrapper = mount(
-        <Upload onBatchUpload={onBatchUpload} beforeUpload={() => false} {...genProps()} />,
-      );
-      triggerUpload(wrapper);
+        const wrapper = mount(
+          <Upload onBatchUpload={onBatchUpload} beforeUpload={() => false} {...genProps()} />,
+        );
+        triggerUpload(wrapper);
 
-      setTimeout(() => {
-        expect(onBatchUpload).toHaveBeenCalledWith([
-          expect.objectContaining(firstFile),
-          expect.objectContaining(secondFile),
-        ]);
-        done();
-      }, 10);
-    });
+        setTimeout(() => {
+          expect(onBatchUpload).toHaveBeenCalledWith([
+            expect.objectContaining(firstFile),
+            expect.objectContaining(secondFile),
+          ]);
+          done();
+        }, 10);
+      });
 
-    it('beforeUpload return promise file', done => {
-      const onBatchUpload = jest.fn();
+      it('return promise file', done => {
+        const onBatchUpload = jest.fn();
 
-      const wrapper = mount(
-        <Upload
-          onBatchUpload={onBatchUpload}
-          beforeUpload={file => Promise.resolve(file)}
-          {...genProps()}
-        />,
-      );
-      triggerUpload(wrapper);
+        const wrapper = mount(
+          <Upload
+            onBatchUpload={onBatchUpload}
+            beforeUpload={file => Promise.resolve(file)}
+            {...genProps()}
+          />,
+        );
+        triggerUpload(wrapper);
 
-      setTimeout(() => {
-        expect(onBatchUpload).toHaveBeenCalledWith([
-          expect.objectContaining(firstFile),
-          expect.objectContaining(secondFile),
-        ]);
-        done();
-      }, 10);
-    });
+        setTimeout(() => {
+          expect(onBatchUpload).toHaveBeenCalledWith([
+            expect.objectContaining(firstFile),
+            expect.objectContaining(secondFile),
+          ]);
+          done();
+        }, 10);
+      });
 
-    it('beforeUpload return promise rejection', done => {
-      const onBatchUpload = jest.fn();
+      it('return promise rejection', done => {
+        const onBatchUpload = jest.fn();
 
-      const wrapper = mount(
-        <Upload
-          onBatchUpload={onBatchUpload}
-          beforeUpload={() => Promise.reject()}
-          {...genProps()}
-        />,
-      );
-      triggerUpload(wrapper);
+        const wrapper = mount(
+          <Upload
+            onBatchUpload={onBatchUpload}
+            beforeUpload={() => Promise.reject()}
+            {...genProps()}
+          />,
+        );
+        triggerUpload(wrapper);
 
-      setTimeout(() => {
-        expect(onBatchUpload).toHaveBeenCalledWith([]);
-        done();
-      }, 10);
+        setTimeout(() => {
+          expect(onBatchUpload).toHaveBeenCalledWith([]);
+          done();
+        }, 10);
+      });
+
+      it('beforeUpload delay for the first', done => {
+        const onBatchUpload = jest.fn();
+
+        const wrapper = mount(
+          <Upload
+            onBatchUpload={onBatchUpload}
+            beforeUpload={async file => {
+              if (file === firstFile) {
+                await delay(100);
+              }
+              return file;
+            }}
+            {...genProps()}
+          />,
+        );
+        triggerUpload(wrapper);
+
+        setTimeout(() => {
+          expect(onBatchUpload).toHaveBeenCalledWith([]);
+          done();
+        }, 1000);
+      });
     });
   });
 });
