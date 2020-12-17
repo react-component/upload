@@ -1,6 +1,16 @@
 # Changelog
 
+## 3.3.4
+
+`2020-12-16`
+
+- chore: use dumi. [#289](https://github.com/react-component/upload/pull/289)
+- chore: update github actions. [#292](https://github.com/react-component/upload/pull/292)
+- chore: fix ts define.
+
 ## 3.3.1
+
+`2020-09-07`
 
 - refatcor: change timeout to promise. [#277](https://github.com/react-component/upload/pull/277)
 
