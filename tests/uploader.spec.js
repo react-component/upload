@@ -403,52 +403,6 @@ describe('uploader', () => {
       uploader.unmount();
     });
 
-    it('transform file function should be called before data function', done => {
-      const props = {
-        action: '/test',
-        data(file) {
-          return new Promise(resolve => {
-            setTimeout(() => {
-              resolve({
-                url: file.url,
-              });
-            }, 500);
-          });
-        },
-        transformFile(file) {
-          return new Promise(resolve => {
-            setTimeout(() => {
-              // eslint-disable-next-line no-param-reassign
-              file.url = 'this is file url';
-              resolve(file);
-            }, 500);
-          });
-        },
-      };
-      const wrapper = mount(<Uploader {...props} />);
-      const input = wrapper.find('input').first();
-
-      const files = [
-        {
-          name: 'success.png',
-          toString() {
-            return this.name;
-          },
-        },
-      ];
-
-      files.item = i => files[i];
-
-      input.simulate('change', { target: { files } });
-
-      setTimeout(() => {
-        setTimeout(() => {
-          expect(requests[0].requestBody.get('url')).toBe('this is file url');
-          done();
-        }, 1000);
-      }, 100);
-    });
-
     it('noes not affect receive origin file when transform file is null', done => {
       const handlers = {};
       const props = {

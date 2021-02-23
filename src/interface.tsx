@@ -1,4 +1,4 @@
-import * as React from 'react';
+import type * as React from 'react';
 
 export type Action = string | ((file: RcFile) => string | PromiseLike<string>);
 
@@ -24,7 +24,6 @@ export interface UploadProps
   customRequest?: (option: UploadRequestOption) => void;
   withCredentials?: boolean;
   openFileDialogOnClick?: boolean;
-  transformFile?: (file: RcFile) => string | Blob | RcFile | PromiseLike<string | Blob | RcFile>;
   prefixCls?: string;
   id?: string;
   onMouseEnter?: (e: React.MouseEvent<HTMLDivElement>) => void;
@@ -38,9 +37,7 @@ export interface UploadProgressEvent extends ProgressEvent {
 
 export type UploadRequestMethod = 'POST' | 'PUT' | 'PATCH' | 'post' | 'put' | 'patch';
 
-export interface UploadRequestHeader {
-  [key: string]: string;
-}
+export type UploadRequestHeader = Record<string, string>;
 
 export interface UploadRequestError extends Error {
   status?: number;

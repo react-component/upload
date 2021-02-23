@@ -1,12 +1,19 @@
 /* eslint react/no-is-mounted:0,react/sort-comp:0,react/prop-types:0 */
-import React, { Component, ReactElement } from 'react';
+import type { ReactElement } from 'react';
+import React, { Component } from 'react';
 import classNames from 'classnames';
 import pickAttrs from 'rc-util/lib/pickAttrs';
 import defaultRequest from './request';
 import getUid from './uid';
 import attrAccept from './attr-accept';
 import traverseFileTree from './traverseFileTree';
-import { UploadProps, UploadProgressEvent, UploadRequestError, RcFile, Action } from './interface';
+import type {
+  UploadProps,
+  UploadProgressEvent,
+  UploadRequestError,
+  RcFile,
+  Action,
+} from './interface';
 
 class AjaxUploader extends Component<UploadProps> {
   state = { uid: getUid() };
@@ -84,7 +91,7 @@ class AjaxUploader extends Component<UploadProps> {
   }
 
   uploadFiles = (files: FileList) => {
-    const postFiles: Array<RcFile> = Array.prototype.slice.call(files);
+    const postFiles = [...files] as RcFile[];
     postFiles
       .map((file: RcFile & { uid?: string }) => {
         // eslint-disable-next-line no-param-reassign
@@ -96,7 +103,7 @@ class AjaxUploader extends Component<UploadProps> {
       });
   };
 
-  upload(file: RcFile, fileList: Array<RcFile>) {
+  upload(file: RcFile, fileList: RcFile[]) {
     const { props } = this;
     if (!props.beforeUpload) {
       // always async in case use react state to keep fileList
@@ -133,7 +140,7 @@ class AjaxUploader extends Component<UploadProps> {
       return;
     }
     const { props } = this;
-    const { onStart, onProgress, transformFile = originFile => originFile } = props;
+    const { onStart, onProgress } = props;
 
     new Promise(resolve => {
       let actionRet: Action | PromiseLike<string> = props.action;
@@ -144,23 +151,17 @@ class AjaxUploader extends Component<UploadProps> {
     }).then((action: string) => {
       const { uid } = file;
       const request = props.customRequest || defaultRequest;
-      const transform = Promise.resolve(transformFile(file))
-        .then(transformedFile => {
-          let { data } = props;
-          if (typeof data === 'function') {
-            data = data(transformedFile);
-          }
-          return Promise.all([transformedFile, data]);
-        })
-        .catch(e => {
-          console.error(e); // eslint-disable-line no-console
-        });
 
-      transform.then(([transformedFile, data]: [RcFile, object]) => {
+      let { data } = props;
+      if (typeof data === 'function') {
+        data = data(file);
+      }
+
+      Promise.all([file, data]).then(([transformedFile, mergedData]: [RcFile, object]) => {
         const requestOption = {
           action,
           filename: props.name,
-          data,
+          data: mergedData,
           file: transformedFile,
           headers: props.headers,
           withCredentials: props.withCredentials,
