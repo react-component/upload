@@ -7,13 +7,7 @@ import defaultRequest from './request';
 import getUid from './uid';
 import attrAccept from './attr-accept';
 import traverseFileTree from './traverseFileTree';
-import type {
-  UploadProps,
-  UploadProgressEvent,
-  UploadRequestError,
-  RcFile,
-  Action,
-} from './interface';
+import type { UploadProps, UploadProgressEvent, UploadRequestError, RcFile } from './interface';
 
 interface ParsedFileInfo {
   origin: RcFile;
@@ -112,7 +106,7 @@ class AjaxUploader extends Component<UploadProps> {
 
       onBatchStart?.(enabledFiles.map(file => file.origin));
 
-      fileList.forEach(file => {
+      enabledFiles.forEach(file => {
         this.post(file);
       });
     });

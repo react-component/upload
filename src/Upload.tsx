@@ -1,7 +1,7 @@
 /* eslint react/prop-types:0 */
 import React, { Component } from 'react';
 import AjaxUpload from './AjaxUploader';
-import { UploadProps, RcFile } from './interface';
+import type { UploadProps, RcFile } from './interface';
 
 function empty() {}
 

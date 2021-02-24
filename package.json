@@ -37,7 +37,8 @@
     "now-build": "npm run docs:build"
   },
   "devDependencies": {
-    "@types/jest": "^26.0.0",
+    "@types/enzyme": "^3.10.8",
+    "@types/jest": "^26.0.20",
     "@types/react": "^16.9.2",
     "@types/react-dom": "^16.9.0",
     "@umijs/fabric": "^2.0.0",
