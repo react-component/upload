@@ -1,5 +1,7 @@
 import type * as React from 'react';
 
+export type BeforeUploadFileType = File | Blob | boolean | string;
+
 export type Action = string | ((file: RcFile) => string | PromiseLike<string>);
 
 export interface UploadProps
@@ -21,7 +23,10 @@ export interface UploadProps
   onError?: (error: Error, ret: object, file: RcFile) => void;
   onSuccess?: (response: object, file: RcFile, xhr: object) => void;
   onProgress?: (event: UploadProgressEvent, file: RcFile) => void;
-  beforeUpload?: (file: RcFile, FileList: RcFile[]) => boolean | Promise<void | File | Blob>;
+  beforeUpload?: (
+    file: RcFile,
+    FileList: RcFile[],
+  ) => BeforeUploadFileType | Promise<void | BeforeUploadFileType>;
   customRequest?: (option: UploadRequestOption) => void;
   withCredentials?: boolean;
   openFileDialogOnClick?: boolean;
@@ -52,7 +57,7 @@ export interface UploadRequestOption<T = any> {
   onSuccess?: (body: T, xhr: XMLHttpRequest) => void;
   data?: object;
   filename?: string;
-  file: RcFile | Blob;
+  file: Exclude<BeforeUploadFileType, File | boolean> | RcFile;
   withCredentials?: boolean;
   action: string;
   headers?: UploadRequestHeader;

@@ -7,13 +7,19 @@ import defaultRequest from './request';
 import getUid from './uid';
 import attrAccept from './attr-accept';
 import traverseFileTree from './traverseFileTree';
-import type { UploadProps, UploadProgressEvent, UploadRequestError, RcFile } from './interface';
+import type {
+  UploadProps,
+  UploadProgressEvent,
+  UploadRequestError,
+  RcFile,
+  BeforeUploadFileType,
+} from './interface';
 
 interface ParsedFileInfo {
   origin: RcFile;
   action: string;
   data: object;
-  parsedFile: File | Blob | null;
+  parsedFile: Exclude<BeforeUploadFileType, boolean>;
 }
 
 class AjaxUploader extends Component<UploadProps> {
@@ -118,7 +124,7 @@ class AjaxUploader extends Component<UploadProps> {
   processFile = async (file: RcFile, fileList: RcFile[]): Promise<ParsedFileInfo> => {
     const { beforeUpload, action, data } = this.props;
 
-    let transformedFile: boolean | File | Blob | void = file;
+    let transformedFile: BeforeUploadFileType | void = file;
     if (beforeUpload) {
       transformedFile = await beforeUpload(file, fileList);
       if (transformedFile === false) {
