@@ -16,6 +16,7 @@ export interface UploadProps
   headers?: UploadRequestHeader;
   accept?: string;
   multiple?: boolean;
+  onBatchStart?: (fileList: RcFile[]) => void;
   onStart?: (file: RcFile) => void;
   onError?: (error: Error, ret: object, file: RcFile) => void;
   onSuccess?: (response: object, file: RcFile, xhr: object) => void;
@@ -51,7 +52,7 @@ export interface UploadRequestOption<T = any> {
   onSuccess?: (body: T, xhr: XMLHttpRequest) => void;
   data?: object;
   filename?: string;
-  file: RcFile;
+  file: RcFile | Blob;
   withCredentials?: boolean;
   action: string;
   headers?: UploadRequestHeader;
