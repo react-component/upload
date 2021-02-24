@@ -1,4 +1,4 @@
-import { RcFile } from './interface';
+import type { RcFile } from './interface';
 
 interface InternalDataTransferItem extends DataTransferItem {
   isFile: boolean;
@@ -15,7 +15,7 @@ function loopFiles(item: InternalDataTransferItem, callback) {
   let fileList = [];
 
   function sequence() {
-    dirReader.readEntries((entries: Array<InternalDataTransferItem>) => {
+    dirReader.readEntries((entries: InternalDataTransferItem[]) => {
       const entryList = Array.prototype.slice.apply(entries);
       fileList = fileList.concat(entryList);
 
@@ -33,7 +33,7 @@ function loopFiles(item: InternalDataTransferItem, callback) {
   sequence();
 }
 
-const traverseFileTree = (files: Array<InternalDataTransferItem>, callback, isAccepted) => {
+const traverseFileTree = (files: InternalDataTransferItem[], callback, isAccepted) => {
   // eslint-disable-next-line @typescript-eslint/naming-convention
   const _traverseFileTree = (item: InternalDataTransferItem, path?: string) => {
     // eslint-disable-next-line no-param-reassign
@@ -60,7 +60,7 @@ const traverseFileTree = (files: Array<InternalDataTransferItem>, callback, isAc
         }
       });
     } else if (item.isDirectory) {
-      loopFiles(item, (entries: Array<InternalDataTransferItem>) => {
+      loopFiles(item, (entries: InternalDataTransferItem[]) => {
         entries.forEach(entryItem => {
           _traverseFileTree(entryItem, `${path}${item.name}/`);
         });
