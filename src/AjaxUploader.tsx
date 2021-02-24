@@ -141,7 +141,12 @@ class AjaxUploader extends Component<UploadProps> {
     }
 
     const parsedFile =
-      typeof transformedFile === 'object' && transformedFile ? transformedFile : file;
+      // string type is from legacy `transformFile`.
+      // Not sure if this will work since no related test case works with it
+      (typeof transformedFile === 'object' || typeof transformedFile === 'string') &&
+      transformedFile
+        ? transformedFile
+        : file;
 
     // Used for `request.ts` get form data name
     if (!(parsedFile as any).name) {
