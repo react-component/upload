@@ -118,10 +118,10 @@ class AjaxUploader extends Component<UploadProps> {
   processFile = async (file: RcFile, fileList: RcFile[]): Promise<ParsedFileInfo> => {
     const { beforeUpload, action, data } = this.props;
 
-    let parsedFile: boolean | File | Blob | void = file;
+    let transformedFile: boolean | File | Blob | void = file;
     if (beforeUpload) {
-      parsedFile = await beforeUpload(file, fileList);
-      if (parsedFile === false) {
+      transformedFile = await beforeUpload(file, fileList);
+      if (transformedFile === false) {
         return null;
       }
     }
@@ -140,10 +140,18 @@ class AjaxUploader extends Component<UploadProps> {
       mergedData = data;
     }
 
+    const parsedFile =
+      typeof transformedFile === 'object' && transformedFile ? transformedFile : file;
+
+    // Used for `request.ts` get form data name
+    if (!(parsedFile as any).name) {
+      (parsedFile as any).name = file.name;
+    }
+
     return {
       origin: file,
       data: mergedData,
-      parsedFile: typeof parsedFile === 'object' && parsedFile ? parsedFile : file,
+      parsedFile,
       action: mergedAction,
     };
   };
