@@ -1,4 +1,4 @@
-import { UploadRequestOption, UploadRequestError, UploadProgressEvent } from './interface';
+import type { UploadRequestOption, UploadRequestError, UploadProgressEvent } from './interface';
 
 function getError(option: UploadRequestOption, xhr: XMLHttpRequest) {
   const msg = `cannot ${option.method} ${option.action} ${xhr.status}'`;
@@ -57,7 +57,7 @@ export default function upload(option: UploadRequestOption) {
 
   // eslint-disable-next-line no-undef
   if (option.file instanceof Blob) {
-    formData.append(option.filename, option.file, option.file.name);
+    formData.append(option.filename, option.file, (option.file as any).name);
   } else {
     formData.append(option.filename, option.file);
   }

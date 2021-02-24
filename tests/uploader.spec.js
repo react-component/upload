@@ -403,52 +403,6 @@ describe('uploader', () => {
       uploader.unmount();
     });
 
-    it('transform file function should be called before data function', done => {
-      const props = {
-        action: '/test',
-        data(file) {
-          return new Promise(resolve => {
-            setTimeout(() => {
-              resolve({
-                url: file.url,
-              });
-            }, 500);
-          });
-        },
-        transformFile(file) {
-          return new Promise(resolve => {
-            setTimeout(() => {
-              // eslint-disable-next-line no-param-reassign
-              file.url = 'this is file url';
-              resolve(file);
-            }, 500);
-          });
-        },
-      };
-      const wrapper = mount(<Uploader {...props} />);
-      const input = wrapper.find('input').first();
-
-      const files = [
-        {
-          name: 'success.png',
-          toString() {
-            return this.name;
-          },
-        },
-      ];
-
-      files.item = i => files[i];
-
-      input.simulate('change', { target: { files } });
-
-      setTimeout(() => {
-        setTimeout(() => {
-          expect(requests[0].requestBody.get('url')).toBe('this is file url');
-          done();
-        }, 1000);
-      }, 100);
-    });
-
     it('noes not affect receive origin file when transform file is null', done => {
       const handlers = {};
       const props = {
@@ -487,6 +441,102 @@ describe('uploader', () => {
       setTimeout(() => {
         requests[0].respond(200, {}, `["","${files[0].name}"]`);
       }, 100);
+    });
+  });
+
+  describe('onBatchStart', () => {
+    const files = [
+      {
+        name: 'bamboo.png',
+        toString() {
+          return this.name;
+        },
+      },
+      {
+        name: 'light.png',
+        toString() {
+          return this.name;
+        },
+      },
+    ];
+    const sleep = (timeout = 500) => new Promise(resolve => setTimeout(resolve, timeout));
+
+    async function testWrapper(props) {
+      const onBatchStart = jest.fn();
+      const wrapper = mount(<Uploader onBatchStart={onBatchStart} {...props} />);
+
+      wrapper.find('input').simulate('change', {
+        target: {
+          files,
+        },
+      });
+
+      // Always wait 500ms to done the test
+      await sleep();
+
+      expect(onBatchStart).toHaveBeenCalled();
+      wrapper.unmount();
+
+      return onBatchStart;
+    }
+
+    it('trigger without pending', async () => {
+      const onBatchStart = await testWrapper();
+      expect(onBatchStart).toHaveBeenCalledWith(files);
+    });
+
+    it('trigger with beforeUpload delay', async () => {
+      const beforeUpload = jest.fn(async file => {
+        if (file.name === 'bamboo.png') {
+          await sleep(100);
+          return true;
+        }
+        return true;
+      });
+
+      const onBatchStart = await testWrapper({ beforeUpload });
+
+      expect(beforeUpload).toHaveBeenCalledTimes(2);
+      expect(onBatchStart).toHaveBeenCalledWith(files);
+    });
+
+    it('beforeUpload but one is deny', async () => {
+      const beforeUpload = jest.fn(async file => {
+        if (file.name === 'light.png') {
+          await sleep(100);
+          return false;
+        }
+        return true;
+      });
+
+      const onBatchStart = await testWrapper({ beforeUpload });
+
+      expect(beforeUpload).toHaveBeenCalledTimes(2);
+      expect(onBatchStart).toHaveBeenCalledWith(files.filter(f => f.name !== 'light.png'));
+    });
+
+    it('action delay', async () => {
+      const action = jest.fn(async file => {
+        await sleep(100);
+        return 'test';
+      });
+
+      const onBatchStart = await testWrapper({ action });
+
+      expect(action).toHaveBeenCalledTimes(2);
+      expect(onBatchStart).toHaveBeenCalledWith(files);
+    });
+
+    it('data delay', async () => {
+      const data = jest.fn(async file => {
+        await sleep(100);
+        return 'test';
+      });
+
+      const onBatchStart = await testWrapper({ data });
+
+      expect(data).toHaveBeenCalledTimes(2);
+      expect(onBatchStart).toHaveBeenCalledWith(files);
     });
   });
 });

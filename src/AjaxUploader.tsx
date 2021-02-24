@@ -1,12 +1,20 @@
 /* eslint react/no-is-mounted:0,react/sort-comp:0,react/prop-types:0 */
-import React, { Component, ReactElement } from 'react';
+import type { ReactElement } from 'react';
+import React, { Component } from 'react';
 import classNames from 'classnames';
 import pickAttrs from 'rc-util/lib/pickAttrs';
 import defaultRequest from './request';
 import getUid from './uid';
 import attrAccept from './attr-accept';
 import traverseFileTree from './traverseFileTree';
-import { UploadProps, UploadProgressEvent, UploadRequestError, RcFile, Action } from './interface';
+import type { UploadProps, UploadProgressEvent, UploadRequestError, RcFile } from './interface';
+
+interface ParsedFileInfo {
+  origin: RcFile;
+  action: string;
+  data: object;
+  parsedFile: File | Blob | null;
+}
 
 class AjaxUploader extends Component<UploadProps> {
   state = { uid: getUid() };
@@ -84,106 +92,105 @@ class AjaxUploader extends Component<UploadProps> {
   }
 
   uploadFiles = (files: FileList) => {
-    const postFiles: Array<RcFile> = Array.prototype.slice.call(files);
-    postFiles
-      .map((file: RcFile & { uid?: string }) => {
-        // eslint-disable-next-line no-param-reassign
-        file.uid = getUid();
-        return file;
-      })
-      .forEach(file => {
-        this.upload(file, postFiles);
+    const originFiles = [...files] as RcFile[];
+    const postFiles = originFiles.map((file: RcFile & { uid?: string }) => {
+      // eslint-disable-next-line no-param-reassign
+      file.uid = getUid();
+      return this.processFile(file, originFiles);
+    });
+
+    // Batch upload files
+    Promise.all(postFiles).then(fileList => {
+      const { onBatchStart } = this.props;
+      const enabledFiles = fileList.filter(file => file);
+
+      onBatchStart?.(enabledFiles.map(file => file.origin));
+
+      enabledFiles.forEach(file => {
+        this.post(file);
       });
+    });
   };
 
-  upload(file: RcFile, fileList: Array<RcFile>) {
-    const { props } = this;
-    if (!props.beforeUpload) {
-      // always async in case use react state to keep fileList
-      Promise.resolve().then(() => {
-        this.post(file);
-      });
-      return;
+  /**
+   * Process file before upload. When all the file is ready, we start upload.
+   */
+  processFile = async (file: RcFile, fileList: RcFile[]): Promise<ParsedFileInfo> => {
+    const { beforeUpload, action, data } = this.props;
+
+    let transformedFile: boolean | File | Blob | void = file;
+    if (beforeUpload) {
+      transformedFile = await beforeUpload(file, fileList);
+      if (transformedFile === false) {
+        return null;
+      }
     }
 
-    const before = props.beforeUpload(file, fileList);
-    if (before && typeof before !== 'boolean' && before.then) {
-      before
-        .then(processedFile => {
-          const processedFileType = Object.prototype.toString.call(processedFile);
-          if (processedFileType === '[object File]' || processedFileType === '[object Blob]') {
-            this.post(processedFile as RcFile);
-            return;
-          }
-          this.post(file);
-        })
-        .catch(e => {
-          // eslint-disable-next-line no-console
-          console.log(e);
-        });
-    } else if (before !== false) {
-      Promise.resolve().then(() => {
-        this.post(file);
-      });
+    let mergedAction: string;
+    if (typeof action === 'function') {
+      mergedAction = await action(file);
+    } else {
+      mergedAction = action;
     }
-  }
 
-  post(file: RcFile) {
+    let mergedData: object;
+    if (typeof data === 'function') {
+      mergedData = await data(file);
+    } else {
+      mergedData = data;
+    }
+
+    const parsedFile =
+      typeof transformedFile === 'object' && transformedFile ? transformedFile : file;
+
+    // Used for `request.ts` get form data name
+    if (!(parsedFile as any).name) {
+      (parsedFile as any).name = file.name;
+    }
+
+    return {
+      origin: file,
+      data: mergedData,
+      parsedFile,
+      action: mergedAction,
+    };
+  };
+
+  post({ data, origin, action, parsedFile }: ParsedFileInfo) {
     if (!this._isMounted) {
       return;
     }
     const { props } = this;
-    const { onStart, onProgress, transformFile = originFile => originFile } = props;
+    const { onStart, onProgress } = props;
 
-    new Promise(resolve => {
-      let actionRet: Action | PromiseLike<string> = props.action;
-      if (typeof actionRet === 'function') {
-        actionRet = actionRet(file);
-      }
-      return resolve(actionRet);
-    }).then((action: string) => {
-      const { uid } = file;
-      const request = props.customRequest || defaultRequest;
-      const transform = Promise.resolve(transformFile(file))
-        .then(transformedFile => {
-          let { data } = props;
-          if (typeof data === 'function') {
-            data = data(transformedFile);
+    const { uid } = origin;
+    const request = props.customRequest || defaultRequest;
+
+    const requestOption = {
+      action,
+      filename: props.name,
+      data,
+      file: parsedFile,
+      headers: props.headers,
+      withCredentials: props.withCredentials,
+      method: props.method || 'post',
+      onProgress: onProgress
+        ? (e: UploadProgressEvent) => {
+            onProgress(e, origin);
           }
-          return Promise.all([transformedFile, data]);
-        })
-        .catch(e => {
-          console.error(e); // eslint-disable-line no-console
-        });
+        : null,
+      onSuccess: (ret: any, xhr: XMLHttpRequest) => {
+        delete this.reqs[uid];
+        props.onSuccess(ret, origin, xhr);
+      },
+      onError: (err: UploadRequestError, ret: any) => {
+        delete this.reqs[uid];
+        props.onError(err, ret, origin);
+      },
+    };
 
-      transform.then(([transformedFile, data]: [RcFile, object]) => {
-        const requestOption = {
-          action,
-          filename: props.name,
-          data,
-          file: transformedFile,
-          headers: props.headers,
-          withCredentials: props.withCredentials,
-          method: props.method || 'post',
-          onProgress: onProgress
-            ? (e: UploadProgressEvent) => {
-                onProgress(e, file);
-              }
-            : null,
-          onSuccess: (ret: any, xhr: XMLHttpRequest) => {
-            delete this.reqs[uid];
-            props.onSuccess(ret, file, xhr);
-          },
-          onError: (err: UploadRequestError, ret: any) => {
-            delete this.reqs[uid];
-            props.onError(err, ret, file);
-          },
-        };
-
-        onStart(file);
-        this.reqs[uid] = request(requestOption);
-      });
-    });
+    onStart(origin);
+    this.reqs[uid] = request(requestOption);
   }
 
   reset() {

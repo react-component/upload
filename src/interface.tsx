@@ -1,4 +1,4 @@
-import * as React from 'react';
+import type * as React from 'react';
 
 export type Action = string | ((file: RcFile) => string | PromiseLike<string>);
 
@@ -16,6 +16,7 @@ export interface UploadProps
   headers?: UploadRequestHeader;
   accept?: string;
   multiple?: boolean;
+  onBatchStart?: (fileList: RcFile[]) => void;
   onStart?: (file: RcFile) => void;
   onError?: (error: Error, ret: object, file: RcFile) => void;
   onSuccess?: (response: object, file: RcFile, xhr: object) => void;
@@ -24,7 +25,6 @@ export interface UploadProps
   customRequest?: (option: UploadRequestOption) => void;
   withCredentials?: boolean;
   openFileDialogOnClick?: boolean;
-  transformFile?: (file: RcFile) => string | Blob | RcFile | PromiseLike<string | Blob | RcFile>;
   prefixCls?: string;
   id?: string;
   onMouseEnter?: (e: React.MouseEvent<HTMLDivElement>) => void;
@@ -38,9 +38,7 @@ export interface UploadProgressEvent extends ProgressEvent {
 
 export type UploadRequestMethod = 'POST' | 'PUT' | 'PATCH' | 'post' | 'put' | 'patch';
 
-export interface UploadRequestHeader {
-  [key: string]: string;
-}
+export type UploadRequestHeader = Record<string, string>;
 
 export interface UploadRequestError extends Error {
   status?: number;
@@ -54,7 +52,7 @@ export interface UploadRequestOption<T = any> {
   onSuccess?: (body: T, xhr: XMLHttpRequest) => void;
   data?: object;
   filename?: string;
-  file: RcFile;
+  file: RcFile | Blob;
   withCredentials?: boolean;
   action: string;
   headers?: UploadRequestHeader;
