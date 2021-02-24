@@ -1,20 +1,46 @@
-<!doctype html><html lang="en"><head><meta charset="utf-8"/><title>Storybook</title><meta name="viewport" content="width=device-width,initial-scale=1"/><style>html, body {
-    overflow: hidden;
-    height: 100%;
-    width: 100%;
-    margin: 0;
-    padding: 0;
-  }</style><script>/* globals window */
-  /* eslint-disable no-underscore-dangle */
-  try {
-    if (window.top !== window) {
-      window.__REACT_DEVTOOLS_GLOBAL_HOOK__ = window.top.__REACT_DEVTOOLS_GLOBAL_HOOK__;
-    }
-  } catch (e) {
-    // eslint-disable-next-line no-console
-    console.warn('unable to connect to top frame for connecting dev tools');
-  }</script><script>// hackcode stroybook no support
-  document.title = 'RC-UPLOAD';</script><link rel="icon" type="image/png" href="https://gw.alipayobjects.com/zos/rmsportal/rlpTLlbMzTNYuZGGCVYM.png"/><style>#root[hidden],
-      #docs-root[hidden] {
-        display: none !important;
-      }</style></head><body><div id="root"></div><div id="docs-root"></div><script></script><script src="runtime~main.286b69a873d49f2f199c.bundle.js"></script><script src="vendors~main.4be98a41dec751470820.bundle.js"></script><script src="main.6c64e436f9929521e611.bundle.js"></script></body></html>
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1, maximum-scale=1, minimum-scale=1, user-scalable=no"
+    />
+    <link
+      rel="shortcut icon"
+      type="image/x-icon"
+      href="https://avatars0.githubusercontent.com/u/9441414?s=200&v=4"
+    />
+    <style>
+      a img + svg {
+        display: none;
+      }
+    </style>
+    <link rel="stylesheet" href="/umi.css" />
+    <script>
+      window.routerBase = "/";
+    </script>
+    <script>
+      //! umi version: 3.3.8
+    </script>
+    <title>rc-upload</title>
+  </head>
+  <body>
+    <div id="root"></div>
+
+    <script>
+      (function () {
+        var timer = setInterval(function () {
+          try {
+            var menuList = document.getElementsByClassName(
+              "__dumi-default-menu-list"
+            );
+            menuList[0].childNodes[0].childNodes[0].innerText = "rc-upload";
+            clearInterval(timer);
+          } catch (e) {}
+        }, 200);
+      })();
+    </script>
+    <script src="/umi.js"></script>
+  </body>
+</html>
