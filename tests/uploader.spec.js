@@ -459,6 +459,13 @@ describe('uploader', () => {
         },
       },
     ];
+
+    const batchEventFiles = files.map(file =>
+      expect.objectContaining({
+        file,
+      }),
+    );
+
     const sleep = (timeout = 500) => new Promise(resolve => setTimeout(resolve, timeout));
 
     async function testWrapper(props) {
@@ -482,7 +489,7 @@ describe('uploader', () => {
 
     it('trigger without pending', async () => {
       const onBatchStart = await testWrapper();
-      expect(onBatchStart).toHaveBeenCalledWith(files);
+      expect(onBatchStart).toHaveBeenCalledWith(batchEventFiles);
     });
 
     it('trigger with beforeUpload delay', async () => {
@@ -497,7 +504,7 @@ describe('uploader', () => {
       const onBatchStart = await testWrapper({ beforeUpload });
 
       expect(beforeUpload).toHaveBeenCalledTimes(2);
-      expect(onBatchStart).toHaveBeenCalledWith(files);
+      expect(onBatchStart).toHaveBeenCalledWith(batchEventFiles);
     });
 
     it('beforeUpload but one is deny', async () => {
@@ -512,7 +519,14 @@ describe('uploader', () => {
       const onBatchStart = await testWrapper({ beforeUpload });
 
       expect(beforeUpload).toHaveBeenCalledTimes(2);
-      expect(onBatchStart).toHaveBeenCalledWith(files.filter(f => f.name !== 'light.png'));
+      expect(onBatchStart).toHaveBeenCalledWith(
+        files.map(file =>
+          expect.objectContaining({
+            file,
+            parsedFile: file.name === 'light.png' ? null : file,
+          }),
+        ),
+      );
     });
 
     it('action delay', async () => {
@@ -524,7 +538,7 @@ describe('uploader', () => {
       const onBatchStart = await testWrapper({ action });
 
       expect(action).toHaveBeenCalledTimes(2);
-      expect(onBatchStart).toHaveBeenCalledWith(files);
+      expect(onBatchStart).toHaveBeenCalledWith(batchEventFiles);
     });
 
     it('data delay', async () => {
@@ -536,7 +550,7 @@ describe('uploader', () => {
       const onBatchStart = await testWrapper({ data });
 
       expect(data).toHaveBeenCalledTimes(2);
-      expect(onBatchStart).toHaveBeenCalledWith(files);
+      expect(onBatchStart).toHaveBeenCalledWith(batchEventFiles);
     });
   });
 });

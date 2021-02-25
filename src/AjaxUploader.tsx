@@ -110,7 +110,7 @@ class AjaxUploader extends Component<UploadProps> {
       const { onBatchStart } = this.props;
       const enabledFiles = fileList.filter(file => file);
 
-      onBatchStart?.(enabledFiles.map(file => file.origin));
+      onBatchStart?.(fileList.map(({ origin, parsedFile }) => ({ file: origin, parsedFile })));
 
       enabledFiles.forEach(file => {
         this.post(file);
@@ -126,9 +126,19 @@ class AjaxUploader extends Component<UploadProps> {
 
     let transformedFile: BeforeUploadFileType | void = file;
     if (beforeUpload) {
-      transformedFile = await beforeUpload(file, fileList);
+      try {
+        transformedFile = await beforeUpload(file, fileList);
+      } catch (e) {
+        // Rejection will also trade as false
+        transformedFile = false;
+      }
       if (transformedFile === false) {
-        return null;
+        return {
+          origin: file,
+          parsedFile: null,
+          action: null,
+          data: null,
+        };
       }
     }
 

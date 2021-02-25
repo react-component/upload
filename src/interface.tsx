@@ -18,7 +18,9 @@ export interface UploadProps
   headers?: UploadRequestHeader;
   accept?: string;
   multiple?: boolean;
-  onBatchStart?: (fileList: RcFile[]) => void;
+  onBatchStart?: (
+    fileList: { file: RcFile; parsedFile: Exclude<BeforeUploadFileType, boolean> }[],
+  ) => void;
   onStart?: (file: RcFile) => void;
   onError?: (error: Error, ret: object, file: RcFile) => void;
   onSuccess?: (response: object, file: RcFile, xhr: object) => void;
