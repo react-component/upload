@@ -166,7 +166,7 @@ class AjaxUploader extends Component<UploadProps> {
         : file;
 
     // Used for `request.ts` get form data name
-    if (!(parsedFile as any).name) {
+    if (typeof parsedFile === 'object' && !(parsedFile as any).name) {
       (parsedFile as any).name = file.name;
     }
 
