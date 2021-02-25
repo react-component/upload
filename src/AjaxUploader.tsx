@@ -108,13 +108,14 @@ class AjaxUploader extends Component<UploadProps> {
     // Batch upload files
     Promise.all(postFiles).then(fileList => {
       const { onBatchStart } = this.props;
-      const enabledFiles = fileList.filter(file => file);
 
       onBatchStart?.(fileList.map(({ origin, parsedFile }) => ({ file: origin, parsedFile })));
 
-      enabledFiles.forEach(file => {
-        this.post(file);
-      });
+      fileList
+        .filter(file => file.parsedFile !== null)
+        .forEach(file => {
+          this.post(file);
+        });
     });
   };
 

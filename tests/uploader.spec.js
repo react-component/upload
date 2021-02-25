@@ -516,8 +516,10 @@ describe('uploader', () => {
         return true;
       });
 
-      const onBatchStart = await testWrapper({ beforeUpload });
+      const onStart = jest.fn();
+      const onBatchStart = await testWrapper({ beforeUpload, onStart });
 
+      expect(onStart).toHaveBeenCalledTimes(1);
       expect(beforeUpload).toHaveBeenCalledTimes(2);
       expect(onBatchStart).toHaveBeenCalledWith(
         files.map(file =>
