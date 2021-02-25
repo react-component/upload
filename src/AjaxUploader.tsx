@@ -171,32 +171,35 @@ class AjaxUploader extends Component<UploadProps> {
     if (!this._isMounted) {
       return;
     }
-    const { props } = this;
-    const { onStart, onProgress } = props;
+
+    const { onStart, customRequest, name, headers, withCredentials, method } = this.props;
 
     const { uid } = origin;
-    const request = props.customRequest || defaultRequest;
+    const request = customRequest || defaultRequest;
 
     const requestOption = {
       action,
-      filename: props.name,
+      filename: name,
       data,
       file: parsedFile,
-      headers: props.headers,
-      withCredentials: props.withCredentials,
-      method: props.method || 'post',
-      onProgress: onProgress
-        ? (e: UploadProgressEvent) => {
-            onProgress(e, origin);
-          }
-        : null,
+      headers,
+      withCredentials,
+      method: method || 'post',
+      onProgress: (e: UploadProgressEvent) => {
+        const { onProgress } = this.props;
+        onProgress?.(e, origin);
+      },
       onSuccess: (ret: any, xhr: XMLHttpRequest) => {
+        const { onSuccess } = this.props;
+        onSuccess?.(ret, origin, xhr);
+
         delete this.reqs[uid];
-        props.onSuccess(ret, origin, xhr);
       },
       onError: (err: UploadRequestError, ret: any) => {
+        const { onError } = this.props;
+        onError?.(err, ret, origin);
+
         delete this.reqs[uid];
-        props.onError(err, ret, origin);
       },
     };
 
