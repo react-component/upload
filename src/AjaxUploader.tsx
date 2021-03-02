@@ -123,7 +123,7 @@ class AjaxUploader extends Component<UploadProps> {
    * Process file before upload. When all the file is ready, we start upload.
    */
   processFile = async (file: RcFile, fileList: RcFile[]): Promise<ParsedFileInfo> => {
-    const { beforeUpload, action, data } = this.props;
+    const { beforeUpload } = this.props;
 
     let transformedFile: BeforeUploadFileType | void = file;
     if (beforeUpload) {
@@ -142,6 +142,9 @@ class AjaxUploader extends Component<UploadProps> {
         };
       }
     }
+
+    // Call beforeUpload could change action & data.
+    const { action, data } = this.props;
 
     let mergedAction: string;
     if (typeof action === 'function') {
