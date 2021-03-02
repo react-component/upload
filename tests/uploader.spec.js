@@ -393,6 +393,53 @@ describe('uploader', () => {
     });
   });
 
+  describe('change action & data in beforeUpload', () => {
+    const files = [
+      {
+        name: 'success.png',
+        toString() {
+          return this.name;
+        },
+      },
+    ];
+
+    files.item = i => files[i];
+
+    it('get changed value in customRequest', done => {
+      const changedAction = '/test2';
+      const changedData = { b: 2 };
+
+      const Demo = () => {
+        const [action, setAction] = React.useState('/test1');
+        const [data, setData] = React.useState({ a: 1 });
+
+        return (
+          <Uploader
+            action={action}
+            data={data}
+            beforeUpload={() => {
+              setAction(changedAction);
+              setData(changedData);
+
+              return true;
+            }}
+            customRequest={options => {
+              expect(options.action).toEqual(changedAction);
+              expect(options.data).toEqual(changedData);
+
+              done();
+            }}
+          />
+        );
+      };
+
+      const wrapper = mount(<Demo />);
+      const input = wrapper.find('input').first();
+
+      input.simulate('change', { target: { files } });
+    });
+  });
+
   describe('transform file before request', () => {
     let uploader;
     beforeEach(() => {
