@@ -5,6 +5,8 @@ import { mount } from 'enzyme';
 import sinon from 'sinon';
 import Uploader from '../index';
 
+const sleep = (timeout = 500) => new Promise(resolve => setTimeout(resolve, timeout));
+
 function Item(name) {
   this.name = name;
   this.toString = () => this.name;
@@ -466,8 +468,6 @@ describe('uploader', () => {
       }),
     );
 
-    const sleep = (timeout = 500) => new Promise(resolve => setTimeout(resolve, timeout));
-
     async function testWrapper(props) {
       const onBatchStart = jest.fn();
       const wrapper = mount(<Uploader onBatchStart={onBatchStart} {...props} />);
@@ -554,5 +554,37 @@ describe('uploader', () => {
       expect(data).toHaveBeenCalledTimes(2);
       expect(onBatchStart).toHaveBeenCalledWith(batchEventFiles);
     });
+  });
+
+  it('dynamic change action in beforeUpload should work', async () => {
+    const Test = () => {
+      const [action, setAction] = React.useState('light');
+
+      async function beforeUpload() {
+        setAction('bamboo');
+        await sleep(100);
+        return true;
+      }
+
+      return <Uploader beforeUpload={beforeUpload} action={action} />;
+    };
+
+    const wrapper = mount(<Test />);
+    wrapper.find('input').simulate('change', {
+      target: {
+        files: [
+          {
+            name: 'little.png',
+            toString() {
+              return this.name;
+            },
+          },
+        ],
+      },
+    });
+
+    await sleep(200);
+
+    expect(requests[0].url).toEqual('bamboo');
   });
 });
