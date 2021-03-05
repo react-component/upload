@@ -33,9 +33,7 @@ class AjaxUploader extends Component<UploadProps> {
 
   onChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { files } = e.target;
-    const acceptedFiles = Array.prototype.slice
-      .call(files)
-      .filter((file: RcFile) => attrAccept(file, this.props.accept));
+    const acceptedFiles = [...files].filter((file: RcFile) => attrAccept(file, this.props.accept));
     this.uploadFiles(acceptedFiles);
     this.reset();
   };
@@ -100,7 +98,7 @@ class AjaxUploader extends Component<UploadProps> {
     this.abort();
   }
 
-  uploadFiles = (files: FileList) => {
+  uploadFiles = (files: FileList | File[]) => {
     const originFiles = [...files] as RcFile[];
     const postFiles = originFiles.map((file: RcFile & { uid?: string }) => {
       // eslint-disable-next-line no-param-reassign
