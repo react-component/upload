@@ -266,6 +266,7 @@ class AjaxUploader extends Component<UploadProps> {
       openFileDialogOnClick,
       onMouseEnter,
       onMouseLeave,
+      capture,
       ...otherProps
     } = this.props;
     const cls = classNames({
@@ -302,6 +303,7 @@ class AjaxUploader extends Component<UploadProps> {
           {...dirProps}
           multiple={multiple}
           onChange={this.onChange}
+          {...(capture != null ? { capture } : {})}
         />
         {children}
       </Tag>
