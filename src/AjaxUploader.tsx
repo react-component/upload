@@ -77,9 +77,9 @@ class AjaxUploader extends Component<UploadProps> {
         (_file: RcFile) => attrAccept(_file, this.props.accept),
       );
     } else {
-      let files = Array.prototype.slice
-        .call(e.dataTransfer.files)
-        .filter((file: RcFile) => attrAccept(file, this.props.accept));
+      let files = [...e.dataTransfer.files].filter((file: RcFile) =>
+        attrAccept(file, this.props.accept),
+      );
 
       if (multiple === false) {
         files = files.slice(0, 1);
@@ -98,7 +98,7 @@ class AjaxUploader extends Component<UploadProps> {
     this.abort();
   }
 
-  uploadFiles = (files: FileList | File[]) => {
+  uploadFiles = (files: File[]) => {
     const originFiles = [...files] as RcFile[];
     const postFiles = originFiles.map((file: RcFile & { uid?: string }) => {
       // eslint-disable-next-line no-param-reassign
