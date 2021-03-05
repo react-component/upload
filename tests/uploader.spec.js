@@ -393,6 +393,22 @@ describe('uploader', () => {
         done();
       }, 100);
     });
+
+    it('unaccepted type files to upload will not trigger onStart when select directory', done => {
+      const input = uploader.find('input').first();
+      const files = [
+        {
+          name: 'unaccepted.webp',
+        },
+      ];
+      input.simulate('change', { target: { files } });
+      const mockStart = jest.fn();
+      handlers.onStart = mockStart;
+      setTimeout(() => {
+        expect(mockStart.mock.calls.length).toBe(0);
+        done();
+      }, 100);
+    });
   });
 
   describe('transform file before request', () => {

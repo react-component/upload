@@ -33,7 +33,10 @@ class AjaxUploader extends Component<UploadProps> {
 
   onChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { files } = e.target;
-    this.uploadFiles(files);
+    const acceptedFiles = Array.prototype.slice
+      .call(files)
+      .filter((file: RcFile) => attrAccept(file, this.props.accept));
+    this.uploadFiles(acceptedFiles);
     this.reset();
   };
 
