@@ -21,7 +21,18 @@
       window.routerBase = "/";
     </script>
     <script>
-      //! umi version: 3.3.8
+      //! umi version: 3.3.9
+    </script>
+    <script>
+      !(function () {
+        var e = localStorage.getItem("dumi:prefers-color"),
+          t = window.matchMedia("(prefers-color-scheme: dark)").matches,
+          r = ["light", "dark", "auto"];
+        document.documentElement.setAttribute(
+          "data-prefers-color",
+          e === r[2] ? (t ? r[1] : r[0]) : r.includes(e) ? e : r[0]
+        );
+      })();
     </script>
     <title>directoryUpload</title>
   </head>
