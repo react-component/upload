@@ -27,6 +27,7 @@ const uploaderProps = {
   onError(err) {
     console.log('onError', err);
   },
+  capture: 'user',
 };
 
 const Test = () => {
