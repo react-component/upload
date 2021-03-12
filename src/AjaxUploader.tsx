@@ -19,7 +19,7 @@ interface ParsedFileInfo {
   origin: RcFile;
   action: string;
   data: object;
-  parsedFile: Exclude<BeforeUploadFileType, boolean>;
+  parsedFile: RcFile;
 }
 
 class AjaxUploader extends Component<UploadProps> {
@@ -162,7 +162,7 @@ class AjaxUploader extends Component<UploadProps> {
       mergedData = data;
     }
 
-    const parsedFile =
+    const parsedData =
       // string type is from legacy `transformFile`.
       // Not sure if this will work since no related test case works with it
       (typeof transformedFile === 'object' || typeof transformedFile === 'string') &&
@@ -170,15 +170,20 @@ class AjaxUploader extends Component<UploadProps> {
         ? transformedFile
         : file;
 
-    // Used for `request.ts` get form data name
-    if (typeof parsedFile === 'object' && !(parsedFile as any).name) {
-      (parsedFile as any).name = file.name;
+    let parsedFile: File;
+    if (parsedData instanceof File) {
+      parsedFile = parsedData;
+    } else {
+      parsedFile = new File([parsedData], file.name, { type: file.type });
     }
+
+    const mergedParsedFile: RcFile = parsedFile as RcFile;
+    mergedParsedFile.uid = file.uid;
 
     return {
       origin: file,
       data: mergedData,
-      parsedFile,
+      parsedFile: mergedParsedFile,
       action: mergedAction,
     };
   };
@@ -203,17 +208,17 @@ class AjaxUploader extends Component<UploadProps> {
       method: method || 'post',
       onProgress: (e: UploadProgressEvent) => {
         const { onProgress } = this.props;
-        onProgress?.(e, origin);
+        onProgress?.(e, parsedFile);
       },
       onSuccess: (ret: any, xhr: XMLHttpRequest) => {
         const { onSuccess } = this.props;
-        onSuccess?.(ret, origin, xhr);
+        onSuccess?.(ret, parsedFile, xhr);
 
         delete this.reqs[uid];
       },
       onError: (err: UploadRequestError, ret: any) => {
         const { onError } = this.props;
-        onError?.(err, ret, origin);
+        onError?.(err, ret, parsedFile);
 
         delete this.reqs[uid];
       },
