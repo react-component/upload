@@ -463,20 +463,7 @@ describe('uploader', () => {
   });
 
   describe('onBatchStart', () => {
-    const files = [
-      {
-        name: 'bamboo.png',
-        toString() {
-          return this.name;
-        },
-      },
-      {
-        name: 'light.png',
-        toString() {
-          return this.name;
-        },
-      },
-    ];
+    const files = [new File([], 'bamboo.png'), new File([], 'light.png')];
 
     const batchEventFiles = files.map(file =>
       expect.objectContaining({
