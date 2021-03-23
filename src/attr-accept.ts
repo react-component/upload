@@ -15,6 +15,10 @@ export default (file: RcFile, acceptedFiles: string | string[]) => {
 
     return acceptedFilesArray.some(type => {
       const validType = type.trim();
+      // This is something like */*,*  allow all files
+      if (/^\*(\/\*)?$/.test(type)) {
+        return true;
+      }
       if (validType.charAt(0) === '.') {
         return endsWith(fileName.toLowerCase(), validType.toLowerCase());
       }

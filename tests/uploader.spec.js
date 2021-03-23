@@ -411,6 +411,156 @@ describe('uploader', () => {
     });
   });
 
+  describe('accept', () => {
+    if (typeof FormData === 'undefined') {
+      return;
+    }
+
+    let uploader;
+    const handlers = {};
+
+    const props = {
+      action: '/test',
+      data: { a: 1, b: 2 },
+      directory: true,
+      onStart(file) {
+        if (handlers.onStart) {
+          handlers.onStart(file);
+        }
+      },
+    };
+
+    function test(desc, value, files, expecptCallTimes) {
+      it(desc, done => {
+        uploader = mount(<Uploader {...props} accept={value} />);
+        const input = uploader.find('input').first();
+        input.simulate('change', { target: { files } });
+        const mockStart = jest.fn();
+        handlers.onStart = mockStart;
+        setTimeout(() => {
+          expect(mockStart.mock.calls.length).toBe(expecptCallTimes);
+          done();
+        }, 100);
+      });
+    }
+
+    test(
+      'default',
+      undefined,
+      [
+        {
+          name: 'accepted.webp',
+        },
+        {
+          name: 'accepted.png',
+        },
+        {
+          name: 'accepted.txt',
+        },
+      ],
+      3,
+    );
+
+    test(
+      'support .ext',
+      '.png',
+      [
+        {
+          name: 'unaccepted.webp',
+        },
+        {
+          name: 'accepted.png',
+        },
+      ],
+      1,
+    );
+
+    test(
+      'support .ext,ext',
+      '.png,.txt',
+      [
+        {
+          name: 'accepted.png',
+        },
+        {
+          name: 'unaccepted.jpg',
+        },
+        {
+          name: 'accepted.txt',
+        },
+      ],
+      2,
+    );
+
+    test(
+      'support image/type',
+      'image/jpeg',
+      [
+        {
+          name: 'unaccepted.png',
+          type: 'image/png',
+        },
+        {
+          name: 'accepted.jpg',
+          type: 'image/jpeg',
+        },
+      ],
+      1,
+    );
+
+    test(
+      'support image/*',
+      'image/*',
+      [
+        {
+          name: 'accepted.png',
+          type: 'image/png',
+        },
+        {
+          name: 'accepted.jpg',
+          type: 'image/jpeg',
+        },
+        {
+          name: 'unaccepted.text',
+          type: 'text/plain',
+        },
+      ],
+      2,
+    );
+
+    test(
+      'support *',
+      '*',
+      [
+        {
+          name: 'accepted.png',
+          type: 'image/png',
+        },
+        {
+          name: 'accepted.text',
+          type: 'text/plain',
+        },
+      ],
+      2,
+    );
+
+    test(
+      'support */*',
+      '*/*',
+      [
+        {
+          name: 'accepted.png',
+          type: 'image/png',
+        },
+        {
+          name: 'accepted.text',
+          type: 'text/plain',
+        },
+      ],
+      2,
+    );
+  });
+
   describe('transform file before request', () => {
     let uploader;
     beforeEach(() => {
