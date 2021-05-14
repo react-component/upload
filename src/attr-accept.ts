@@ -19,6 +19,8 @@ export default (file: RcFile, acceptedFiles: string | string[]) => {
       if (/^\*(\/\*)?$/.test(type)) {
         return true;
       }
+
+      // like .jpg, .png
       if (validType.charAt(0) === '.') {
         return endsWith(fileName.toLowerCase(), validType.toLowerCase());
       }

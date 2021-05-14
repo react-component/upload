@@ -430,7 +430,7 @@ describe('uploader', () => {
       },
     };
 
-    function test(desc, value, files, expecptCallTimes) {
+    function test(desc, value, files, expectCallTimes) {
       it(desc, done => {
         uploader = mount(<Uploader {...props} accept={value} />);
         const input = uploader.find('input').first();
@@ -438,7 +438,7 @@ describe('uploader', () => {
         const mockStart = jest.fn();
         handlers.onStart = mockStart;
         setTimeout(() => {
-          expect(mockStart.mock.calls.length).toBe(expecptCallTimes);
+          expect(mockStart.mock.calls.length).toBe(expectCallTimes);
           done();
         }, 100);
       });
@@ -547,6 +547,22 @@ describe('uploader', () => {
     test(
       'support */*',
       '*/*',
+      [
+        {
+          name: 'accepted.png',
+          type: 'image/png',
+        },
+        {
+          name: 'accepted.text',
+          type: 'text/plain',
+        },
+      ],
+      2,
+    );
+
+    test(
+      'invalidate type should skip',
+      'jpg',
       [
         {
           name: 'accepted.png',
