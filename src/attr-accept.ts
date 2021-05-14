@@ -1,9 +1,5 @@
 import type { RcFile } from './interface';
 
-function endsWith(str: string, suffix: string) {
-  return str.indexOf(suffix, str.length - suffix.length) !== -1;
-}
-
 export default (file: RcFile, acceptedFiles: string | string[]) => {
   if (file && acceptedFiles) {
     const acceptedFilesArray = Array.isArray(acceptedFiles)
@@ -20,7 +16,15 @@ export default (file: RcFile, acceptedFiles: string | string[]) => {
         return true;
       }
       if (validType.charAt(0) === '.') {
-        return endsWith(fileName.toLowerCase(), validType.toLowerCase());
+        const lowerFileName = fileName.toLowerCase();
+        const lowerType = validType.toLowerCase();
+
+        let affixList = [lowerType];
+        if (lowerType === '.jpg' || lowerType === '.jpeg') {
+          affixList = ['.jpg', 'jpeg'];
+        }
+
+        return affixList.some(affix => lowerFileName.endsWith(affix));
       }
       if (/\/\*$/.test(validType)) {
         // This is something like a image/* mime type
