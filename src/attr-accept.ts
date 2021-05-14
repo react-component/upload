@@ -1,3 +1,4 @@
+import warning from 'rc-util/lib/warning';
 import type { RcFile } from './interface';
 
 function endsWith(str: string, suffix: string) {
@@ -24,11 +25,24 @@ export default (file: RcFile, acceptedFiles: string | string[]) => {
       if (validType.charAt(0) === '.') {
         return endsWith(fileName.toLowerCase(), validType.toLowerCase());
       }
+
+      // This is something like a image/* mime type
       if (/\/\*$/.test(validType)) {
-        // This is something like a image/* mime type
         return baseMimeType === validType.replace(/\/.*$/, '');
       }
-      return mimeType === validType;
+
+      // Full match
+      if (mimeType === validType) {
+        return true;
+      }
+
+      // Invalidate type should skip
+      if (/^\w+$/.test(validType)) {
+        warning(false, `Upload takes an invalidate 'accept' type '${validType}'.Skip for check.`);
+        return true;
+      }
+
+      return false;
     });
   }
   return true;
