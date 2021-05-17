@@ -502,7 +502,7 @@ describe('uploader', () => {
     );
 
     test(
-      'support .ext',
+      'support .png',
       '.png',
       [
         {
@@ -513,6 +513,23 @@ describe('uploader', () => {
         },
       ],
       1,
+    );
+
+    test(
+      'support .jpg and .jpeg',
+      '.jpg',
+      [
+        {
+          name: 'unaccepted.webp',
+        },
+        {
+          name: 'accepted.jpg',
+        },
+        {
+          name: 'accepted.jpeg',
+        },
+      ],
+      2,
     );
 
     test(
