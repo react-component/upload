@@ -1,3 +1,4 @@
+import warning from 'rc-util/lib/warning';
 import type { RcFile } from './interface';
 
 export default (file: RcFile, acceptedFiles: string | string[]) => {
@@ -15,6 +16,8 @@ export default (file: RcFile, acceptedFiles: string | string[]) => {
       if (/^\*(\/\*)?$/.test(type)) {
         return true;
       }
+
+      // like .jpg, .png
       if (validType.charAt(0) === '.') {
         const lowerFileName = fileName.toLowerCase();
         const lowerType = validType.toLowerCase();
@@ -26,11 +29,24 @@ export default (file: RcFile, acceptedFiles: string | string[]) => {
 
         return affixList.some(affix => lowerFileName.endsWith(affix));
       }
+
+      // This is something like a image/* mime type
       if (/\/\*$/.test(validType)) {
-        // This is something like a image/* mime type
         return baseMimeType === validType.replace(/\/.*$/, '');
       }
-      return mimeType === validType;
+
+      // Full match
+      if (mimeType === validType) {
+        return true;
+      }
+
+      // Invalidate type should skip
+      if (/^\w+$/.test(validType)) {
+        warning(false, `Upload takes an invalidate 'accept' type '${validType}'.Skip for check.`);
+        return true;
+      }
+
+      return false;
     });
   }
   return true;

@@ -1,6 +1,7 @@
 /* eslint no-console:0 */
 import React from 'react';
 import { format } from 'util';
+import { resetWarned } from 'rc-util/lib/warning';
 import { mount } from 'enzyme';
 import sinon from 'sinon';
 import Uploader from '../index';
@@ -409,6 +410,35 @@ describe('uploader', () => {
         done();
       }, 100);
     });
+
+    it('accept if type is invalidate', done => {
+      resetWarned();
+      const errSpy = jest.spyOn(console, 'error').mockImplementation(() => {});
+
+      uploader.unmount();
+      uploader = mount(<Uploader {...props} accept="jpg,png" />);
+
+      const input = uploader.find('input').first();
+      const files = [
+        {
+          name: 'unaccepted.webp',
+        },
+      ];
+      input.simulate('change', { target: { files } });
+      const mockStart = jest.fn();
+      handlers.onStart = mockStart;
+
+      expect(errSpy).toHaveBeenCalledWith(
+        "Warning: Upload takes an invalidate 'accept' type 'jpg'.Skip for check.",
+      );
+
+      setTimeout(() => {
+        expect(mockStart.mock.calls.length).toBe(1);
+
+        errSpy.mockRestore();
+        done();
+      }, 100);
+    });
   });
 
   describe('accept', () => {
@@ -430,15 +460,25 @@ describe('uploader', () => {
       },
     };
 
-    function test(desc, value, files, expecptCallTimes) {
+    function test(desc, value, files, expectCallTimes, errorMessage) {
       it(desc, done => {
+        resetWarned();
+        const errSpy = jest.spyOn(console, 'error').mockImplementation(() => {});
+
         uploader = mount(<Uploader {...props} accept={value} />);
         const input = uploader.find('input').first();
         input.simulate('change', { target: { files } });
         const mockStart = jest.fn();
         handlers.onStart = mockStart;
+
+        if (errorMessage) {
+          expect(errSpy).toHaveBeenCalledWith(errorMessage);
+        }
+
         setTimeout(() => {
-          expect(mockStart.mock.calls.length).toBe(expecptCallTimes);
+          expect(mockStart.mock.calls.length).toBe(expectCallTimes);
+
+          errSpy.mockRestore();
           done();
         }, 100);
       });
@@ -575,6 +615,23 @@ describe('uploader', () => {
         },
       ],
       2,
+    );
+
+    test(
+      'invalidate type should skip',
+      'jpg',
+      [
+        {
+          name: 'accepted.png',
+          type: 'image/png',
+        },
+        {
+          name: 'accepted.text',
+          type: 'text/plain',
+        },
+      ],
+      2,
+      "Warning: Upload takes an invalidate 'accept' type 'jpg'.Skip for check.",
     );
   });
 
