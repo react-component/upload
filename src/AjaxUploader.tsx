@@ -32,8 +32,11 @@ class AjaxUploader extends Component<UploadProps> {
   private _isMounted: boolean;
 
   onChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const { accept, directory } = this.props;
     const { files } = e.target;
-    const acceptedFiles = [...files].filter((file: RcFile) => attrAccept(file, this.props.accept));
+    const acceptedFiles = [...files].filter(
+      (file: RcFile) => !directory || attrAccept(file, accept),
+    );
     this.uploadFiles(acceptedFiles);
     this.reset();
   };
