@@ -269,6 +269,7 @@ class AjaxUploader extends Component<UploadProps> {
       style,
       multiple,
       accept,
+      capture,
       children,
       directory,
       openFileDialogOnClick,
@@ -308,6 +309,7 @@ class AjaxUploader extends Component<UploadProps> {
           key={this.state.uid}
           style={{ display: 'none' }}
           accept={accept}
+          capture={capture}
           {...dirProps}
           multiple={multiple}
           onChange={this.onChange}

@@ -67,6 +67,7 @@ React.render(<Upload />, container);
 |data| object/function(file) | | other data object to post or a function which returns a data object(a promise object which resolve a data object) |
 |headers| object | {} | http headers to post, available in modern browsers |
 |accept | string | | input accept attribute |
+|capture | string | | input capture attribute |
 |multiple | boolean | false | only support ie10+|
 |onStart | function| | start upload file |
 |onError| function| | error callback |
