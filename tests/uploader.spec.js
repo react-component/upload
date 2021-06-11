@@ -460,12 +460,12 @@ describe('uploader', () => {
       },
     };
 
-    function test(desc, value, files, expectCallTimes, errorMessage) {
+    function test(desc, value, files, expectCallTimes, errorMessage, extraProps) {
       it(desc, done => {
         resetWarned();
         const errSpy = jest.spyOn(console, 'error').mockImplementation(() => {});
 
-        uploader = mount(<Uploader {...props} accept={value} />);
+        uploader = mount(<Uploader {...props} {...extraProps} accept={value} />);
         const input = uploader.find('input').first();
         input.simulate('change', { target: { files } });
         const mockStart = jest.fn();
@@ -632,6 +632,26 @@ describe('uploader', () => {
       ],
       2,
       "Warning: Upload takes an invalidate 'accept' type 'jpg'.Skip for check.",
+    );
+
+    test(
+      'should skip when select file',
+      '.png',
+      [
+        {
+          name: 'accepted.png',
+          type: 'image/png',
+        },
+        {
+          name: 'unaccepted.text',
+          type: 'text/plain',
+        },
+      ],
+      2,
+      '',
+      {
+        directory: false,
+      },
     );
   });
 
