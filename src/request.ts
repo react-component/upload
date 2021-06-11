@@ -65,6 +65,10 @@ export default function upload(option: UploadRequestOption) {
   xhr.onerror = function error(e) {
     option.onError(e);
   };
+  
+  xhr.ontimeout = function timeout(e) {
+    option.onError(e);
+  };
 
   xhr.onload = function onload() {
     // allow success when 2xx status
