@@ -1,20 +1,20 @@
 {
-  "name": "rc-upload",
+  "name": "sia-upload",
   "version": "4.3.1",
   "description": "upload ui component for react",
   "keywords": [
     "react",
-    "react-component",
+    "sia-fl",
     "react-upload",
     "upload"
   ],
-  "homepage": "http://github.com/react-component/upload",
+  "homepage": "http://github.com/sia-fl/upload",
   "repository": {
     "type": "git",
-    "url": "git@github.com:react-component/upload.git"
+    "url": "git@github.com:sia-fl/upload.git"
   },
   "bugs": {
-    "url": "http://github.com/react-component/upload/issues"
+    "url": "http://github.com/sia-fl/upload/issues"
   },
   "license": "MIT",
   "files": [
