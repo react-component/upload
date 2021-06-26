@@ -13,6 +13,7 @@ export interface UploadProps
   component?: React.JSXElementConstructor<any>;
   action?: Action;
   method?: UploadRequestMethod;
+  processData?: boolean;
   directory?: boolean;
   data?: object | ((file: RcFile | string | Blob) => object);
   headers?: UploadRequestHeader;
@@ -64,6 +65,7 @@ export interface UploadRequestOption<T = any> {
   action: string;
   headers?: UploadRequestHeader;
   method: UploadRequestMethod;
+  processData: boolean;
 }
 
 export interface RcFile extends File {

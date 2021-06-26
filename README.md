@@ -63,6 +63,7 @@ React.render(<Upload />, container);
 |component | "div"|"span" | "span"| wrap component name |
 |action| string &#124; function(file): string &#124; Promise&lt;string&gt; | | form action url |
 |method | string | post | request method |
+|processData | boolean | true | serialization form data(send only file object, do not send file related information) |
 |directory| boolean | false | support upload whole directory |
 |data| object/function(file) | | other data object to post or a function which returns a data object(a promise object which resolve a data object) |
 |headers| object | {} | http headers to post, available in modern browsers |

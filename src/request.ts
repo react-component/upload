@@ -35,33 +35,6 @@ export default function upload(option: UploadRequestOption) {
     };
   }
 
-  // eslint-disable-next-line no-undef
-  const formData = new FormData();
-
-  if (option.data) {
-    Object.keys(option.data).forEach(key => {
-      const value = option.data[key];
-      // support key-value array data
-      if (Array.isArray(value)) {
-        value.forEach(item => {
-          // { list: [ 11, 22 ] }
-          // formData.append('list[]', 11);
-          formData.append(`${key}[]`, item);
-        });
-        return;
-      }
-
-      formData.append(key, option.data[key]);
-    });
-  }
-
-  // eslint-disable-next-line no-undef
-  if (option.file instanceof Blob) {
-    formData.append(option.filename, option.file, (option.file as any).name);
-  } else {
-    formData.append(option.filename, option.file);
-  }
-
   xhr.onerror = function error(e) {
     option.onError(e);
   };
@@ -97,7 +70,37 @@ export default function upload(option: UploadRequestOption) {
     }
   });
 
-  xhr.send(formData);
+  if (option.method.toLowerCase() === 'put' && option.processData === false) {
+    xhr.send(option.file);
+  } else {
+    // eslint-disable-next-line no-undef
+    const formData = new FormData();
+
+    if (option.data) {
+      Object.keys(option.data).forEach(key => {
+        const value = option.data[key];
+        // support key-value array data
+        if (Array.isArray(value)) {
+          value.forEach(item => {
+            // { list: [ 11, 22 ] }
+            // formData.append('list[]', 11);
+            formData.append(`${key}[]`, item);
+          });
+          return;
+        }
+
+        formData.append(key, option.data[key]);
+      });
+    }
+
+    // eslint-disable-next-line no-undef
+    if (option.file instanceof Blob) {
+      formData.append(option.filename, option.file, (option.file as any).name);
+    } else {
+      formData.append(option.filename, option.file);
+    }
+    xhr.send(formData);
+  }
 
   return {
     abort() {

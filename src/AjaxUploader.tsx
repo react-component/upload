@@ -196,7 +196,8 @@ class AjaxUploader extends Component<UploadProps> {
       return;
     }
 
-    const { onStart, customRequest, name, headers, withCredentials, method } = this.props;
+    const { onStart, customRequest, name, headers, withCredentials, method, processData } =
+      this.props;
 
     const { uid } = origin;
     const request = customRequest || defaultRequest;
@@ -209,6 +210,7 @@ class AjaxUploader extends Component<UploadProps> {
       headers,
       withCredentials,
       method: method || 'post',
+      processData: processData || true,
       onProgress: (e: UploadProgressEvent) => {
         const { onProgress } = this.props;
         onProgress?.(e, parsedFile);
