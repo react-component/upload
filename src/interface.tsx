@@ -56,7 +56,7 @@ export interface UploadRequestError extends Error {
 export interface UploadRequestOption<T = any> {
   onProgress?: (event: UploadProgressEvent) => void;
   onError?: (event: UploadRequestError | ProgressEvent, body?: T) => void;
-  onSuccess?: (body: T, xhr: XMLHttpRequest) => void;
+  onSuccess?: (body: T, xhr?: XMLHttpRequest) => void;
   data?: object;
   filename?: string;
   file: Exclude<BeforeUploadFileType, File | boolean> | RcFile;
