@@ -1,6 +1,6 @@
 import Upload from './Upload';
 import { UploadProps } from './interface';
-
-export { UploadProps };
+import { FileInput } from './FileInput';
+export { UploadProps, FileInput };
 
 export default Upload;
