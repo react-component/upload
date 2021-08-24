@@ -13,7 +13,9 @@ function FileInput({ value, inputFileValue, ...rest }) {
       <label
         className="wrapper"
         style={{
-            
+            width: "50px",
+            background: "#fff",
+            padding: "30px",
             
           boxShadow:
             "0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19)"
