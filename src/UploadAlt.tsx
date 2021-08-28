@@ -11,7 +11,7 @@ import {
   
 } from "antd";
 
-import FileInput from './FileInput.js'
+import FileInput from './FileInput.tsx'
 
 
 function UploadAlt() {
