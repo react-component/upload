@@ -16,7 +16,14 @@ function UploadAlt() {
         // console.log(file[0]);
       }
 
-      
+      const showModal = () => {
+        setIsModalVisible(true);
+      };
+
+      const handleCancel = () => {
+        setIsModalVisible(false);
+      };
+
       const handleSubmit = (e) => {
         const fr = new FileReader();
         fr.onload = function (e) {
@@ -25,6 +32,7 @@ function UploadAlt() {
           setfileDataContent(text);
           console.log(fileDataContent);
         };
+
         fr.readAsText(fileData);
         axios({
           method: "post",
@@ -55,7 +63,19 @@ function UploadAlt() {
             <Button type="primary" onClick={showModal} style={{marginTop: "50px"}}>
             Upload
             </Button>
-            
+            <Modal
+              title="Confirmation"
+              visible={isModalVisible}
+              onOk={handleSubmit}
+              onCancel={handleCancel}>
+              style={{
+                overflow: 'auto',
+                borderRadius: '10px',
+                backgroundColor: '#1890ff',
+              }}
+            <p>Are you sure to upload the following file?</p>
+            {fileData && <p>File: {fileData.name}</p>}
+            </Modal>
         </Card>
     </div>
     );
