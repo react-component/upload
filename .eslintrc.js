@@ -1,9 +1,9 @@
 const base = require("@umijs/fabric/dist/eslint");
 
 module.exports = {
-  
+  ...base,
   rules: {
-    
+    ...base.rules,
     "react/no-array-index-key": 0,
     "react/sort-comp": 0,
     "@typescript-eslint/no-explicit-any": 0,
@@ -19,7 +19,9 @@ module.exports = {
     "import/no-named-as-default": 0,
     "import/no-extraneous-dependencies": 0,
     "no-underscore-dangle": 0,
-    "no-shadow": "off",
-  "@typescript-eslint/no-shadow": ["error"]
   },
+  "rules": {
+      "no-shadow": "off",
+      "@typescript-eslint/no-shadow": ["error"]
+  }
 };
