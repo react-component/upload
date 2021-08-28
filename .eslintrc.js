@@ -19,9 +19,8 @@ module.exports = {
     "import/no-named-as-default": 0,
     "import/no-extraneous-dependencies": 0,
     "no-underscore-dangle": 0,
+    "@typescript-eslint/no-shadow": 0,
+     "no-shadow": 0,
   },
-  "rules": {
-      "no-shadow": "off",
-      "@typescript-eslint/no-shadow": ["error"]
-  }
+
 };
