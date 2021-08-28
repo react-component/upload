@@ -1,11 +1,11 @@
 import React, { useState } from "react";
 
 function FileInput({ value, FileContent, ...rest }) {
-  const [content, setContent] = useState(false);
+  const [filePresent, setFilePresent] = useState(false);
   const [Files, setFiles] = useState([]);
 
-  function noop(content) {
-    setContent(true);
+  function noop(filePresent) {
+    setFilePresent(true);
   }
 
   return (
@@ -30,12 +30,12 @@ function FileInput({ value, FileContent, ...rest }) {
             setFiles([...e.target.files]);
             FileContent(e.target.files);
 
-            setContent(true);
+            setFilePresent(true);
           }}
         />
       </label>
 
-      {Boolean(content) && (
+      {Boolean(filePresent) && (
         <div style={{ marginTop: "40px", marginBottom: "10px" }}>
           Selected files: {Files.map((f) => f.name).join(", ")}
         </div>
