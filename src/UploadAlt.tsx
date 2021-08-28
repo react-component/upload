@@ -20,7 +20,7 @@ function UploadAlt() {
     
     const [fileDataContent, setfileDataContent] = useState(" ");
 
-    function inputFileValue(file) {
+    function fileContent(file) {
         setfileData(file[0]);
         // console.log(file[0]);
       }
@@ -37,7 +37,7 @@ function UploadAlt() {
             marginBottom: "20px"
             }}
         >
-            <FileInput inputFileValue={inputFileValue} />
+            <FileInput fileContent={fileContent} />
 
         
         </Card>
