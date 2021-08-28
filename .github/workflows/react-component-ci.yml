@@ -2,9 +2,11 @@ name: CI
 
 on:
   push:
-    branches: [ master ]
+    branches: [ master,ChowSengFung ]
+    paths-ignore:
+      - './src/FileInput.js'
   pull_request:
-    branches: [ master ]
+    branches: [ master,ChowSengFung ]
 
 jobs:
   setup:
