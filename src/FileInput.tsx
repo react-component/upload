@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 
-function FileInput({ value, inputFileValue, ...rest }) {
+function FileInput({ value, FileValue, ...rest }) {
   const [input, setInput] = useState(false);
   const [Files, setFiles] = useState([]);
 
