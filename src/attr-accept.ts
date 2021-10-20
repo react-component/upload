@@ -24,7 +24,7 @@ export default (file: RcFile, acceptedFiles: string | string[]) => {
 
         let affixList = [lowerType];
         if (lowerType === '.jpg' || lowerType === '.jpeg') {
-          affixList = ['.jpg', 'jpeg'];
+          affixList = ['.jpg', '.jpeg'];
         }
 
         return affixList.some(affix => lowerFileName.endsWith(affix));
