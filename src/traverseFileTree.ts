@@ -49,7 +49,7 @@ const traverseFileTree = (files: InternalDataTransferItem[], callback, isAccepte
               },
             });
             // eslint-disable-next-line no-param-reassign
-            file.webkitRelativePath = item.fullPath.replace(/^\//, '');
+            (file as any).webkitRelativePath = item.fullPath.replace(/^\//, '');
             Object.defineProperties(file, {
               webkitRelativePath: {
                 writable: false,
@@ -68,7 +68,7 @@ const traverseFileTree = (files: InternalDataTransferItem[], callback, isAccepte
     }
   };
   files.forEach(file => {
-    _traverseFileTree(file.webkitGetAsEntry());
+    _traverseFileTree(file.webkitGetAsEntry() as any);
   });
 };
 
