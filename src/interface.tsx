@@ -14,7 +14,7 @@ export interface UploadProps
   action?: Action;
   method?: UploadRequestMethod;
   directory?: boolean;
-  data?: object | ((file: RcFile | string | Blob) => object);
+  data?: Record<string, unknown> | ((file: RcFile | string | Blob) => Record<string, unknown>);
   headers?: UploadRequestHeader;
   accept?: string;
   multiple?: boolean;
@@ -22,8 +22,8 @@ export interface UploadProps
     fileList: { file: RcFile; parsedFile: Exclude<BeforeUploadFileType, boolean> }[],
   ) => void;
   onStart?: (file: RcFile) => void;
-  onError?: (error: Error, ret: object, file: RcFile) => void;
-  onSuccess?: (response: object, file: RcFile, xhr: object) => void;
+  onError?: (error: Error, ret: Record<string, unknown>, file: RcFile) => void;
+  onSuccess?: (response: Record<string, unknown>, file: RcFile, xhr: XMLHttpRequest) => void;
   onProgress?: (event: UploadProgressEvent, file: RcFile) => void;
   beforeUpload?: (
     file: RcFile,
@@ -57,7 +57,7 @@ export interface UploadRequestOption<T = any> {
   onProgress?: (event: UploadProgressEvent) => void;
   onError?: (event: UploadRequestError | ProgressEvent, body?: T) => void;
   onSuccess?: (body: T, xhr?: XMLHttpRequest) => void;
-  data?: object;
+  data?: Record<string, unknown>;
   filename?: string;
   file: Exclude<BeforeUploadFileType, File | boolean> | RcFile;
   withCredentials?: boolean;

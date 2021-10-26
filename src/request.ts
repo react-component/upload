@@ -51,7 +51,7 @@ export default function upload(option: UploadRequestOption) {
         return;
       }
 
-      formData.append(key, option.data[key]);
+      formData.append(key, value as string | Blob);
     });
   }
 
