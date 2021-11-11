@@ -40,7 +40,7 @@ export interface UploadProps
 }
 
 export interface UploadProgressEvent extends Partial<ProgressEvent> {
-  percent: number;
+  percent?: number;
 }
 
 export type UploadRequestMethod = 'POST' | 'PUT' | 'PATCH' | 'post' | 'put' | 'patch';
