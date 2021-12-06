@@ -39,8 +39,8 @@ export interface UploadProps
   onClick?: (e: React.MouseEvent<HTMLDivElement> | React.KeyboardEvent<HTMLDivElement>) => void;
 }
 
-export interface UploadProgressEvent extends ProgressEvent {
-  percent: number;
+export interface UploadProgressEvent extends Partial<ProgressEvent> {
+  percent?: number;
 }
 
 export type UploadRequestMethod = 'POST' | 'PUT' | 'PATCH' | 'post' | 'put' | 'patch';
