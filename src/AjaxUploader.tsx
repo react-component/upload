@@ -156,20 +156,13 @@ class AjaxUploader extends Component<UploadProps> {
       mergedAction = action;
     }
 
-    // Get latest data
-    const { data } = this.props;
-    let mergedData: Record<string, unknown>;
-    if (typeof data === 'function') {
-      mergedData = await data(file);
-    } else {
-      mergedData = data;
-    }
+
 
     const parsedData =
       // string type is from legacy `transformFile`.
       // Not sure if this will work since no related test case works with it
       (typeof transformedFile === 'object' || typeof transformedFile === 'string') &&
-      transformedFile
+        transformedFile
         ? transformedFile
         : file;
 
@@ -182,6 +175,15 @@ class AjaxUploader extends Component<UploadProps> {
 
     const mergedParsedFile: RcFile = parsedFile as RcFile;
     mergedParsedFile.uid = file.uid;
+
+    // Get latest data
+    const { data } = this.props;
+    let mergedData: Record<string, unknown>;
+    if (typeof data === 'function') {
+      mergedData = await data(mergedParsedFile);
+    } else {
+      mergedData = data;
+    }
 
     return {
       origin: file,
@@ -289,14 +291,14 @@ class AjaxUploader extends Component<UploadProps> {
     const events = disabled
       ? {}
       : {
-          onClick: openFileDialogOnClick ? this.onClick : () => {},
-          onKeyDown: openFileDialogOnClick ? this.onKeyDown : () => {},
-          onMouseEnter,
-          onMouseLeave,
-          onDrop: this.onFileDrop,
-          onDragOver: this.onFileDrop,
-          tabIndex: '0',
-        };
+        onClick: openFileDialogOnClick ? this.onClick : () => { },
+        onKeyDown: openFileDialogOnClick ? this.onKeyDown : () => { },
+        onMouseEnter,
+        onMouseLeave,
+        onDrop: this.onFileDrop,
+        onDragOver: this.onFileDrop,
+        tabIndex: '0',
+      };
     return (
       <Tag {...events} className={cls} role="button" style={style}>
         <input
