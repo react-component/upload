@@ -91,7 +91,7 @@ export default function upload(option: UploadRequestOption) {
   }
 
   Object.entries(headers)
-    .filter(([header, value]) => value !== null)
+    .filter(([, value]) => value !== null)
     .forEach(([header, value]) => xhr.setRequestHeader(header, value));
 
   xhr.send(formData);
