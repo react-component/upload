@@ -38,7 +38,7 @@
   },
   "devDependencies": {
     "@types/enzyme": "^3.10.8",
-    "@types/jest": "^26.0.20",
+    "@types/jest": "^28.1.7",
     "@types/react": "^17.0.15",
     "@types/react-dom": "^17.0.9",
     "@umijs/fabric": "^2.0.0",
