@@ -29,6 +29,10 @@ class Upload extends Component<UploadProps> {
     this.uploader.abort(file);
   }
 
+  showOpenFilePicker() {
+    this.uploader.showOpenFilePicker();
+  }
+
   saveUploader = (node: AjaxUpload) => {
     this.uploader = node;
   };
