@@ -302,6 +302,7 @@ class AjaxUploader extends Component<UploadProps> {
         <input
           {...pickAttrs(otherProps, { aria: true, data: true })}
           id={id}
+          disabled={disabled}
           type="file"
           ref={this.saveFileInput}
           onClick={e => e.stopPropagation()} // https://github.com/ant-design/ant-design/issues/19948
