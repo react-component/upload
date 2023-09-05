@@ -283,8 +283,11 @@ class AjaxUploader extends Component<UploadProps> {
       [className]: className,
     });
     // because input don't have directory/webkitdirectory type declaration
+    // detect if it's a Safari browser
+    const isSafari = /^((?!chrome|android).)*safari/i.test(navigator.userAgent);
+    const safariAccept = isSafari ? ".folder" : undefined
     const dirProps: any = directory
-      ? { directory: 'directory', webkitdirectory: 'webkitdirectory', accept: ".folder" }
+      ? { directory: 'directory', webkitdirectory: 'webkitdirectory', accept: safariAccept }
       : {};
     const events = disabled
       ? {}
