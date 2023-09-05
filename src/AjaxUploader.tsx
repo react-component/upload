@@ -284,7 +284,7 @@ class AjaxUploader extends Component<UploadProps> {
     });
     // because input don't have directory/webkitdirectory type declaration
     const dirProps: any = directory
-      ? { directory: 'directory', webkitdirectory: 'webkitdirectory' }
+      ? { directory: 'directory', webkitdirectory: 'webkitdirectory', accept: ".folder" }
       : {};
     const events = disabled
       ? {}
