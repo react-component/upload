@@ -36,6 +36,9 @@ function loopFiles(item: InternalDataTransferItem, callback) {
 const traverseFileTree = (files: InternalDataTransferItem[], callback, isAccepted) => {
   // eslint-disable-next-line @typescript-eslint/naming-convention
   const _traverseFileTree = (item: InternalDataTransferItem, path?: string) => {
+    if (!item) {
+      return;
+    }
     // eslint-disable-next-line no-param-reassign
     item.path = path || '';
     if (item.isFile) {
