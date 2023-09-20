@@ -395,6 +395,22 @@ describe('uploader', () => {
       }, 100);
     });
 
+    it('dragging and dropping a non file with a file does not prevent the file from being uploaded', done => {
+      const input = uploader.find('input').first();
+      const file = {
+        name: 'success.png',
+      };
+      input.simulate('drop', {
+        dataTransfer: { items: [{ webkitGetAsEntry: () => null }, makeDataTransferItem(file)] },
+      });
+      const mockStart = jest.fn();
+      handlers.onStart = mockStart;
+      setTimeout(() => {
+        expect(mockStart.mock.calls.length).toBe(1);
+        done();
+      }, 100);
+    });
+
     it('unaccepted type files to upload will not trigger onStart when select directory', done => {
       const input = uploader.find('input').first();
       const files = [
