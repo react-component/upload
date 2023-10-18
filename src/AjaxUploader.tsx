@@ -279,8 +279,10 @@ class AjaxUploader extends Component<UploadProps> {
       onMouseLeave,
       ...otherProps
     } = this.props;
-    const cls = clsx(className, prefixCls, {
+    const cls = clsx({
+      [prefixCls]: true,
       [`${prefixCls}-disabled`]: disabled,
+      [className]: className,
     });
     // because input don't have directory/webkitdirectory type declaration
     const dirProps: any = directory
