@@ -37,11 +37,14 @@ export interface UploadProps
   onMouseEnter?: (e: React.MouseEvent<HTMLDivElement>) => void;
   onMouseLeave?: (e: React.MouseEvent<HTMLDivElement>) => void;
   onClick?: (e: React.MouseEvent<HTMLDivElement> | React.KeyboardEvent<HTMLDivElement>) => void;
-  /**
-   * Inline styles that actually act on the input tag,
-   * whereas the previous `style` only acted on its parent container.
-   */
-  innerStyle?: React.CSSProperties;
+  classNames?: {
+    wrapper?: string;
+    input?: string;
+  };
+  styles?: {
+    wrapper?: React.CSSProperties;
+    input?: React.CSSProperties;
+  };
 }
 
 export interface UploadProgressEvent extends Partial<ProgressEvent> {

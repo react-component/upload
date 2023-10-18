@@ -1,7 +1,7 @@
 /* eslint react/no-is-mounted:0,react/sort-comp:0,react/prop-types:0 */
 import type { ReactElement } from 'react';
 import React, { Component } from 'react';
-import classNames from 'classnames';
+import clsx from 'classnames';
 import pickAttrs from 'rc-util/lib/pickAttrs';
 import defaultRequest from './request';
 import getUid from './uid';
@@ -264,10 +264,11 @@ class AjaxUploader extends Component<UploadProps> {
       component: Tag,
       prefixCls,
       className,
+      classNames,
       disabled,
       id,
-      style: rootStyle,
-      innerStyle,
+      style,
+      styles,
       multiple,
       accept,
       capture,
@@ -278,11 +279,14 @@ class AjaxUploader extends Component<UploadProps> {
       onMouseLeave,
       ...otherProps
     } = this.props;
-    const cls = classNames({
-      [prefixCls]: true,
-      [`${prefixCls}-disabled`]: disabled,
-      [className]: className,
-    });
+    const cls = clsx(
+      className,
+      prefixCls,
+      {
+        [`${prefixCls}-disabled`]: disabled,
+      },
+      classNames?.wrapper,
+    );
     // because input don't have directory/webkitdirectory type declaration
     const dirProps: any = directory
       ? { directory: 'directory', webkitdirectory: 'webkitdirectory' }
@@ -298,8 +302,14 @@ class AjaxUploader extends Component<UploadProps> {
           onDragOver: this.onFileDrop,
           tabIndex: '0',
         };
+
+    const mergedWrapperStyle: React.CSSProperties = {
+      ...style,
+      ...styles?.wrapper,
+    };
+
     return (
-      <Tag {...events} className={cls} role="button" style={rootStyle}>
+      <Tag {...events} className={cls} role="button" style={mergedWrapperStyle}>
         <input
           {...pickAttrs(otherProps, { aria: true, data: true })}
           id={id}
@@ -308,7 +318,8 @@ class AjaxUploader extends Component<UploadProps> {
           ref={this.saveFileInput}
           onClick={e => e.stopPropagation()} // https://github.com/ant-design/ant-design/issues/19948
           key={this.state.uid}
-          style={{ display: 'none', ...(innerStyle ?? {}) }}
+          style={styles?.input ?? { display: 'none' }}
+          className={classNames?.input}
           accept={accept}
           {...dirProps}
           multiple={multiple}
