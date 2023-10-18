@@ -266,7 +266,8 @@ class AjaxUploader extends Component<UploadProps> {
       className,
       disabled,
       id,
-      style,
+      style: rootStyle,
+      innerStyle,
       multiple,
       accept,
       capture,
@@ -298,7 +299,7 @@ class AjaxUploader extends Component<UploadProps> {
           tabIndex: '0',
         };
     return (
-      <Tag {...events} className={cls} role="button" style={style}>
+      <Tag {...events} className={cls} role="button" style={rootStyle}>
         <input
           {...pickAttrs(otherProps, { aria: true, data: true })}
           id={id}
@@ -307,7 +308,7 @@ class AjaxUploader extends Component<UploadProps> {
           ref={this.saveFileInput}
           onClick={e => e.stopPropagation()} // https://github.com/ant-design/ant-design/issues/19948
           key={this.state.uid}
-          style={{ display: 'none' }}
+          style={{ display: 'none', ...(innerStyle ?? {}) }}
           accept={accept}
           {...dirProps}
           multiple={multiple}
