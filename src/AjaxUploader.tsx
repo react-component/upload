@@ -297,7 +297,6 @@ class AjaxUploader extends Component<UploadProps> {
           onDragOver: this.onFileDrop,
           tabIndex: '0',
         };
-
     return (
       <Tag {...events} className={cls} role="button" style={style}>
         <input
