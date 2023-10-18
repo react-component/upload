@@ -850,4 +850,9 @@ describe('uploader', () => {
 
     expect(requests[0].url).toEqual('bamboo');
   });
+
+  it('props: innerStyle', () => {
+    const wrapper = mount(<Uploader innerStyle={{ color: 'red' }} />);
+    expect(wrapper.find('input').props().style.color).toBe('red');
+  });
 });
