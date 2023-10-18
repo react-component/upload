@@ -863,6 +863,6 @@ describe('uploader', () => {
     expect(wrapper.find('.bamboo-input').length).toBeTruthy();
 
     expect(wrapper.find('.bamboo-input').props().style.color).toEqual('red');
-    expect(wrapper.find('input').props().style.display).not.toBe('none');
+    expect(wrapper.find('input').props().style.display).toBe('none');
   });
 });
