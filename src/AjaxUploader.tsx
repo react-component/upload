@@ -264,11 +264,11 @@ class AjaxUploader extends Component<UploadProps> {
       component: Tag,
       prefixCls,
       className,
-      classNames,
+      classNames = {},
       disabled,
       id,
       style,
-      styles,
+      styles = {},
       multiple,
       accept,
       capture,
@@ -307,8 +307,8 @@ class AjaxUploader extends Component<UploadProps> {
           ref={this.saveFileInput}
           onClick={e => e.stopPropagation()} // https://github.com/ant-design/ant-design/issues/19948
           key={this.state.uid}
-          style={styles?.input ?? { display: 'none' }}
-          className={classNames?.input}
+          style={{ display: 'none', ...styles.input }}
+          className={classNames.input}
           accept={accept}
           {...dirProps}
           multiple={multiple}
