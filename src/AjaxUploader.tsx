@@ -1,7 +1,7 @@
 /* eslint react/no-is-mounted:0,react/sort-comp:0,react/prop-types:0 */
 import type { ReactElement } from 'react';
 import React, { Component } from 'react';
-import classNames from 'classnames';
+import clsx from 'classnames';
 import pickAttrs from 'rc-util/lib/pickAttrs';
 import defaultRequest from './request';
 import getUid from './uid';
@@ -264,9 +264,11 @@ class AjaxUploader extends Component<UploadProps> {
       component: Tag,
       prefixCls,
       className,
+      classNames = {},
       disabled,
       id,
       style,
+      styles = {},
       multiple,
       accept,
       capture,
@@ -277,7 +279,7 @@ class AjaxUploader extends Component<UploadProps> {
       onMouseLeave,
       ...otherProps
     } = this.props;
-    const cls = classNames({
+    const cls = clsx({
       [prefixCls]: true,
       [`${prefixCls}-disabled`]: disabled,
       [className]: className,
@@ -307,7 +309,8 @@ class AjaxUploader extends Component<UploadProps> {
           ref={this.saveFileInput}
           onClick={e => e.stopPropagation()} // https://github.com/ant-design/ant-design/issues/19948
           key={this.state.uid}
-          style={{ display: 'none' }}
+          style={{ display: 'none', ...styles.input }}
+          className={classNames.input}
           accept={accept}
           {...dirProps}
           multiple={multiple}

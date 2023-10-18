@@ -850,4 +850,19 @@ describe('uploader', () => {
 
     expect(requests[0].url).toEqual('bamboo');
   });
+
+  it('input style defaults to display none', () => {
+    const wrapper = mount(<Uploader />);
+    expect(wrapper.find('input').props().style.display).toBe('none');
+  });
+
+  it('classNames and styles should work', () => {
+    const wrapper = mount(
+      <Uploader classNames={{ input: 'bamboo-input' }} styles={{ input: { color: 'red' } }} />,
+    );
+    expect(wrapper.find('.bamboo-input').length).toBeTruthy();
+
+    expect(wrapper.find('.bamboo-input').props().style.color).toEqual('red');
+    expect(wrapper.find('input').props().style.display).toBe('none');
+  });
 });
