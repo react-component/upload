@@ -38,11 +38,9 @@ export interface UploadProps
   onMouseLeave?: (e: React.MouseEvent<HTMLDivElement>) => void;
   onClick?: (e: React.MouseEvent<HTMLDivElement> | React.KeyboardEvent<HTMLDivElement>) => void;
   classNames?: {
-    wrapper?: string;
     input?: string;
   };
   styles?: {
-    wrapper?: React.CSSProperties;
     input?: React.CSSProperties;
   };
 }

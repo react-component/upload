@@ -279,14 +279,9 @@ class AjaxUploader extends Component<UploadProps> {
       onMouseLeave,
       ...otherProps
     } = this.props;
-    const cls = clsx(
-      className,
-      prefixCls,
-      {
-        [`${prefixCls}-disabled`]: disabled,
-      },
-      classNames?.wrapper,
-    );
+    const cls = clsx(className, prefixCls, {
+      [`${prefixCls}-disabled`]: disabled,
+    });
     // because input don't have directory/webkitdirectory type declaration
     const dirProps: any = directory
       ? { directory: 'directory', webkitdirectory: 'webkitdirectory' }
@@ -303,13 +298,8 @@ class AjaxUploader extends Component<UploadProps> {
           tabIndex: '0',
         };
 
-    const mergedWrapperStyle: React.CSSProperties = {
-      ...style,
-      ...styles?.wrapper,
-    };
-
     return (
-      <Tag {...events} className={cls} role="button" style={mergedWrapperStyle}>
+      <Tag {...events} className={cls} role="button" style={style}>
         <input
           {...pickAttrs(otherProps, { aria: true, data: true })}
           id={id}
