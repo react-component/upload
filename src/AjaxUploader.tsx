@@ -169,7 +169,7 @@ class AjaxUploader extends Component<UploadProps> {
       // string type is from legacy `transformFile`.
       // Not sure if this will work since no related test case works with it
       (typeof transformedFile === 'object' || typeof transformedFile === 'string') &&
-      transformedFile
+        transformedFile
         ? transformedFile
         : file;
 
@@ -291,14 +291,13 @@ class AjaxUploader extends Component<UploadProps> {
     const events = disabled
       ? {}
       : {
-          onClick: openFileDialogOnClick ? this.onClick : () => {},
-          onKeyDown: openFileDialogOnClick ? this.onKeyDown : () => {},
-          onMouseEnter,
-          onMouseLeave,
-          onDrop: this.onFileDrop,
-          onDragOver: this.onFileDrop,
-          tabIndex: '0',
-        };
+        onClick: openFileDialogOnClick ? this.onClick : () => { },
+        onKeyDown: openFileDialogOnClick ? this.onKeyDown : () => { },
+        onMouseEnter,
+        onMouseLeave,
+        onDrop: this.onFileDrop,
+        onDragOver: this.onFileDrop,
+      };
     return (
       <Tag {...events} className={cls} role="button" style={style}>
         <input
