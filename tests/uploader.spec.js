@@ -865,4 +865,9 @@ describe('uploader', () => {
     expect(wrapper.find('.bamboo-input').props().style.color).toEqual('red');
     expect(wrapper.find('input').props().style.display).toBe('none');
   });
+
+  it('the upload button wrapper span does not have the tabIndex attribute', () => {
+    const wrapper = mount(<Uploader />);
+    expect(wrapper.find('.rc-upload').props().tabIndex).toBe(undefined);
+  });
 });
