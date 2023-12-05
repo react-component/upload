@@ -21,6 +21,7 @@ class Upload extends Component<UploadProps> {
     customRequest: null,
     withCredentials: false,
     openFileDialogOnClick: true,
+    hasControlInside: false,
   };
 
   private uploader: AjaxUpload;

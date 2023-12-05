@@ -865,4 +865,18 @@ describe('uploader', () => {
     expect(wrapper.find('.bamboo-input').props().style.color).toEqual('red');
     expect(wrapper.find('input').props().style.display).toBe('none');
   });
+
+  it('Should be focusable and has role=button by default', () => {
+    const wrapper = mount(<Uploader />);
+
+    expect(wrapper.find('span').props().tabIndex).toBe('0');
+    expect(wrapper.find('span').props().role).toBe('button');
+  });
+
+  it("Should not be focusable and doesn't have role=button with hasControlInside=true", () => {
+    const wrapper = mount(<Uploader hasControlInside />);
+
+    expect(wrapper.find('span').props().tabIndex).toBe(undefined);
+    expect(wrapper.find('span').props().role).toBe(undefined);
+  });
 });
