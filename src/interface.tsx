@@ -43,6 +43,7 @@ export interface UploadProps
   styles?: {
     input?: React.CSSProperties;
   };
+  hasControlInside?: boolean;
 }
 
 export interface UploadProgressEvent extends Partial<ProgressEvent> {
