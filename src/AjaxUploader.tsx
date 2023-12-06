@@ -41,6 +41,10 @@ class AjaxUploader extends Component<UploadProps> {
     this.reset();
   };
 
+  showOpenFilePicker = () => {
+    this.fileInput?.click();
+  };
+
   onClick = (e: React.MouseEvent<HTMLDivElement> | React.KeyboardEvent<HTMLDivElement>) => {
     const el = this.fileInput;
     if (!el) {

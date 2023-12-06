@@ -113,6 +113,8 @@ customRequest callback is passed an object with:
 
 abort(file?: File) => void: abort the uploading file
 
+showOpenFilePicker() => void: open file picker
+
 ## License
 
 rc-upload is released under the MIT license.
