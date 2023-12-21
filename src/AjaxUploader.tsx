@@ -1,19 +1,18 @@
 /* eslint react/no-is-mounted:0,react/sort-comp:0,react/prop-types:0 */
-import type { ReactElement } from 'react';
-import React, { Component } from 'react';
 import clsx from 'classnames';
 import pickAttrs from 'rc-util/lib/pickAttrs';
-import defaultRequest from './request';
-import getUid from './uid';
+import React, { Component } from 'react';
 import attrAccept from './attr-accept';
-import traverseFileTree from './traverseFileTree';
 import type {
-  UploadProps,
-  UploadProgressEvent,
-  UploadRequestError,
-  RcFile,
   BeforeUploadFileType,
+  RcFile,
+  UploadProgressEvent,
+  UploadProps,
+  UploadRequestError,
 } from './interface';
+import defaultRequest from './request';
+import traverseFileTree from './traverseFileTree';
+import getUid from './uid';
 
 interface ParsedFileInfo {
   origin: RcFile;
@@ -41,20 +40,23 @@ class AjaxUploader extends Component<UploadProps> {
     this.reset();
   };
 
-  onClick = (e: React.MouseEvent<HTMLDivElement> | React.KeyboardEvent<HTMLDivElement>) => {
+  onClick = (event: React.MouseEvent<HTMLDivElement> | React.KeyboardEvent<HTMLDivElement>) => {
     const el = this.fileInput;
     if (!el) {
       return;
     }
-    const { children, onClick } = this.props;
-    if (children && (children as ReactElement).type === 'button') {
+
+    const target = event.target as HTMLElement;
+    const { onClick } = this.props;
+
+    if (target && target.tagName === 'BUTTON') {
       const parent = el.parentNode as HTMLInputElement;
       parent.focus();
-      parent.querySelector('button').blur();
+      target.blur();
     }
     el.click();
     if (onClick) {
-      onClick(e);
+      onClick(event);
     }
   };
 
