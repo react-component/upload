@@ -10,7 +10,7 @@ export interface UploadProps
   style?: React.CSSProperties;
   className?: string;
   disabled?: boolean;
-  component?: React.JSXElementConstructor<any>;
+  component?: React.ComponentType<any> | string;
   action?: Action;
   method?: UploadRequestMethod;
   directory?: boolean;
@@ -28,7 +28,7 @@ export interface UploadProps
   beforeUpload?: (
     file: RcFile,
     FileList: RcFile[],
-  ) => BeforeUploadFileType | Promise<void | BeforeUploadFileType>;
+  ) => BeforeUploadFileType | Promise<void | BeforeUploadFileType> | void;
   customRequest?: (option: UploadRequestOption) => void;
   withCredentials?: boolean;
   openFileDialogOnClick?: boolean;

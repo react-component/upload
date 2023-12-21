@@ -1,4 +1,3 @@
-/* eslint no-console:0 */
 import sinon from 'sinon';
 import request from '../src/request';
 
@@ -6,7 +5,7 @@ let xhr;
 let requests;
 
 const empty = () => {};
-const option = {
+const option: any = {
   onSuccess: empty,
   action: 'upload.do',
   data: { a: 1, b: 2, c: [3, 4] },

@@ -1,14 +1,14 @@
 /* eslint no-console:0 */
 
+import Upload, { type UploadProps } from 'rc-upload';
 import React from 'react';
-import Upload from 'rc-upload';
 
 const style = `
         .rc-upload-disabled {
            opacity:0.5;
         `;
 
-const uploaderProps = {
+const uploaderProps: UploadProps = {
   action: '/upload.do',
   data: { a: 1, b: 2 },
   multiple: true,
