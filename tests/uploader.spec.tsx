@@ -242,10 +242,8 @@ describe('uploader', () => {
       }, 100);
     });
 
-    return;
-
     it('drag unaccepted type files to upload will not trigger onStart', done => {
-      const input = uploader.find('input').first();
+      const input = uploader.container.querySelector('input')!;
       const files = [
         {
           name: 'success.jpg',
@@ -254,8 +252,11 @@ describe('uploader', () => {
           },
         },
       ];
-      files.item = i => files[i];
-      input.simulate('drop', { dataTransfer: { files } });
+      (files as any).item = (i: number) => files[i];
+
+      fireEvent.drop(input, {
+        dataTransfer: { files },
+      });
       const mockStart = jest.fn();
       handlers.onStart = mockStart;
       setTimeout(() => {
@@ -263,6 +264,8 @@ describe('uploader', () => {
         done();
       }, 100);
     });
+
+    return;
 
     it('drag files with multiple false', done => {
       const wrapper = render(<Upload {...props} multiple={false} />);
