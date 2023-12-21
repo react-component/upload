@@ -25,7 +25,7 @@
   ],
   "scripts": {
     "compile": "father build",
-    "coverage": "father test --coverage",
+    "coverage": "rc-test --coverage",
     "docs:build": "dumi build",
     "docs:deploy": "npm run docs:build && gh-pages -d .doc",
     "lint": "eslint src/ --ext .ts,.tsx,.jsx,.js,.md",
@@ -34,19 +34,7 @@
     "prettier": "prettier --write \"**/*.{ts,tsx,js,jsx,json,md}\"",
     "postpublish": "npm run docs:deploy",
     "start": "dumi dev",
-    "test": "father test"
-  },
-  "jest": {
-    "collectCoverageFrom": [
-      "src/*"
-    ],
-    "coveragePathIgnorePatterns": [
-      "src/IframeUploader.jsx"
-    ],
-    "transform": {
-      "\\.tsx?$": "./node_modules/rc-tools/scripts/jestPreprocessor.js",
-      "\\.jsx?$": "./node_modules/rc-tools/scripts/jestPreprocessor.js"
-    }
+    "test": "rc-test"
   },
   "dependencies": {
     "@babel/runtime": "^7.18.3",
@@ -74,6 +62,7 @@
     "gh-pages": "^3.1.0",
     "np": "^7.0.0",
     "raf": "^3.4.0",
+    "rc-test": "^7.0.13",
     "rc-tools": "8.x",
     "react": "^18.0.0",
     "react-dom": "^18.0.0",
