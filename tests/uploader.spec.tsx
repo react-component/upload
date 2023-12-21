@@ -2,7 +2,7 @@
 import React from 'react';
 import { format } from 'util';
 import { resetWarned } from 'rc-util/lib/warning';
-import { mount } from 'enzyme';
+import { render } from '@testing-library/react';
 import sinon from 'sinon';
 import Uploader from '../index';
 
