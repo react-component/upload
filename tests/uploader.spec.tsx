@@ -892,9 +892,7 @@ describe('uploader', () => {
   it("Should not be focusable and doesn't have role=button with hasControlInside=true", () => {
     const { container } = render(<Upload hasControlInside />);
 
-    console.log(container.innerHTML);
-
     expect(container.querySelector('span')!.tabIndex).not.toBe(0);
-    expect(container.querySelector('span')!.role).not.toHaveAttribute('role', 'button');
+    expect(container.querySelector('span')!).not.toHaveAttribute('role', 'button');
   });
 });
