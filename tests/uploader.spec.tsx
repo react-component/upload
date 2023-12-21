@@ -681,33 +681,31 @@ describe('uploader', () => {
     );
   });
 
-  return;
-
   describe('transform file before request', () => {
-    let uploader;
+    let uploader: ReturnType<typeof render>;
     beforeEach(() => {
       uploader = render(<Upload />);
     });
 
     afterEach(() => {
-      uploader.unrender();
+      uploader.unmount();
     });
 
     it('noes not affect receive origin file when transform file is null', done => {
-      const handlers = {};
-      const props = {
+      const handlers: UploadProps = {};
+      const props: UploadProps = {
         action: '/test',
         onSuccess(ret, file) {
           if (handlers.onSuccess) {
-            handlers.onSuccess(ret, file);
+            handlers.onSuccess(ret, file, null!);
           }
         },
         transformFile() {
           return null;
         },
-      };
-      const wrapper = render(<Upload {...props} />);
-      const input = wrapper.find('input').first();
+      } as any;
+      const { container } = render(<Upload {...props} />);
+      const input = container.querySelector('input')!;
 
       const files = [
         {
@@ -718,7 +716,7 @@ describe('uploader', () => {
         },
       ];
 
-      files.item = i => files[i];
+      (files as any).item = i => files[i];
 
       handlers.onSuccess = (ret, file) => {
         expect(ret[1]).toEqual(file.name);
@@ -726,7 +724,7 @@ describe('uploader', () => {
         done();
       };
 
-      input.simulate('change', { target: { files } });
+      fireEvent.change(input, { target: { files } });
 
       setTimeout(() => {
         requests[0].respond(200, {}, `["","${files[0].name}"]`);
@@ -743,11 +741,11 @@ describe('uploader', () => {
       }),
     );
 
-    async function testWrapper(props) {
+    async function testWrapper(props?: UploadProps) {
       const onBatchStart = jest.fn();
-      const wrapper = render(<Upload onBatchStart={onBatchStart} {...props} />);
+      const { container } = render(<Upload onBatchStart={onBatchStart} {...props} />);
 
-      wrapper.find('input').simulate('change', {
+      fireEvent.change(container.querySelector('input')!, {
         target: {
           files,
         },
@@ -757,7 +755,6 @@ describe('uploader', () => {
       await sleep();
 
       expect(onBatchStart).toHaveBeenCalled();
-      wrapper.unrender();
 
       return onBatchStart;
     }
@@ -822,7 +819,7 @@ describe('uploader', () => {
       const data = jest.fn(async file => {
         await sleep(100);
         return 'test';
-      });
+      }) as any;
 
       const onBatchStart = await testWrapper({ data });
 
@@ -844,8 +841,9 @@ describe('uploader', () => {
       return <Upload beforeUpload={beforeUpload} action={action} />;
     };
 
-    const wrapper = render(<Test />);
-    wrapper.find('input').simulate('change', {
+    const { container } = render(<Test />);
+
+    fireEvent.change(container.querySelector('input')!, {
       target: {
         files: [
           {
@@ -864,31 +862,39 @@ describe('uploader', () => {
   });
 
   it('input style defaults to display none', () => {
-    const wrapper = render(<Upload />);
-    expect(wrapper.find('input').props().style.display).toBe('none');
+    const { container } = render(<Upload />);
+    expect(container.querySelector('input')).toHaveStyle({
+      display: 'none',
+    });
   });
 
   it('classNames and styles should work', () => {
-    const wrapper = render(
+    const { container } = render(
       <Upload classNames={{ input: 'bamboo-input' }} styles={{ input: { color: 'red' } }} />,
     );
-    expect(wrapper.find('.bamboo-input').length).toBeTruthy();
+    expect(container.querySelector('.bamboo-input')).toBeTruthy();
 
-    expect(wrapper.find('.bamboo-input').props().style.color).toEqual('red');
-    expect(wrapper.find('input').props().style.display).toBe('none');
+    expect(container.querySelector('.bamboo-input')).toHaveStyle({
+      color: 'red',
+    });
+    expect(container.querySelector('input')).toHaveStyle({
+      display: 'none',
+    });
   });
 
   it('Should be focusable and has role=button by default', () => {
-    const wrapper = render(<Upload />);
+    const { container } = render(<Upload />);
 
-    expect(wrapper.find('span').props().tabIndex).toBe('0');
-    expect(wrapper.find('span').props().role).toBe('button');
+    expect(container.querySelector('span')!.tabIndex).toBe(0);
+    expect(container.querySelector('span')).toHaveAttribute('role', 'button');
   });
 
   it("Should not be focusable and doesn't have role=button with hasControlInside=true", () => {
-    const wrapper = render(<Upload hasControlInside />);
+    const { container } = render(<Upload hasControlInside />);
 
-    expect(wrapper.find('span').props().tabIndex).toBe(undefined);
-    expect(wrapper.find('span').props().role).toBe(undefined);
+    console.log(container.innerHTML);
+
+    expect(container.querySelector('span')!.tabIndex).not.toBe(0);
+    expect(container.querySelector('span')!.role).not.toHaveAttribute('role', 'button');
   });
 });
