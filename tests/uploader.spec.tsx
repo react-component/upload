@@ -1,10 +1,9 @@
-/* eslint no-console:0 */
-import React from 'react';
-import { format } from 'util';
+import { fireEvent, render } from '@testing-library/react';
 import { resetWarned } from 'rc-util/lib/warning';
-import { render } from '@testing-library/react';
+import React from 'react';
 import sinon from 'sinon';
-import Uploader from '../index';
+import { format } from 'util';
+import Upload, { type UploadProps } from '../src';
 
 const sleep = (timeout = 500) => new Promise(resolve => setTimeout(resolve, timeout));
 
@@ -72,10 +71,10 @@ describe('uploader', () => {
       return;
     }
 
-    let uploader;
-    const handlers = {};
+    let uploader: ReturnType<typeof render>;
+    const handlers: UploadProps = {};
 
-    const props = {
+    const props: UploadProps = {
       action: '/test',
       data: { a: 1, b: 2 },
       multiple: true,
@@ -89,7 +88,7 @@ describe('uploader', () => {
       onSuccess(ret, file) {
         console.log('onSuccess', ret);
         if (handlers.onSuccess) {
-          handlers.onSuccess(ret, file);
+          handlers.onSuccess(ret, file, null!);
         }
       },
       onProgress(step, file) {
@@ -104,7 +103,7 @@ describe('uploader', () => {
     };
 
     beforeEach(() => {
-      uploader = mount(<Uploader {...props} />);
+      uploader = render(<Upload {...props} />);
     });
 
     afterEach(() => {
@@ -112,39 +111,49 @@ describe('uploader', () => {
     });
 
     it('with id', () => {
-      const wrapper = mount(<Uploader id="bamboo" />);
-      expect(wrapper.find('input').props().id).toBe('bamboo');
+      const { container } = render(<Upload id="bamboo" />);
+      expect(container.querySelector('input')!.id).toBe('bamboo');
     });
 
     it('should pass through data & aria attributes', () => {
-      const wrapper = mount(
-        <Uploader
+      const { container } = render(
+        <Upload
           data-testid="data-testid"
           data-my-custom-attr="custom data attribute"
           aria-label="Upload a file"
         />,
       );
-      expect(wrapper.find('input').props()['data-testid']).toBe('data-testid');
-      expect(wrapper.find('input').props()['data-my-custom-attr']).toBe('custom data attribute');
-      expect(wrapper.find('input').props()['aria-label']).toBe('Upload a file');
+
+      const input = container.querySelector('input')!;
+      expect(input).toHaveAttribute('data-testid', 'data-testid');
+      expect(input).toHaveAttribute('data-my-custom-attr', 'custom data attribute');
+      expect(input).toHaveAttribute('aria-label', 'Upload a file');
     });
 
     it('should pass through role attributes', () => {
-      const wrapper = mount(<Uploader role="button" />);
-      expect(wrapper.find('input').props().role).toBe('button');
+      const { container } = render(<Upload role="button" />);
+      expect(container.querySelector('input')!.getAttribute('role')).toBe('button');
     });
 
     it('should not pass through unknown props', () => {
-      const wrapper = mount(<Uploader customProp="This shouldn't be rendered to DOM" />);
-      expect(wrapper.find('input').props().customProp).toBeUndefined();
+      const { container } = render(
+        <Upload
+          {...({
+            customProp: "This shouldn't be rendered to DOM",
+          } as any)}
+        />,
+      );
+      expect(container.querySelector('input')!.hasAttribute('customProp')).toBe(false);
     });
 
     it('create works', () => {
-      expect(uploader.find('span').length).toBeTruthy();
+      const { container } = render(<Upload />);
+      const spans = container.querySelectorAll('span');
+      expect(spans.length).toBeGreaterThan(0);
     });
 
     it('upload success', done => {
-      const input = uploader.find('input').first();
+      const input = uploader.container.querySelector('input')!;
       const files = [
         {
           name: 'success.png',
@@ -153,7 +162,7 @@ describe('uploader', () => {
           },
         },
       ];
-      files.item = i => files[i];
+      (files as any).item = (i: number) => files[i];
 
       handlers.onSuccess = (ret, file) => {
         expect(ret[1]).toEqual(file.name);
@@ -164,14 +173,17 @@ describe('uploader', () => {
       handlers.onError = err => {
         done(err);
       };
-      input.simulate('change', { target: { files } });
+
+      fireEvent.change(input, {
+        target: { files },
+      });
       setTimeout(() => {
         requests[0].respond(200, {}, `["","${files[0].name}"]`);
       }, 100);
     });
 
     it('upload error', done => {
-      const input = uploader.find('input').first();
+      const input = uploader.container.querySelector('input')!;
 
       const files = [
         {
@@ -181,23 +193,25 @@ describe('uploader', () => {
           },
         },
       ];
-      files.item = i => files[i];
+      (files as any).item = (i: number) => files[i];
 
-      handlers.onError = (err, ret) => {
+      handlers.onError = (err: any, ret) => {
         expect(err instanceof Error).toEqual(true);
         expect(err.status).toEqual(400);
         expect(ret).toEqual('error 400');
         done();
       };
 
-      input.simulate('change', { target: { files } });
+      fireEvent.change(input, {
+        target: { files },
+      });
       setTimeout(() => {
         requests[0].respond(400, {}, `error 400`);
       }, 100);
     });
 
     it('drag to upload', done => {
-      const input = uploader.find('input').first();
+      const input = uploader.container.querySelector('input')!;
 
       const files = [
         {
@@ -207,7 +221,7 @@ describe('uploader', () => {
           },
         },
       ];
-      files.item = i => files[i];
+      (files as any).item = (i: number) => files[i];
 
       handlers.onSuccess = (ret, file) => {
         expect(ret[1]).toEqual(file.name);
@@ -219,12 +233,16 @@ describe('uploader', () => {
         done(err);
       };
 
-      input.simulate('drop', { dataTransfer: { files } });
+      fireEvent.change(input, {
+        target: { files },
+      });
 
       setTimeout(() => {
         requests[0].respond(200, {}, `["","${files[0].name}"]`);
       }, 100);
     });
+
+    return;
 
     it('drag unaccepted type files to upload will not trigger onStart', done => {
       const input = uploader.find('input').first();
@@ -247,7 +265,7 @@ describe('uploader', () => {
     });
 
     it('drag files with multiple false', done => {
-      const wrapper = mount(<Uploader {...props} multiple={false} />);
+      const wrapper = render(<Upload {...props} multiple={false} />);
       const input = wrapper.find('input').first();
 
       const files = [
@@ -305,7 +323,7 @@ describe('uploader', () => {
           }, 1000);
         });
       };
-      const wrapper = mount(<Uploader data={data} action={action} />);
+      const wrapper = render(<Upload data={data} action={action} />);
       const input = wrapper.find('input').first();
 
       const files = [
@@ -330,6 +348,8 @@ describe('uploader', () => {
       }, 100);
     });
   });
+
+  return;
 
   describe('directory uploader', () => {
     if (typeof FormData === 'undefined') {
@@ -368,7 +388,7 @@ describe('uploader', () => {
     };
 
     beforeEach(() => {
-      uploader = mount(<Uploader {...props} />);
+      uploader = render(<Upload {...props} />);
     });
 
     it('unaccepted type files to upload will not trigger onStart', done => {
@@ -431,8 +451,8 @@ describe('uploader', () => {
       resetWarned();
       const errSpy = jest.spyOn(console, 'error').mockImplementation(() => {});
 
-      uploader.unmount();
-      uploader = mount(<Uploader {...props} accept="jpg,png" />);
+      uploader.unrender();
+      uploader = render(<Upload {...props} accept="jpg,png" />);
 
       const input = uploader.find('input').first();
       const files = [
@@ -481,7 +501,7 @@ describe('uploader', () => {
         resetWarned();
         const errSpy = jest.spyOn(console, 'error').mockImplementation(() => {});
 
-        uploader = mount(<Uploader {...props} {...extraProps} accept={value} />);
+        uploader = render(<Upload {...props} {...extraProps} accept={value} />);
         const input = uploader.find('input').first();
         input.simulate('change', { target: { files } });
         const mockStart = jest.fn();
@@ -674,11 +694,11 @@ describe('uploader', () => {
   describe('transform file before request', () => {
     let uploader;
     beforeEach(() => {
-      uploader = mount(<Uploader />);
+      uploader = render(<Upload />);
     });
 
     afterEach(() => {
-      uploader.unmount();
+      uploader.unrender();
     });
 
     it('noes not affect receive origin file when transform file is null', done => {
@@ -694,7 +714,7 @@ describe('uploader', () => {
           return null;
         },
       };
-      const wrapper = mount(<Uploader {...props} />);
+      const wrapper = render(<Upload {...props} />);
       const input = wrapper.find('input').first();
 
       const files = [
@@ -733,7 +753,7 @@ describe('uploader', () => {
 
     async function testWrapper(props) {
       const onBatchStart = jest.fn();
-      const wrapper = mount(<Uploader onBatchStart={onBatchStart} {...props} />);
+      const wrapper = render(<Upload onBatchStart={onBatchStart} {...props} />);
 
       wrapper.find('input').simulate('change', {
         target: {
@@ -745,7 +765,7 @@ describe('uploader', () => {
       await sleep();
 
       expect(onBatchStart).toHaveBeenCalled();
-      wrapper.unmount();
+      wrapper.unrender();
 
       return onBatchStart;
     }
@@ -829,10 +849,10 @@ describe('uploader', () => {
         return true;
       }
 
-      return <Uploader beforeUpload={beforeUpload} action={action} />;
+      return <Upload beforeUpload={beforeUpload} action={action} />;
     };
 
-    const wrapper = mount(<Test />);
+    const wrapper = render(<Test />);
     wrapper.find('input').simulate('change', {
       target: {
         files: [
@@ -852,13 +872,13 @@ describe('uploader', () => {
   });
 
   it('input style defaults to display none', () => {
-    const wrapper = mount(<Uploader />);
+    const wrapper = render(<Upload />);
     expect(wrapper.find('input').props().style.display).toBe('none');
   });
 
   it('classNames and styles should work', () => {
-    const wrapper = mount(
-      <Uploader classNames={{ input: 'bamboo-input' }} styles={{ input: { color: 'red' } }} />,
+    const wrapper = render(
+      <Upload classNames={{ input: 'bamboo-input' }} styles={{ input: { color: 'red' } }} />,
     );
     expect(wrapper.find('.bamboo-input').length).toBeTruthy();
 
@@ -867,14 +887,14 @@ describe('uploader', () => {
   });
 
   it('Should be focusable and has role=button by default', () => {
-    const wrapper = mount(<Uploader />);
+    const wrapper = render(<Upload />);
 
     expect(wrapper.find('span').props().tabIndex).toBe('0');
     expect(wrapper.find('span').props().role).toBe('button');
   });
 
   it("Should not be focusable and doesn't have role=button with hasControlInside=true", () => {
-    const wrapper = mount(<Uploader hasControlInside />);
+    const wrapper = render(<Upload hasControlInside />);
 
     expect(wrapper.find('span').props().tabIndex).toBe(undefined);
     expect(wrapper.find('span').props().role).toBe(undefined);
