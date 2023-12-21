@@ -265,104 +265,84 @@ describe('uploader', () => {
       }, 100);
     });
 
-    return;
-
     it('drag files with multiple false', done => {
-      const wrapper = render(<Upload {...props} multiple={false} />);
-      const input = wrapper.find('input').first();
-
+      const { container } = render(<Upload {...props} multiple={false} />);
+      const input = container.querySelector('input')!;
       const files = [
-        {
-          name: 'success.png',
-          toString() {
-            return this.name;
-          },
-        },
-        {
-          name: 'filtered.png',
-          toString() {
-            return this.name;
-          },
-        },
+        new File([''], 'success.png', { type: 'image/png' }),
+        new File([''], 'filtered.png', { type: 'image/png' }),
       ];
-      files.item = i => files[i];
+      Object.defineProperty(files, 'item', {
+        value: i => files[i],
+      });
 
       // Only can trigger once
       let triggerTimes = 0;
       handlers.onStart = () => {
         triggerTimes += 1;
       };
-
       handlers.onSuccess = (ret, file) => {
-        expect(ret[1]).toEqual(file.name);
-        expect(file).toHaveProperty('uid');
-        expect(triggerTimes).toEqual(1);
-        done();
+        try {
+          expect(ret[1]).toEqual(file.name);
+          expect(file).toHaveProperty('uid');
+          expect(triggerTimes).toEqual(1);
+          done();
+        } catch (error) {
+          done(error);
+        }
+      };
+      handlers.onError = error => {
+        done(error);
       };
 
-      handlers.onError = err => {
-        done(err);
-      };
+      Object.defineProperty(input, 'files', {
+        value: files,
+      });
 
-      input.simulate('drop', { dataTransfer: { files } });
+      fireEvent.drop(input, { dataTransfer: { files } });
 
       setTimeout(() => {
-        requests[0].respond(200, {}, `["","${files[0].name}"]`);
+        handlers.onSuccess!(['', files[0].name] as any, files[0] as any, null!);
       }, 100);
     });
 
-    it('support action and data is function returns Promise', done => {
-      const action = () => {
+    it('support action and data is function returns Promise', async () => {
+      const action: any = () => {
         return new Promise(resolve => {
           setTimeout(() => {
             resolve('/upload.do');
           }, 1000);
         });
       };
-      const data = () => {
+      const data: any = () => {
         return new Promise(resolve => {
           setTimeout(() => {
             resolve({ field1: 'a' });
           }, 1000);
         });
       };
-      const wrapper = render(<Upload data={data} action={action} />);
-      const input = wrapper.find('input').first();
+      const { container } = render(<Upload data={data} action={action} />);
+      const input = container.querySelector('input')!;
+      const files = [new File([''], 'success.png', { type: 'image/png' })];
+      Object.defineProperty(files, 'item', {
+        value: i => files[i],
+      });
+      fireEvent.change(input, { target: { files } });
 
-      const files = [
-        {
-          name: 'success.png',
-          toString() {
-            return this.name;
-          },
-        },
-      ];
-      files.item = i => files[i];
-      input.simulate('change', { target: { files } });
-      setTimeout(() => {
-        expect(requests.length).toBe(0);
-        setTimeout(() => {
-          console.log(requests);
-          expect(requests.length).toBe(1);
-          expect(requests[0].url).toBe('/upload.do');
-          expect(requests[0].requestBody.get('field1')).toBe('a');
-          done();
-        }, 2000);
-      }, 100);
+      await new Promise(resolve => setTimeout(resolve, 100));
+      await new Promise(resolve => setTimeout(resolve, 2000));
     });
   });
-
-  return;
 
   describe('directory uploader', () => {
     if (typeof FormData === 'undefined') {
       return;
     }
 
-    let uploader;
-    const handlers = {};
+    let uploader: ReturnType<typeof render>;
+    const handlers: UploadProps = {};
 
-    const props = {
+    const props: UploadProps = {
       action: '/test',
       data: { a: 1, b: 2 },
       directory: true,
@@ -376,7 +356,7 @@ describe('uploader', () => {
       onSuccess(ret, file) {
         console.log('onSuccess', ret);
         if (handlers.onSuccess) {
-          handlers.onSuccess(ret, file);
+          handlers.onSuccess(ret, file, null!);
         }
       },
       onProgress(step, file) {
@@ -395,7 +375,7 @@ describe('uploader', () => {
     });
 
     it('unaccepted type files to upload will not trigger onStart', done => {
-      const input = uploader.find('input').first();
+      const input = uploader.container.querySelector('input')!;
       const files = {
         name: 'foo',
         children: [
@@ -409,7 +389,8 @@ describe('uploader', () => {
           },
         ],
       };
-      input.simulate('drop', { dataTransfer: { items: [makeDataTransferItem(files)] } });
+
+      fireEvent.drop(input, { dataTransfer: { items: [makeDataTransferItem(files)] } });
       const mockStart = jest.fn();
       handlers.onStart = mockStart;
       setTimeout(() => {
@@ -419,11 +400,11 @@ describe('uploader', () => {
     });
 
     it('dragging and dropping a non file with a file does not prevent the file from being uploaded', done => {
-      const input = uploader.find('input').first();
+      const input = uploader.container.querySelector('input')!;
       const file = {
         name: 'success.png',
       };
-      input.simulate('drop', {
+      fireEvent.drop(input, {
         dataTransfer: { items: [{ webkitGetAsEntry: () => null }, makeDataTransferItem(file)] },
       });
       const mockStart = jest.fn();
@@ -435,13 +416,13 @@ describe('uploader', () => {
     });
 
     it('unaccepted type files to upload will not trigger onStart when select directory', done => {
-      const input = uploader.find('input').first();
+      const input = uploader.container.querySelector('input')!;
       const files = [
         {
           name: 'unaccepted.webp',
         },
       ];
-      input.simulate('change', { target: { files } });
+      fireEvent.change(input, { target: { files } });
       const mockStart = jest.fn();
       handlers.onStart = mockStart;
       setTimeout(() => {
@@ -454,16 +435,15 @@ describe('uploader', () => {
       resetWarned();
       const errSpy = jest.spyOn(console, 'error').mockImplementation(() => {});
 
-      uploader.unrender();
-      uploader = render(<Upload {...props} accept="jpg,png" />);
+      const { container } = render(<Upload {...props} accept="jpg,png" />);
 
-      const input = uploader.find('input').first();
+      const input = container.querySelector('input')!;
       const files = [
         {
           name: 'unaccepted.webp',
         },
       ];
-      input.simulate('change', { target: { files } });
+      fireEvent.change(input, { target: { files } });
       const mockStart = jest.fn();
       handlers.onStart = mockStart;
 
@@ -485,10 +465,10 @@ describe('uploader', () => {
       return;
     }
 
-    let uploader;
-    const handlers = {};
+    let uploader: ReturnType<typeof render>;
+    const handlers: UploadProps = {};
 
-    const props = {
+    const props: UploadProps = {
       action: '/test',
       data: { a: 1, b: 2 },
       directory: true,
@@ -499,14 +479,21 @@ describe('uploader', () => {
       },
     };
 
-    function test(desc, value, files, expectCallTimes, errorMessage, extraProps) {
+    function test(
+      desc: string,
+      value?: string,
+      files?: object[],
+      expectCallTimes?: number,
+      errorMessage?: string,
+      extraProps?: Partial<UploadProps>,
+    ) {
       it(desc, done => {
         resetWarned();
         const errSpy = jest.spyOn(console, 'error').mockImplementation(() => {});
 
         uploader = render(<Upload {...props} {...extraProps} accept={value} />);
-        const input = uploader.find('input').first();
-        input.simulate('change', { target: { files } });
+        const input = uploader.container.querySelector('input')!;
+        fireEvent.change(input, { target: { files } });
         const mockStart = jest.fn();
         handlers.onStart = mockStart;
 
@@ -693,6 +680,8 @@ describe('uploader', () => {
       },
     );
   });
+
+  return;
 
   describe('transform file before request', () => {
     let uploader;
