@@ -1,5 +1,3 @@
-/* eslint react/no-is-mounted:0,react/sort-comp:0,react/prop-types:0 */
-import type { ReactElement } from 'react';
 import React, { Component } from 'react';
 import classNames from 'classnames';
 import pickAttrs from 'rc-util/lib/pickAttrs';
@@ -46,11 +44,14 @@ class AjaxUploader extends Component<UploadProps> {
     if (!el) {
       return;
     }
-    const { children, onClick } = this.props;
-    if (children && (children as ReactElement).type === 'button') {
+
+    const target = e.target as HTMLElement;
+    const { onClick } = this.props;
+
+    if (target && target.tagName === 'BUTTON') {
       const parent = el.parentNode as HTMLInputElement;
       parent.focus();
-      parent.querySelector('button').blur();
+      target.blur();
     }
     el.click();
     if (onClick) {
