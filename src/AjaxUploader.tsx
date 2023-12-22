@@ -41,20 +41,23 @@ class AjaxUploader extends Component<UploadProps> {
     this.reset();
   };
 
-  onClick = (e: React.MouseEvent<HTMLDivElement> | React.KeyboardEvent<HTMLDivElement>) => {
+  onClick = (event: React.MouseEvent<HTMLDivElement> | React.KeyboardEvent<HTMLDivElement>) => {
     const el = this.fileInput;
     if (!el) {
       return;
     }
-    const { children, onClick } = this.props;
-    if (children && (children as ReactElement).type === 'button') {
+
+    const target = event.target as HTMLElement;
+    const { onClick } = this.props;
+
+    if (target && target.tagName === 'BUTTON') {
       const parent = el.parentNode as HTMLInputElement;
       parent.focus();
-      parent.querySelector('button').blur();
+      target.blur();
     }
     el.click();
     if (onClick) {
-      onClick(e);
+      onClick(event);
     }
   };
 
