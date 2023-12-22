@@ -1,5 +1,3 @@
-/* eslint react/no-is-mounted:0,react/sort-comp:0,react/prop-types:0 */
-import type { ReactElement } from 'react';
 import React, { Component } from 'react';
 import classNames from 'classnames';
 import pickAttrs from 'rc-util/lib/pickAttrs';
