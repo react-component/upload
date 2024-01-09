@@ -64,7 +64,7 @@
     "rc-tools": "8.x",
     "react": "^18.0.0",
     "react-dom": "^18.0.0",
-    "regenerator-runtime": "^0.13.7",
+    "regenerator-runtime": "^0.14.1",
     "sinon": "^9.0.2",
     "typescript": "^5.3.3",
     "vinyl-fs": "^3.0.3"
