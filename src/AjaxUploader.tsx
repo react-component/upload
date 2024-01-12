@@ -13,6 +13,7 @@ import type {
 import defaultRequest from './request';
 import traverseFileTree from './traverseFileTree';
 import getUid from './uid';
+import asyncPool from './asyncPool';
 
 interface ParsedFileInfo {
   origin: RcFile;
@@ -111,17 +112,20 @@ class AjaxUploader extends Component<UploadProps> {
       return this.processFile(file, originFiles);
     });
 
+    const { onBatchStart, concurrencyLimit } = this.props;
     // Batch upload files
     Promise.all(postFiles).then(fileList => {
-      const { onBatchStart } = this.props;
-
       onBatchStart?.(fileList.map(({ origin, parsedFile }) => ({ file: origin, parsedFile })));
 
-      fileList
-        .filter(file => file.parsedFile !== null)
-        .forEach(file => {
+      const parsedFiles = fileList.filter(file => file.parsedFile !== null);
+      if (concurrencyLimit) {
+        // Asynchronously posts files with the concurrency limit.
+        asyncPool(concurrencyLimit, parsedFiles, async file => this.post(file));
+      } else {
+        parsedFiles.forEach(file => {
           this.post(file);
         });
+      }
     });
   };
 
@@ -162,7 +166,7 @@ class AjaxUploader extends Component<UploadProps> {
     const { data } = this.props;
     let mergedData: Record<string, unknown>;
     if (typeof data === 'function') {
-      mergedData = await data(file);
+      mergedData = data(file);
     } else {
       mergedData = data;
     }

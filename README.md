@@ -60,7 +60,7 @@ React.render(<Upload />, container);
 |style | object | {}| root component inline style |
 |className | string | - | root component className |
 |disabled | boolean | false | whether disabled |
-|component | "div"|"span" | "span"| wrap component name |
+|component | "div"|"span" | "span"|
 |action| string &#124; function(file): string &#124; Promise&lt;string&gt; | | form action url |
 |method | string | post | request method |
 |directory| boolean | false | support upload whole directory |
@@ -69,6 +69,7 @@ React.render(<Upload />, container);
 |accept | string | | input accept attribute |
 |capture | string | | input capture attribute |
 |multiple | boolean | false | only support ie10+|
+|concurrencyLimit | number |  | asynchronously posts files with the concurrency limit |
 |onStart | function| | start upload file |
 |onError| function| | error callback |
 |onSuccess | function | | success callback |
