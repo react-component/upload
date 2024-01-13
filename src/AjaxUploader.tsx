@@ -6,6 +6,7 @@ import attrAccept from './attr-accept';
 import type {
   BeforeUploadFileType,
   RcFile,
+  RequestTask,
   UploadProgressEvent,
   UploadProps,
   UploadRequestError,
@@ -22,14 +23,23 @@ interface ParsedFileInfo {
   parsedFile: RcFile;
 }
 
-class AjaxUploader extends Component<UploadProps> {
-  state = { uid: getUid() };
+interface UploadState {
+  uid: string;
+  requestTasks: RequestTask[];
+}
+
+class AjaxUploader extends Component<UploadProps, UploadState> {
+  state = { uid: getUid(), requestTasks: [] as RequestTask[] };
 
   reqs: any = {};
 
   private fileInput: HTMLInputElement;
 
   private _isMounted: boolean;
+
+  appendRequstTask = (task: RequestTask) => {
+    this.setState(pre => ({ ...pre, requestTasks: [...pre.requestTasks, task] }));
+  };
 
   onChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { accept, directory } = this.props;
@@ -120,11 +130,23 @@ class AjaxUploader extends Component<UploadProps> {
       const parsedFiles = fileList.filter(file => file.parsedFile !== null);
       if (concurrencyLimit) {
         // Asynchronously posts files with the concurrency limit.
-        asyncPool(concurrencyLimit, parsedFiles, async file => this.post(file));
+        asyncPool(
+          concurrencyLimit,
+          this.state.requestTasks,
+          item =>
+            new Promise<void>(resolve => {
+              const xhr = item.xhr;
+
+              item.done = resolve;
+
+              xhr.send(item.data);
+            }),
+        );
       } else {
         parsedFiles.forEach(file => {
           this.post(file);
         });
+        this.state.requestTasks.forEach(({ xhr, data }) => xhr.send(data));
       }
     });
   };
@@ -234,12 +256,13 @@ class AjaxUploader extends Component<UploadProps> {
     };
 
     onStart(origin);
-    this.reqs[uid] = request(requestOption);
+    this.reqs[uid] = request(requestOption, this.appendRequstTask);
   }
 
   reset() {
     this.setState({
       uid: getUid(),
+      requestTasks: [],
     });
   }
 

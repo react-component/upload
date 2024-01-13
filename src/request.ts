@@ -1,4 +1,9 @@
-import type { UploadRequestOption, UploadRequestError, UploadProgressEvent } from './interface';
+import type {
+  UploadRequestOption,
+  UploadRequestError,
+  UploadProgressEvent,
+  RequestTask,
+} from './interface';
 
 function getError(option: UploadRequestOption, xhr: XMLHttpRequest) {
   const msg = `cannot ${option.method} ${option.action} ${xhr.status}'`;
@@ -22,7 +27,10 @@ function getBody(xhr: XMLHttpRequest) {
   }
 }
 
-export default function upload(option: UploadRequestOption) {
+export default function upload(
+  option: UploadRequestOption,
+  appendTask: (task: RequestTask) => void,
+) {
   // eslint-disable-next-line no-undef
   const xhr = new XMLHttpRequest();
 
@@ -62,11 +70,16 @@ export default function upload(option: UploadRequestOption) {
     formData.append(option.filename, option.file);
   }
 
+  const task: RequestTask = { xhr, data: formData };
+
   xhr.onerror = function error(e) {
     option.onError(e);
+    task.done?.();
   };
 
   xhr.onload = function onload() {
+    task.done?.();
+
     // allow success when 2xx status
     // see https://github.com/react-component/upload/issues/34
     if (xhr.status < 200 || xhr.status >= 300) {
@@ -97,7 +110,7 @@ export default function upload(option: UploadRequestOption) {
     }
   });
 
-  xhr.send(formData);
+  appendTask(task);
 
   return {
     abort() {
