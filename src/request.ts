@@ -22,7 +22,7 @@ function getBody(xhr: XMLHttpRequest) {
   }
 }
 
-export default function upload(option: UploadRequestOption) {
+export function prepareXHR(option: UploadRequestOption): XMLHttpRequest {
   // eslint-disable-next-line no-undef
   const xhr = new XMLHttpRequest();
 
@@ -35,6 +35,45 @@ export default function upload(option: UploadRequestOption) {
     };
   }
 
+  xhr.open(option.method, option.action, true);
+
+  // Has to be after `.open()`. See https://github.com/enyo/dropzone/issues/179
+  if (option.withCredentials && 'withCredentials' in xhr) {
+    xhr.withCredentials = true;
+  }
+
+  const headers = option.headers || {};
+
+  // when set headers['X-Requested-With'] = null , can close default XHR header
+  // see https://github.com/react-component/upload/issues/33
+  if (headers['X-Requested-With'] !== null) {
+    xhr.setRequestHeader('X-Requested-With', 'XMLHttpRequest');
+  }
+
+  Object.keys(headers).forEach(h => {
+    if (headers[h] !== null) {
+      xhr.setRequestHeader(h, headers[h]);
+    }
+  });
+
+  xhr.onerror = function error(e) {
+    option.onError(e);
+  };
+
+  xhr.onload = function onload(_) {
+    // allow success when 2xx status
+    // see https://github.com/react-component/upload/issues/34
+    if (xhr.status < 200 || xhr.status >= 300) {
+      return option.onError(getError(option, xhr), getBody(xhr));
+    }
+
+    return option.onSuccess(getBody(xhr), xhr);
+  };
+
+  return xhr;
+}
+
+export function prepareData(option: UploadRequestOption) {
   // eslint-disable-next-line no-undef
   const formData = new FormData();
 
@@ -62,40 +101,14 @@ export default function upload(option: UploadRequestOption) {
     formData.append(option.filename, option.file);
   }
 
-  xhr.onerror = function error(e) {
-    option.onError(e);
-  };
+  return formData;
+}
 
-  xhr.onload = function onload() {
-    // allow success when 2xx status
-    // see https://github.com/react-component/upload/issues/34
-    if (xhr.status < 200 || xhr.status >= 300) {
-      return option.onError(getError(option, xhr), getBody(xhr));
-    }
+export default function upload(option: UploadRequestOption) {
+  const xhr = prepareXHR(option);
 
-    return option.onSuccess(getBody(xhr), xhr);
-  };
-
-  xhr.open(option.method, option.action, true);
-
-  // Has to be after `.open()`. See https://github.com/enyo/dropzone/issues/179
-  if (option.withCredentials && 'withCredentials' in xhr) {
-    xhr.withCredentials = true;
-  }
-
-  const headers = option.headers || {};
-
-  // when set headers['X-Requested-With'] = null , can close default XHR header
-  // see https://github.com/react-component/upload/issues/33
-  if (headers['X-Requested-With'] !== null) {
-    xhr.setRequestHeader('X-Requested-With', 'XMLHttpRequest');
-  }
-
-  Object.keys(headers).forEach(h => {
-    if (headers[h] !== null) {
-      xhr.setRequestHeader(h, headers[h]);
-    }
-  });
+  // eslint-disable-next-line no-undef
+  const formData = prepareData(option);
 
   xhr.send(formData);
 

@@ -44,6 +44,7 @@ export interface UploadProps
     input?: React.CSSProperties;
   };
   hasControlInside?: boolean;
+  concurrencyLimit?: number;
 }
 
 export interface UploadProgressEvent extends Partial<ProgressEvent> {
@@ -75,4 +76,10 @@ export interface UploadRequestOption<T = any> {
 
 export interface RcFile extends File {
   uid: string;
+}
+
+export interface ConcurrencyRequestTask {
+  xhr: XMLHttpRequest;
+  data: File | FormData | string | Blob;
+  done?: () => void;
 }
