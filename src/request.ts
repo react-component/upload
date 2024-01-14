@@ -60,6 +60,7 @@ export function prepareXHR(option: UploadRequestOption): XMLHttpRequest {
     option.onError(e);
   };
 
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   xhr.onload = function onload(_) {
     // allow success when 2xx status
     // see https://github.com/react-component/upload/issues/34
