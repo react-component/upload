@@ -1,5 +1,5 @@
-import { ConcurrencyRequestTask, UploadRequestOption } from './interface';
-import { prepareData, prepareXHR } from './request';
+import type { ConcurrencyRequestTask, UploadRequestOption } from './interface';
+import { onXHRLoad, prepareData, prepareXHR } from './request';
 
 /**
  * Asynchronously processes an array of items with a concurrency limit.
@@ -105,12 +105,13 @@ export default class ConcurrencyRequester<T> {
 
     xhr.onerror = function error(e) {
       task.done?.();
-      xhr.onerror(e);
+      option.onError(e);
     };
 
-    xhr.onload = function onload(e) {
+    xhr.onload = function onload() {
       task.done?.();
-      xhr.onload(e);
+
+      onXHRLoad(this, option);
     };
 
     return task;

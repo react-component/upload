@@ -1,4 +1,4 @@
-import type { UploadRequestOption, UploadRequestError, UploadProgressEvent } from './interface';
+import type { UploadProgressEvent, UploadRequestError, UploadRequestOption } from './interface';
 
 function getError(option: UploadRequestOption, xhr: XMLHttpRequest) {
   const msg = `cannot ${option.method} ${option.action} ${xhr.status}'`;
@@ -20,6 +20,16 @@ function getBody(xhr: XMLHttpRequest) {
   } catch (e) {
     return text;
   }
+}
+
+export function onXHRLoad(xhr: XMLHttpRequest, option: UploadRequestOption) {
+  // allow success when 2xx status
+  // see https://github.com/react-component/upload/issues/34
+  if (xhr.status < 200 || xhr.status >= 300) {
+    return option.onError(getError(option, xhr), getBody(xhr));
+  }
+
+  return option.onSuccess(getBody(xhr), xhr);
 }
 
 export function prepareXHR(option: UploadRequestOption): XMLHttpRequest {
@@ -62,13 +72,7 @@ export function prepareXHR(option: UploadRequestOption): XMLHttpRequest {
 
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   xhr.onload = function onload(_) {
-    // allow success when 2xx status
-    // see https://github.com/react-component/upload/issues/34
-    if (xhr.status < 200 || xhr.status >= 300) {
-      return option.onError(getError(option, xhr), getBody(xhr));
-    }
-
-    return option.onSuccess(getBody(xhr), xhr);
+    onXHRLoad(this, option);
   };
 
   return xhr;
