@@ -1,5 +1,5 @@
 ---
-title: rc-trigger
+title: rc-upload
 ---
 
 <embed src="../README.md"></embed>
