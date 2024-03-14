@@ -306,6 +306,106 @@ describe('uploader', () => {
       }, 100);
     });
 
+    it('paste to upload', done => {
+      const rcUpload = uploader.container.querySelector('.rc-upload')!;
+      const input = uploader.container.querySelector('input')!;
+
+      const files = [
+        {
+          name: 'success.png',
+          toString() {
+            return this.name;
+          },
+        },
+      ];
+      (files as any).item = (i: number) => files[i];
+
+      handlers.onSuccess = (ret, file) => {
+        expect(ret[1]).toEqual(file.name);
+        expect(file).toHaveProperty('uid');
+        done();
+      };
+
+      handlers.onError = err => {
+        done(err);
+      };
+
+      fireEvent.mouseEnter(rcUpload);
+      fireEvent.paste(input, {
+        clipboardData: { files },
+      });
+
+      setTimeout(() => {
+        requests[0].respond(200, {}, `["","${files[0].name}"]`);
+      }, 100);
+    });
+
+    it('paste unaccepted type files to upload will not trigger onStart', done => {
+      const input = uploader.container.querySelector('input')!;
+      const files = [
+        {
+          name: 'success.jpg',
+          toString() {
+            return this.name;
+          },
+        },
+      ];
+      (files as any).item = (i: number) => files[i];
+
+      fireEvent.paste(input, {
+        clipboardData: { files },
+      });
+      const mockStart = jest.fn();
+      handlers.onStart = mockStart;
+      setTimeout(() => {
+        expect(mockStart.mock.calls.length).toBe(0);
+        done();
+      }, 100);
+    });
+
+    it('paste files with multiple false', done => {
+      const { container } = render(<Upload {...props} multiple={false} />);
+      const rcUpload = container.querySelector('.rc-upload')!;
+      const input = container.querySelector('input')!;
+      const files = [
+        new File([''], 'success.png', { type: 'image/png' }),
+        new File([''], 'filtered.png', { type: 'image/png' }),
+      ];
+      Object.defineProperty(files, 'item', {
+        value: i => files[i],
+      });
+
+      // Only can trigger once
+      let triggerTimes = 0;
+      handlers.onStart = () => {
+        triggerTimes += 1;
+      };
+      handlers.onSuccess = (ret, file) => {
+        try {
+          expect(ret[1]).toEqual(file.name);
+          expect(file).toHaveProperty('uid');
+          expect(triggerTimes).toEqual(1);
+          done();
+        } catch (error) {
+          done(error);
+        }
+      };
+      handlers.onError = error => {
+        done(error);
+      };
+
+      Object.defineProperty(input, 'files', {
+        value: files,
+      });
+
+      fireEvent.mouseEnter(rcUpload);
+      fireEvent.paste(input, { clipboardData: { files } });
+
+      setTimeout(() => {
+        handlers.onSuccess!(['', files[0].name] as any, files[0] as any, null!);
+      }, 100);
+    });
+
     it('support action and data is function returns Promise', async () => {
       const action: any = () => {
         return new Promise(resolve => {
@@ -331,6 +431,21 @@ describe('uploader', () => {
 
       await new Promise(resolve => setTimeout(resolve, 100));
       await new Promise(resolve => setTimeout(resolve, 2000));
+    });
+
+    it('support onMouseEnter and onMouseLeave', async () => {
+      const onMouseEnter = jest.fn();
+      const onMouseLeave = jest.fn();
+
+      const { container } = render(
+        <Upload onMouseEnter={onMouseEnter} onMouseLeave={onMouseLeave} />,
+      );
+      const rcUpload = container.querySelector('.rc-upload')!;
+
+      fireEvent.mouseEnter(rcUpload);
+      fireEvent.mouseLeave(rcUpload);
+      expect(onMouseEnter).toHaveBeenCalled();
+      expect(onMouseLeave).toHaveBeenCalled();
     });
   });
 
