@@ -280,6 +280,7 @@ class AjaxUploader extends Component<UploadProps> {
       onMouseEnter,
       onMouseLeave,
       hasControlInside,
+      type,
       ...otherProps
     } = this.props;
     const cls = clsx({
@@ -298,8 +299,10 @@ class AjaxUploader extends Component<UploadProps> {
           onKeyDown: openFileDialogOnClick ? this.onKeyDown : () => {},
           onMouseEnter,
           onMouseLeave,
-          onDrop: this.onFileDrop,
-          onDragOver: this.onFileDrop,
+          ...(type === 'drag' ? {
+            onDrop: this.onFileDrop,
+            onDragOver: this.onFileDrop,
+          } : {}),
           tabIndex: hasControlInside ? undefined : '0',
         };
     return (
