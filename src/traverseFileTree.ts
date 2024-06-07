@@ -10,30 +10,32 @@ interface InternalDataTransferItem extends DataTransferItem {
   path: string;
 }
 
-function loopFiles(item: InternalDataTransferItem, callback) {
-  const dirReader = item.createReader();
-  let fileList = [];
-
-  function sequence() {
-    dirReader.readEntries((entries: InternalDataTransferItem[]) => {
-      const entryList = Array.prototype.slice.apply(entries);
-      fileList = fileList.concat(entryList);
-
-      // Check if all the file has been viewed
-      const isFinished = !entryList.length;
-
-      if (isFinished) {
-        callback(fileList);
-      } else {
-        sequence();
-      }
-    });
-  }
-
-  sequence();
-}
-
 const traverseFileTree = (files: InternalDataTransferItem[], callback, isAccepted) => {
+  let restDirectory = 0;
+  const flattenFileList = [];
+  function loopFiles(item: InternalDataTransferItem, callback) {
+    const dirReader = item.createReader();
+    let fileList = [];
+
+    function sequence() {
+      dirReader.readEntries((entries: InternalDataTransferItem[]) => {
+        const entryList = Array.prototype.slice.apply(entries);
+        fileList = fileList.concat(entryList);
+
+        // Check if all the file has been viewed
+        const isFinished = !entryList.length;
+
+        if (isFinished) {
+          restDirectory--;
+          callback(fileList);
+        } else {
+          sequence();
+        }
+      });
+    }
+
+    sequence();
+  }
   // eslint-disable-next-line @typescript-eslint/naming-convention
   const _traverseFileTree = (item: InternalDataTransferItem, path?: string) => {
     if (!item) {
@@ -59,10 +61,15 @@ const traverseFileTree = (files: InternalDataTransferItem[], callback, isAccepte
               },
             });
           }
-          callback([file]);
+          flattenFileList.push(file);
+          console.log(restDirectory);
+          if (restDirectory === 0) {
+            callback(flattenFileList);
+          }
         }
       });
     } else if (item.isDirectory) {
+      restDirectory++;
       loopFiles(item, (entries: InternalDataTransferItem[]) => {
         entries.forEach(entryItem => {
           _traverseFileTree(entryItem, `${path}${item.name}/`);
