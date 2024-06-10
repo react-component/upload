@@ -11,7 +11,7 @@ interface InternalDataTransferItem extends DataTransferItem {
 }
 
 const traverseFileTree = (files: InternalDataTransferItem[], callback, isAccepted) => {
-  let restDirectory = 0;
+  let restFile = files.length;
   const flattenFileList = [];
   function loopFiles(item: InternalDataTransferItem, callback) {
     const dirReader = item.createReader();
@@ -26,7 +26,7 @@ const traverseFileTree = (files: InternalDataTransferItem[], callback, isAccepte
         const isFinished = !entryList.length;
 
         if (isFinished) {
-          restDirectory--;
+          restFile = restFile - 1 + fileList.length;
           callback(fileList);
         } else {
           sequence();
@@ -39,6 +39,7 @@ const traverseFileTree = (files: InternalDataTransferItem[], callback, isAccepte
   // eslint-disable-next-line @typescript-eslint/naming-convention
   const _traverseFileTree = (item: InternalDataTransferItem, path?: string) => {
     if (!item) {
+      restFile = restFile - 1;
       return;
     }
     // eslint-disable-next-line no-param-reassign
@@ -62,13 +63,13 @@ const traverseFileTree = (files: InternalDataTransferItem[], callback, isAccepte
             });
           }
           flattenFileList.push(file);
-          if (restDirectory === 0) {
+          restFile = restFile - 1;
+          if (restFile === 0) {
             callback(flattenFileList);
           }
         }
       });
     } else if (item.isDirectory) {
-      restDirectory++;
       loopFiles(item, (entries: InternalDataTransferItem[]) => {
         entries.forEach(entryItem => {
           _traverseFileTree(entryItem, `${path}${item.name}/`);
