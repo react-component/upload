@@ -13,7 +13,7 @@ interface InternalDataTransferItem extends DataTransferItem {
 const traverseFileTree = (files: InternalDataTransferItem[], callback, isAccepted) => {
   let restFile = files.length;
   const flattenFileList = [];
-  function loopFiles(item: InternalDataTransferItem, callback) {
+  function loopFiles(item: InternalDataTransferItem, InnerCallback) {
     const dirReader = item.createReader();
     let fileList = [];
 
@@ -27,7 +27,7 @@ const traverseFileTree = (files: InternalDataTransferItem[], callback, isAccepte
 
         if (isFinished) {
           restFile = restFile - 1 + fileList.length;
-          callback(fileList);
+          InnerCallback(fileList);
         } else {
           sequence();
         }
