@@ -401,10 +401,10 @@ describe('uploader', () => {
                 name: 'rc',
                 children: [
                   {
-                    name: '3.png',
+                    name: '5.webp',
                   },
                   {
-                    name: '4.png',
+                    name: '4.webp',
                   },
                 ],
               },
@@ -415,11 +415,9 @@ describe('uploader', () => {
       const input = container.querySelector('input')!;
       fireEvent.drop(input, { dataTransfer: { items: [makeDataTransferItem(files)] } });
       setTimeout(() => {
-        expect(mockBeforeUpload.mock.calls.length).toBe(4);
-        expect(mockBeforeUpload.mock.calls[0][1].length).toBe(4);
-        expect(mockBeforeUpload.mock.calls[1][1].length).toBe(4);
-        expect(mockBeforeUpload.mock.calls[2][1].length).toBe(4);
-        expect(mockBeforeUpload.mock.calls[3][1].length).toBe(4);
+        expect(mockBeforeUpload.mock.calls.length).toBe(2);
+        expect(mockBeforeUpload.mock.calls[0][1].length).toBe(2);
+        expect(mockBeforeUpload.mock.calls[1][1].length).toBe(2);
         done();
       }, 100);
     });

@@ -67,6 +67,11 @@ const traverseFileTree = (files: InternalDataTransferItem[], callback, isAccepte
           if (restFile === 0) {
             callback(flattenFileList);
           }
+        } else {
+          restFile = restFile - 1;
+          if (restFile === 0) {
+            callback(flattenFileList);
+          }
         }
       });
     } else if (item.isDirectory) {
