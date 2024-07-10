@@ -11,9 +11,11 @@ interface InternalDataTransferItem extends DataTransferItem {
 }
 
 const traverseFileTree = (files: InternalDataTransferItem[], callback, isAccepted) => {
-  let restFile = files.length;
   const flattenFileList = [];
-  function loopFiles(item: InternalDataTransferItem, InnerCallback) {
+  let progressFileList = [];
+  let wipIndex = 0;
+  files.forEach(file => progressFileList.push(file.webkitGetAsEntry() as any));
+  function loopFiles(item: InternalDataTransferItem) {
     const dirReader = item.createReader();
     let fileList = [];
 
@@ -26,8 +28,8 @@ const traverseFileTree = (files: InternalDataTransferItem[], callback, isAccepte
         const isFinished = !entryList.length;
 
         if (isFinished) {
-          restFile = restFile - 1 + fileList.length;
-          InnerCallback(fileList);
+          wipIndex++;
+          progressFileList = progressFileList.concat(fileList);
         } else {
           sequence();
         }
@@ -39,7 +41,7 @@ const traverseFileTree = (files: InternalDataTransferItem[], callback, isAccepte
   // eslint-disable-next-line @typescript-eslint/naming-convention
   const _traverseFileTree = (item: InternalDataTransferItem, path?: string) => {
     if (!item) {
-      restFile = restFile - 1;
+      wipIndex++;
       return;
     }
     // eslint-disable-next-line no-param-reassign
@@ -63,28 +65,23 @@ const traverseFileTree = (files: InternalDataTransferItem[], callback, isAccepte
             });
           }
           flattenFileList.push(file);
-          restFile = restFile - 1;
-          if (restFile === 0) {
-            callback(flattenFileList);
-          }
-        } else {
-          restFile = restFile - 1;
-          if (restFile === 0) {
-            callback(flattenFileList);
-          }
         }
       });
+      wipIndex++;
     } else if (item.isDirectory) {
-      loopFiles(item, (entries: InternalDataTransferItem[]) => {
-        entries.forEach(entryItem => {
-          _traverseFileTree(entryItem, `${path}${item.name}/`);
-        });
-      });
+      loopFiles(item);
     }
   };
-  files.forEach(file => {
-    _traverseFileTree(file.webkitGetAsEntry() as any);
-  });
+
+  function walkFiles() {
+    while (wipIndex < progressFileList.length) {
+      _traverseFileTree(progressFileList[wipIndex]);
+      if (wipIndex === progressFileList.length) {
+        callback(flattenFileList);
+      }
+    }
+  }
+  walkFiles();
 };
 
 export default traverseFileTree;
