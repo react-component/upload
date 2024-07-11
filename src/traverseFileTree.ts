@@ -20,20 +20,25 @@ const traverseFileTree = (files: InternalDataTransferItem[], callback, isAccepte
     let fileList = [];
 
     function sequence() {
-      dirReader.readEntries((entries: InternalDataTransferItem[]) => {
-        const entryList = Array.prototype.slice.apply(entries);
-        fileList = fileList.concat(entryList);
+      dirReader.readEntries(
+        (entries: InternalDataTransferItem[]) => {
+          const entryList = Array.prototype.slice.apply(entries);
+          fileList = fileList.concat(entryList);
 
-        // Check if all the file has been viewed
-        const isFinished = !entryList.length;
+          // Check if all the file has been viewed
+          const isFinished = !entryList.length;
 
-        if (isFinished) {
+          if (isFinished) {
+            wipIndex++;
+            progressFileList = progressFileList.concat(fileList);
+          } else {
+            sequence();
+          }
+        },
+        () => {
           wipIndex++;
-          progressFileList = progressFileList.concat(fileList);
-        } else {
-          sequence();
-        }
-      });
+        },
+      );
     }
 
     sequence();
