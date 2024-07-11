@@ -10,30 +10,28 @@ interface InternalDataTransferItem extends DataTransferItem {
   path: string;
 }
 
-function loopFiles(item: InternalDataTransferItem, callback) {
-  const dirReader = item.createReader();
-  let fileList = [];
-
-  function sequence() {
-    dirReader.readEntries((entries: InternalDataTransferItem[]) => {
-      const entryList = Array.prototype.slice.apply(entries);
-      fileList = fileList.concat(entryList);
-
-      // Check if all the file has been viewed
-      const isFinished = !entryList.length;
-
-      if (isFinished) {
-        callback(fileList);
-      } else {
-        sequence();
-      }
-    });
-  }
-
-  sequence();
-}
-
 const traverseFileTree = (files: InternalDataTransferItem[], callback, isAccepted) => {
+  const flattenFileList = [];
+  const progressFileList = [];
+  files.forEach(file => progressFileList.push(file.webkitGetAsEntry() as any));
+  function loopFiles(item: InternalDataTransferItem) {
+    const dirReader = item.createReader();
+
+    function sequence() {
+      dirReader.readEntries((entries: InternalDataTransferItem[]) => {
+        const entryList = Array.prototype.slice.apply(entries);
+
+        progressFileList.push(...entryList);
+        // Check if all the file has been viewed
+        const isFinished = !entryList.length;
+        if (!isFinished) {
+          sequence();
+        }
+      });
+    }
+
+    sequence();
+  }
   // eslint-disable-next-line @typescript-eslint/naming-convention
   const _traverseFileTree = (item: InternalDataTransferItem, path?: string) => {
     if (!item) {
@@ -59,20 +57,23 @@ const traverseFileTree = (files: InternalDataTransferItem[], callback, isAccepte
               },
             });
           }
-          callback([file]);
+          flattenFileList.push(file);
         }
       });
     } else if (item.isDirectory) {
-      loopFiles(item, (entries: InternalDataTransferItem[]) => {
-        entries.forEach(entryItem => {
-          _traverseFileTree(entryItem, `${path}${item.name}/`);
-        });
-      });
+      loopFiles(item);
     }
   };
-  files.forEach(file => {
-    _traverseFileTree(file.webkitGetAsEntry() as any);
-  });
+
+  function walkFiles() {
+    let wipIndex = 0;
+    while (wipIndex < progressFileList.length) {
+      _traverseFileTree(progressFileList[wipIndex]);
+      wipIndex++;
+    }
+    callback(flattenFileList);
+  }
+  walkFiles();
 };
 
 export default traverseFileTree;

@@ -25,7 +25,7 @@ const makeFileSystemEntry = item => {
       return {
         readEntries(handle) {
           if (!first) {
-            return [];
+            return handle([]);
           }
 
           first = false;
@@ -373,7 +373,54 @@ describe('uploader', () => {
     beforeEach(() => {
       uploader = render(<Upload {...props} />);
     });
+    it('beforeUpload should run after all children files are parsed', done => {
+      const props = { action: '/test', directory: true, accept: '.png' };
+      const mockBeforeUpload = jest.fn();
+      const beforeUpload = (file, fileList) => {
+        console.log('beforeUpload', file, fileList);
+        mockBeforeUpload(file, fileList);
+      };
+      const Test = () => {
+        return <Upload {...props} beforeUpload={beforeUpload} />;
+      };
 
+      const { container } = render(<Test />);
+      const files = {
+        name: 'foo',
+        children: [
+          {
+            name: 'bar',
+            children: [
+              {
+                name: '1.png',
+              },
+              {
+                name: '2.png',
+              },
+              {
+                name: 'rc',
+                children: [
+                  {
+                    name: '5.webp',
+                  },
+                  {
+                    name: '4.webp',
+                  },
+                ],
+              },
+            ],
+          },
+        ],
+      };
+      const input = container.querySelector('input')!;
+      fireEvent.drop(input, { dataTransfer: { items: [makeDataTransferItem(files)] } });
+      setTimeout(() => {
+        expect(mockBeforeUpload.mock.calls.length).toBe(2);
+        expect(mockBeforeUpload.mock.calls[0][1].length).toBe(2);
+        expect(mockBeforeUpload.mock.calls[1][1].length).toBe(2);
+        done();
+      }, 100);
+    });
     it('unaccepted type files to upload will not trigger onStart', done => {
       const input = uploader.container.querySelector('input')!;
       const files = {
