@@ -24,9 +24,7 @@ const traverseFileTree = (files: InternalDataTransferItem[], callback, isAccepte
         progressFileList.push(...entryList);
         // Check if all the file has been viewed
         const isFinished = !entryList.length;
-        if (isFinished) {
-          return;
-        } else {
+        if (!isFinished) {
           sequence();
         }
       });
