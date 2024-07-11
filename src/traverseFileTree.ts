@@ -20,25 +20,19 @@ const traverseFileTree = (files: InternalDataTransferItem[], callback, isAccepte
     let fileList = [];
 
     function sequence() {
-      dirReader.readEntries(
-        (entries: InternalDataTransferItem[]) => {
-          const entryList = Array.prototype.slice.apply(entries);
-          fileList = fileList.concat(entryList);
+      dirReader.readEntries((entries: InternalDataTransferItem[]) => {
+        const entryList = Array.prototype.slice.apply(entries);
+        fileList.push(...entryList);
 
-          // Check if all the file has been viewed
-          const isFinished = !entryList.length;
+        // Check if all the file has been viewed
+        const isFinished = !entryList.length;
 
-          if (isFinished) {
-            wipIndex++;
-            progressFileList = progressFileList.concat(fileList);
-          } else {
-            sequence();
-          }
-        },
-        () => {
-          wipIndex++;
-        },
-      );
+        if (isFinished) {
+          progressFileList = progressFileList.concat(fileList);
+        } else {
+          sequence();
+        }
+      });
     }
 
     sequence();
@@ -46,7 +40,6 @@ const traverseFileTree = (files: InternalDataTransferItem[], callback, isAccepte
   // eslint-disable-next-line @typescript-eslint/naming-convention
   const _traverseFileTree = (item: InternalDataTransferItem, path?: string) => {
     if (!item) {
-      wipIndex++;
       return;
     }
     // eslint-disable-next-line no-param-reassign
@@ -72,7 +65,6 @@ const traverseFileTree = (files: InternalDataTransferItem[], callback, isAccepte
           flattenFileList.push(file);
         }
       });
-      wipIndex++;
     } else if (item.isDirectory) {
       loopFiles(item);
     }
@@ -81,10 +73,9 @@ const traverseFileTree = (files: InternalDataTransferItem[], callback, isAccepte
   function walkFiles() {
     while (wipIndex < progressFileList.length) {
       _traverseFileTree(progressFileList[wipIndex]);
-      if (wipIndex === progressFileList.length) {
-        callback(flattenFileList);
-      }
+      wipIndex++;
     }
+    callback(flattenFileList);
   }
   walkFiles();
 };
