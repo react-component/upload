@@ -12,7 +12,7 @@ interface InternalDataTransferItem extends DataTransferItem {
 
 const traverseFileTree = (files: InternalDataTransferItem[], callback, isAccepted) => {
   const flattenFileList = [];
-  let progressFileList = [];
+  const progressFileList = [];
   files.forEach(file => progressFileList.push(file.webkitGetAsEntry() as any));
   function loopFiles(item: InternalDataTransferItem) {
     const dirReader = item.createReader();
