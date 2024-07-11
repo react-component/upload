@@ -13,22 +13,19 @@ interface InternalDataTransferItem extends DataTransferItem {
 const traverseFileTree = (files: InternalDataTransferItem[], callback, isAccepted) => {
   const flattenFileList = [];
   let progressFileList = [];
-  let wipIndex = 0;
   files.forEach(file => progressFileList.push(file.webkitGetAsEntry() as any));
   function loopFiles(item: InternalDataTransferItem) {
     const dirReader = item.createReader();
-    let fileList = [];
 
     function sequence() {
       dirReader.readEntries((entries: InternalDataTransferItem[]) => {
         const entryList = Array.prototype.slice.apply(entries);
-        fileList.push(...entryList);
 
+        progressFileList.push(...entryList);
         // Check if all the file has been viewed
         const isFinished = !entryList.length;
-
         if (isFinished) {
-          progressFileList = progressFileList.concat(fileList);
+          return;
         } else {
           sequence();
         }
@@ -71,6 +68,7 @@ const traverseFileTree = (files: InternalDataTransferItem[], callback, isAccepte
   };
 
   function walkFiles() {
+    let wipIndex = 0;
     while (wipIndex < progressFileList.length) {
       _traverseFileTree(progressFileList[wipIndex]);
       wipIndex++;
