@@ -10,36 +10,34 @@ interface InternalDataTransferItem extends DataTransferItem {
   path: string;
 }
 
-const traverseFileTree = (files: InternalDataTransferItem[], callback, isAccepted) => {
+// https://github.com/ant-design/ant-design/issues/50080
+const traverseFileTree = async (files: InternalDataTransferItem[], isAccepted) => {
   const flattenFileList = [];
   const progressFileList = [];
   files.forEach(file => progressFileList.push(file.webkitGetAsEntry() as any));
-  function loopFiles(item: InternalDataTransferItem) {
-    const dirReader = item.createReader();
 
-    function sequence() {
-      dirReader.readEntries((entries: InternalDataTransferItem[]) => {
-        const entryList = Array.prototype.slice.apply(entries);
+  async function readDirectory(directory: InternalDataTransferItem) {
+    const dirReader = directory.createReader();
+    const entries = [];
 
-        progressFileList.push(...entryList);
-        // Check if all the file has been viewed
-        const isFinished = !entryList.length;
-        if (!isFinished) {
-          sequence();
-        }
+    while (true) {
+      const results = await new Promise<InternalDataTransferItem[]>((resolve, reject) => {
+        dirReader.readEntries(resolve, reject);
       });
-    }
 
-    sequence();
-  }
-  // eslint-disable-next-line @typescript-eslint/naming-convention
-  const _traverseFileTree = (item: InternalDataTransferItem, path?: string) => {
-    if (!item) {
-      return;
+      if (!results.length) {
+        break;
+      }
+
+      for (const entry of results) {
+        entries.push(entry);
+      }
     }
-    // eslint-disable-next-line no-param-reassign
-    item.path = path || '';
-    if (item.isFile) {
+    return entries;
+  }
+
+  async function readFile(item: InternalDataTransferItem) {
+    return new Promise<RcFile & { webkitRelativePath?: string }>(reslove => {
       item.file(file => {
         if (isAccepted(file)) {
           // https://github.com/ant-design/ant-design/issues/16426
@@ -57,23 +55,39 @@ const traverseFileTree = (files: InternalDataTransferItem[], callback, isAccepte
               },
             });
           }
-          flattenFileList.push(file);
+          reslove(file);
+        } else {
+          reslove(null);
         }
       });
+    });
+  }
+
+  // eslint-disable-next-line @typescript-eslint/naming-convention
+  const _traverseFileTree = async (item: InternalDataTransferItem, path?: string) => {
+    if (!item) {
+      return;
+    }
+    // eslint-disable-next-line no-param-reassign
+    item.path = path || '';
+    if (item.isFile) {
+      const file = await readFile(item);
+      if (file) {
+        flattenFileList.push(file);
+      }
     } else if (item.isDirectory) {
-      loopFiles(item);
+      const entries = await readDirectory(item);
+      progressFileList.push(...entries);
     }
   };
 
-  function walkFiles() {
-    let wipIndex = 0;
-    while (wipIndex < progressFileList.length) {
-      _traverseFileTree(progressFileList[wipIndex]);
-      wipIndex++;
-    }
-    callback(flattenFileList);
+  let wipIndex = 0;
+  while (wipIndex < progressFileList.length) {
+    await _traverseFileTree(progressFileList[wipIndex]);
+    wipIndex++;
   }
-  walkFiles();
+
+  return flattenFileList;
 };
 
 export default traverseFileTree;
