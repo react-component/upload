@@ -21,8 +21,8 @@ const traverseFileTree = async (files: InternalDataTransferItem[], isAccepted) =
     const entries = [];
 
     while (true) {
-      const results = await new Promise<InternalDataTransferItem[]>((resolve, reject) => {
-        dirReader.readEntries(resolve, reject);
+      const results = await new Promise<InternalDataTransferItem[]>((resolve) => {
+        dirReader.readEntries(resolve, () => resolve([]));
       });
 
       if (!results.length) {
