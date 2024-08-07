@@ -66,7 +66,7 @@ class AjaxUploader extends Component<UploadProps> {
     }
   };
 
-  onFileDrop = (e: React.DragEvent<HTMLDivElement>) => {
+  onFileDrop = async (e: React.DragEvent<HTMLDivElement>) => {
     const { multiple } = this.props;
 
     e.preventDefault();
@@ -76,11 +76,11 @@ class AjaxUploader extends Component<UploadProps> {
     }
 
     if (this.props.directory) {
-      traverseFileTree(
+      const files = await traverseFileTree(
         Array.prototype.slice.call(e.dataTransfer.items),
-        this.uploadFiles,
         (_file: RcFile) => attrAccept(_file, this.props.accept),
       );
+      this.uploadFiles(files);
     } else {
       let files = [...e.dataTransfer.files].filter((file: RcFile) =>
         attrAccept(file, this.props.accept),
