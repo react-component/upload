@@ -37,9 +37,46 @@ const makeFileSystemEntry = item => {
   return ret;
 };
 
+const makeFileSystemEntryAsync = item => {
+  const isDirectory = Array.isArray(item.children);
+  const ret = {
+    isDirectory,
+    isFile: !isDirectory,
+    file: handle => {
+      handle(new Item(item.name));
+    },
+    createReader: () => {
+      let first = true;
+      return {
+        async readEntries(handle, error) {
+          await sleep(100);
+        
+          if (!first) {
+            return handle([]);
+          }
+
+          if (item.error && first) {
+            return error && error(new Error('read file error'))
+          }
+
+          first = false;
+          return handle(item.children.map(makeFileSystemEntryAsync));
+        },
+      };
+    },
+  };
+  return ret;
+};
+
 const makeDataTransferItem = item => {
   return {
     webkitGetAsEntry: () => makeFileSystemEntry(item),
+  };
+};
+
+const makeDataTransferItemAsync = item => {
+  return {
+    webkitGetAsEntry: () => makeFileSystemEntryAsync(item),
   };
 };
 
@@ -460,6 +497,95 @@ describe('uploader', () => {
         expect(mockStart.mock.calls.length).toBe(1);
         done();
       }, 100);
+    });
+
+    it('dragging and dropping files to upload through asynchronous file reading is run normal', done => {
+      const input = uploader.container.querySelector('input')!;
+
+      const files = {
+        name: 'foo',
+        children: [
+          {
+            name: 'bar',
+            children: [
+              {
+                name: '1.png',
+              },
+              {
+                name: '2.png',
+              },
+              {
+                name: 'rc',
+                children: [
+                  {
+                    name: '5.webp',
+                  },
+                  {
+                    name: '4.webp',
+                  },
+                ],
+              },
+            ],
+          },
+        ],
+      };
+      fireEvent.drop(input, { dataTransfer: { items: [makeDataTransferItemAsync(files)] } });
+      const mockStart = jest.fn();
+      handlers.onStart = mockStart;
+      
+      setTimeout(() => {
+        expect(mockStart.mock.calls.length).toBe(2);
+        done();
+      }, 1000);
+    });
+
+    it('dragging and dropping files to upload through asynchronous file reading with some readEntries method throw error', (done) => {
+      const input = uploader.container.querySelector('input')!;
+
+      const files = {
+        name: 'foo',
+        children: [
+          {
+            name: 'bar',
+            error: true,
+            children: [
+              {
+                name: '1.png',
+              },
+              {
+                name: 'ffc',
+                children: [
+                  {
+                    name: '7.png',
+                  },
+                  {
+                    name: '8.png',
+                  },
+                ],
+              }
+            ],
+          },
+          {
+            name: 'rc',
+            children: [
+              {
+                name: '3.png',
+              },
+              {
+                name: '4.webp',
+              },
+            ],
+          },
+        ],
+      };
+      fireEvent.drop(input, { dataTransfer: { items: [makeDataTransferItemAsync(files)] } });
+      const mockStart = jest.fn();
+      handlers.onStart = mockStart;
+      
+      setTimeout(() => {
+        expect(mockStart.mock.calls.length).toBe(1);
+        done();
+      }, 1000);
     });
 
     it('unaccepted type files to upload will not trigger onStart when select directory', done => {
