@@ -4,7 +4,7 @@ import Upload from 'rc-upload';
 
 const props = {
   action: () => {
-    return new Promise(resolve => {
+    return new Promise<string>(resolve => {
       setTimeout(() => {
         resolve('/upload.do');
       }, 2000);

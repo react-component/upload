@@ -2,6 +2,7 @@
 import React from 'react';
 import axios from 'axios';
 import Upload from 'rc-upload';
+import { UploadRequestOption } from '@/interface';
 
 const uploadProps = {
   action: '/upload.do',
@@ -32,13 +33,13 @@ const uploadProps = {
     onProgress,
     onSuccess,
     withCredentials,
-  }) {
+  }: UploadRequestOption) {
     // EXAMPLE: post form-data with 'axios'
     // eslint-disable-next-line no-undef
     const formData = new FormData();
     if (data) {
       Object.keys(data).forEach(key => {
-        formData.append(key, data[key]);
+        formData.append(key, data[key] as string);
       });
     }
     formData.append(filename, file);
@@ -48,7 +49,7 @@ const uploadProps = {
         withCredentials,
         headers,
         onUploadProgress: ({ total, loaded }) => {
-          onProgress({ percent: Math.round((loaded / total) * 100).toFixed(2) }, file);
+          onProgress({ percent: Number(Math.round((loaded / total) * 100).toFixed(2)) }, file);
         },
       })
       .then(({ data: response }) => {
