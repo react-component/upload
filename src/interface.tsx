@@ -29,7 +29,7 @@ export interface UploadProps
     file: RcFile,
     FileList: RcFile[],
   ) => BeforeUploadFileType | Promise<void | BeforeUploadFileType> | void;
-  customRequest?: (option: UploadRequestOption) => void;
+  customRequest?: (option: UploadRequestOption) => void | { abort: () => void };
   withCredentials?: boolean;
   openFileDialogOnClick?: boolean;
   prefixCls?: string;
@@ -54,6 +54,8 @@ export type UploadRequestMethod = 'POST' | 'PUT' | 'PATCH' | 'post' | 'put' | 'p
 
 export type UploadRequestHeader = Record<string, string>;
 
+export type UploadRequestFile = Exclude<BeforeUploadFileType, File | boolean> | RcFile;
+
 export interface UploadRequestError extends Error {
   status?: number;
   method?: UploadRequestMethod;
@@ -61,12 +63,12 @@ export interface UploadRequestError extends Error {
 }
 
 export interface UploadRequestOption<T = any> {
-  onProgress?: (event: UploadProgressEvent) => void;
+  onProgress?: (event: UploadProgressEvent, file?: UploadRequestFile) => void;
   onError?: (event: UploadRequestError | ProgressEvent, body?: T) => void;
-  onSuccess?: (body: T, xhr?: XMLHttpRequest) => void;
+  onSuccess?: (body: T, fileOrXhr?: UploadRequestFile | XMLHttpRequest) => void;
   data?: Record<string, unknown>;
   filename?: string;
-  file: Exclude<BeforeUploadFileType, File | boolean> | RcFile;
+  file: UploadRequestFile;
   withCredentials?: boolean;
   action: string;
   headers?: UploadRequestHeader;

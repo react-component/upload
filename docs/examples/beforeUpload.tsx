@@ -1,10 +1,10 @@
 /* eslint no-console:0 */
 
-import React from 'react';
+import { Action } from '@/interface';
 import Upload from 'rc-upload';
 
 const props = {
-  action: '/upload.do',
+  action: '/upload.do' as Action,
   multiple: true,
   onStart(file) {
     console.log('onStart', file, file.name);
@@ -17,7 +17,7 @@ const props = {
   },
   beforeUpload(file, fileList) {
     console.log(file, fileList);
-    return new Promise(resolve => {
+    return new Promise<string>(resolve => {
       console.log('start check');
       setTimeout(() => {
         console.log('check finshed');
