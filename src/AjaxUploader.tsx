@@ -308,6 +308,10 @@ class AjaxUploader extends Component<UploadProps> {
         <input
           {...pickAttrs(otherProps, { aria: true, data: true })}
           id={id}
+          /**
+           * https://github.com/ant-design/ant-design/issues/50643,
+           * https://github.com/react-component/upload/pull/575#issuecomment-2320646552
+           */
           name={name}
           disabled={disabled}
           type="file"
