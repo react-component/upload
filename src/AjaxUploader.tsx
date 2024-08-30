@@ -269,7 +269,6 @@ class AjaxUploader extends Component<UploadProps> {
       classNames = {},
       disabled,
       id,
-      name,
       style,
       styles = {},
       multiple,
@@ -308,7 +307,6 @@ class AjaxUploader extends Component<UploadProps> {
         <input
           {...pickAttrs(otherProps, { aria: true, data: true })}
           id={id}
-          name={name}
           disabled={disabled}
           type="file"
           ref={this.saveFileInput}
