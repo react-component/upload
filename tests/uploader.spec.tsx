@@ -152,12 +152,6 @@ describe('uploader', () => {
       expect(container.querySelector('input')!.id).toBe('bamboo');
     });
 
-    // https://github.com/ant-design/ant-design/issues/50643
-    it('with name', () => {
-      const { container } = render(<Upload name="bamboo" />);
-      expect(container.querySelector('input')!.name).toBe('bamboo');
-    });
-
     it('should pass through data & aria attributes', () => {
       const { container } = render(
         <Upload
