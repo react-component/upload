@@ -27,7 +27,7 @@
     "compile": "father build",
     "coverage": "rc-test --coverage",
     "docs:build": "dumi build",
-    "docs:deploy": "npm run docs:build && gh-pages -d .doc",
+    "docs:deploy": "npm run docs:build && gh-pages -d dist",
     "lint": "eslint src/ --ext .ts,.tsx,.jsx,.js,.md",
     "now-build": "npm run docs:build",
     "prepublishOnly": "npm run compile && np --yolo --no-publish",
