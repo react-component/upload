@@ -11,7 +11,6 @@ class Upload extends Component<UploadProps> {
     prefixCls: 'rc-upload',
     data: {},
     headers: {},
-    name: 'file',
     multipart: false,
     onStart: empty,
     onError: empty,
