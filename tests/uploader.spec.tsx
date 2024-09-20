@@ -152,6 +152,12 @@ describe('uploader', () => {
       expect(container.querySelector('input')!.id).toBe('bamboo');
     });
 
+    // https://github.com/ant-design/ant-design/issues/50643
+    it('with name', () => {
+      const { container } = render(<Upload name="bamboo" />);
+      expect(container.querySelector('input')!.name).toBe('bamboo');
+    });
+
     it('should pass through data & aria attributes', () => {
       const { container } = render(
         <Upload
@@ -368,6 +374,31 @@ describe('uploader', () => {
 
       await new Promise(resolve => setTimeout(resolve, 100));
       await new Promise(resolve => setTimeout(resolve, 2000));
+    });
+
+    it('should pass file to request', done => {
+      const fakeRequest = jest.fn((file) => {
+        expect(file).toEqual(expect.objectContaining({
+          filename: 'file', // <= https://github.com/react-component/upload/pull/574
+          file: expect.any(File),
+          method: 'post',
+          onError: expect.any(Function),
+          onProgress: expect.any(Function),
+          onSuccess: expect.any(Function),
+          data: expect.anything(),
+        }));
+
+        done();
+      });
+
+      const { container } = render(<Upload customRequest={fakeRequest} />);
+      const input = container.querySelector('input')!;
+      const files = [new File([''], 'success.png', { type: 'image/png' })];
+      Object.defineProperty(files, 'item', {
+        value: i => files[i],
+      });
+
+      fireEvent.change(input, { target: { files } });
     });
   });
 
