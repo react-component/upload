@@ -13,6 +13,7 @@ import type {
 import defaultRequest from './request';
 import traverseFileTree from './traverseFileTree';
 import getUid from './uid';
+import ConcurrencyRequester from './concurrencyRequest';
 
 interface ParsedFileInfo {
   origin: RcFile;
@@ -25,6 +26,8 @@ class AjaxUploader extends Component<UploadProps> {
   state = { uid: getUid() };
 
   reqs: any = {};
+
+  private concurrencyRequester?: ConcurrencyRequester<any>;
 
   private fileInput: HTMLInputElement;
 
@@ -111,10 +114,14 @@ class AjaxUploader extends Component<UploadProps> {
       return this.processFile(file, originFiles);
     });
 
+    const { onBatchStart, concurrencyLimit } = this.props;
+
+    if (concurrencyLimit) {
+      this.concurrencyRequester = new ConcurrencyRequester(concurrencyLimit);
+    }
+
     // Batch upload files
     Promise.all(postFiles).then(fileList => {
-      const { onBatchStart } = this.props;
-
       onBatchStart?.(fileList.map(({ origin, parsedFile }) => ({ file: origin, parsedFile })));
 
       fileList
@@ -122,6 +129,11 @@ class AjaxUploader extends Component<UploadProps> {
         .forEach(file => {
           this.post(file);
         });
+
+      // Asynchronously posts files with the concurrency limit.
+      if (this.concurrencyRequester) {
+        this.concurrencyRequester.send();
+      }
     });
   };
 
@@ -230,7 +242,11 @@ class AjaxUploader extends Component<UploadProps> {
     };
 
     onStart(origin);
-    this.reqs[uid] = request(requestOption);
+    if (this.concurrencyRequester) {
+      this.reqs[uid] = this.concurrencyRequester.append(requestOption);
+    } else {
+      this.reqs[uid] = request(requestOption);
+    }
   }
 
   reset() {
