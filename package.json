@@ -46,7 +46,7 @@
     "@testing-library/jest-dom": "^6.1.5",
     "@testing-library/react": "^14.1.2",
     "@types/jest": "^29.5.11",
-    "@types/react": "^18.0.0",
+    "@types/react": "^19.0.1",
     "@types/react-dom": "^18.0.0",
     "@umijs/fabric": "^4.0.1",
     "axios": "^1.7.2",
