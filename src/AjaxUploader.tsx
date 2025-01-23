@@ -24,7 +24,7 @@ interface ParsedFileInfo {
 class AjaxUploader extends Component<UploadProps> {
   state = { uid: getUid() };
 
-  reqs: any = {};
+  reqs: Record<string, any> = {};
 
   private fileInput: HTMLInputElement;
 
