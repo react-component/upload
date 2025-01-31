@@ -69,5 +69,9 @@
     "sinon": "^9.0.2",
     "typescript": "^5.3.3",
     "vinyl-fs": "^3.0.3"
+  },
+  "peerDependencies": {
+    "react": ">=16.9.0",
+    "react-dom": ">=16.9.0"
   }
 }
