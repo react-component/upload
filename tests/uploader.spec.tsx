@@ -1,18 +1,18 @@
 import { fireEvent, render } from '@testing-library/react';
-import { resetWarned } from 'rc-util/lib/warning';
+import { resetWarned } from '@rc-component/util/lib/warning';
 import React from 'react';
 import sinon from 'sinon';
 import { format } from 'util';
 import Upload, { type UploadProps } from '../src';
 
-const sleep = (timeout = 500) => new Promise(resolve => setTimeout(resolve, timeout));
+const sleep = (timeout = 500) => new Promise<void>(resolve => setTimeout(resolve, timeout));
 
-function Item(name) {
+function Item(name: string) {
   this.name = name;
   this.toString = () => this.name;
 }
 
-const makeFileSystemEntry = item => {
+const makeFileSystemEntry = (item: any) => {
   const isDirectory = Array.isArray(item.children);
   const ret = {
     isDirectory,
@@ -50,13 +50,13 @@ const makeFileSystemEntryAsync = item => {
       return {
         async readEntries(handle, error) {
           await sleep(100);
-        
+
           if (!first) {
             return handle([]);
           }
 
           if (item.error && first) {
-            return error && error(new Error('read file error'))
+            return error && error(new Error('read file error'));
           }
 
           first = false;
@@ -377,16 +377,18 @@ describe('uploader', () => {
     });
 
     it('should pass file to request', done => {
-      const fakeRequest = jest.fn((file) => {
-        expect(file).toEqual(expect.objectContaining({
-          filename: 'file', // <= https://github.com/react-component/upload/pull/574
-          file: expect.any(File),
-          method: 'post',
-          onError: expect.any(Function),
-          onProgress: expect.any(Function),
-          onSuccess: expect.any(Function),
-          data: expect.anything(),
-        }));
+      const fakeRequest = jest.fn(file => {
+        expect(file).toEqual(
+          expect.objectContaining({
+            filename: 'file', // <= https://github.com/react-component/upload/pull/574
+            file: expect.any(File),
+            method: 'post',
+            onError: expect.any(Function),
+            onProgress: expect.any(Function),
+            onSuccess: expect.any(Function),
+            data: expect.anything(),
+          }),
+        );
 
         done();
       });
@@ -563,14 +565,14 @@ describe('uploader', () => {
       fireEvent.drop(input, { dataTransfer: { items: [makeDataTransferItemAsync(files)] } });
       const mockStart = jest.fn();
       handlers.onStart = mockStart;
-      
+
       setTimeout(() => {
         expect(mockStart.mock.calls.length).toBe(2);
         done();
       }, 1000);
     });
 
-    it('dragging and dropping files to upload through asynchronous file reading with some readEntries method throw error', (done) => {
+    it('dragging and dropping files to upload through asynchronous file reading with some readEntries method throw error', done => {
       const input = uploader.container.querySelector('input')!;
 
       const files = {
@@ -593,7 +595,7 @@ describe('uploader', () => {
                     name: '8.png',
                   },
                 ],
-              }
+              },
             ],
           },
           {
@@ -612,7 +614,7 @@ describe('uploader', () => {
       fireEvent.drop(input, { dataTransfer: { items: [makeDataTransferItemAsync(files)] } });
       const mockStart = jest.fn();
       handlers.onStart = mockStart;
-      
+
       setTimeout(() => {
         expect(mockStart.mock.calls.length).toBe(1);
         done();

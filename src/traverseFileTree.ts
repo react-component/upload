@@ -14,18 +14,21 @@ interface InternalDataTransferItem extends DataTransferItem {
 const traverseFileTree = async (files: InternalDataTransferItem[], isAccepted) => {
   const flattenFileList = [];
   const progressFileList = [];
-  files.forEach(file => progressFileList.push(file.webkitGetAsEntry() as any));
+
+  files.forEach(file => {
+    progressFileList.push(file.webkitGetAsEntry() as any);
+  });
 
   async function readDirectory(directory: InternalDataTransferItem) {
     const dirReader = directory.createReader();
-    const entries = [];
+    const entries: InternalDataTransferItem[] = [];
 
     while (true) {
-      const results = await new Promise<InternalDataTransferItem[]>((resolve) => {
+      const results = await new Promise<InternalDataTransferItem[]>(resolve => {
         dirReader.readEntries(resolve, () => resolve([]));
       });
       const n = results.length;
-      
+
       if (!n) {
         break;
       }
