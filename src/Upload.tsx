@@ -1,42 +1,46 @@
-/* eslint react/prop-types:0 */
-import React, { Component } from 'react';
+import React from 'react';
 import AjaxUpload from './AjaxUploader';
-import type { UploadProps, RcFile } from './interface';
+import type { UploadProps } from './interface';
 
 function empty() {}
 
-class Upload extends Component<UploadProps> {
-  static defaultProps = {
-    component: 'span',
-    prefixCls: 'rc-upload',
-    data: {},
-    headers: {},
-    name: 'file',
-    multipart: false,
-    onStart: empty,
-    onError: empty,
-    onSuccess: empty,
-    multiple: false,
-    beforeUpload: null,
-    customRequest: null,
-    withCredentials: false,
-    openFileDialogOnClick: true,
-    hasControlInside: false,
-  };
-
-  private uploader: AjaxUpload;
-
-  abort(file: RcFile) {
-    this.uploader.abort(file);
-  }
-
-  saveUploader = (node: AjaxUpload) => {
-    this.uploader = node;
-  };
-
-  render() {
-    return <AjaxUpload {...this.props} ref={this.saveUploader} />;
-  }
-}
+const Upload: React.FC<Readonly<UploadProps>> = props => {
+  const {
+    component = 'span',
+    prefixCls = 'rc-upload',
+    data = {},
+    headers = {},
+    name = 'file',
+    onStart = empty,
+    onError = empty,
+    onSuccess = empty,
+    multiple = false,
+    beforeUpload = null,
+    customRequest = null,
+    withCredentials = false,
+    openFileDialogOnClick = true,
+    hasControlInside = false,
+    ...rest
+  } = props;
+  return (
+    <AjaxUpload
+      component={component}
+      prefixCls={prefixCls}
+      data={data}
+      headers={headers}
+      name={name}
+      onStart={onStart}
+      onError={onError}
+      onSuccess={onSuccess}
+      multiple={multiple}
+      beforeUpload={beforeUpload}
+      customRequest={customRequest}
+      withCredentials={withCredentials}
+      openFileDialogOnClick={openFileDialogOnClick}
+      hasControlInside={hasControlInside}
+      {...rest}
+    />
+  );
+};
 
 export default Upload;

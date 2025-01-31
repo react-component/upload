@@ -1,6 +1,6 @@
 /* eslint no-console:0 */
 
-import { Action } from '@/interface';
+import type { Action } from '@/interface';
 import Upload from 'rc-upload';
 
 const props = {

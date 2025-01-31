@@ -17,12 +17,12 @@ function getBody(xhr: XMLHttpRequest) {
 
   try {
     return JSON.parse(text);
-  } catch (e) {
+  } catch {
     return text;
   }
 }
 
-export default function upload(option: UploadRequestOption) {
+function upload(option: UploadRequestOption) {
   // eslint-disable-next-line no-undef
   const xhr = new XMLHttpRequest();
 
@@ -105,3 +105,5 @@ export default function upload(option: UploadRequestOption) {
     },
   };
 }
+
+export default upload;
