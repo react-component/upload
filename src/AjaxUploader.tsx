@@ -46,7 +46,7 @@ const AjaxUploader: React.FC<Readonly<React.PropsWithChildren<UploadProps>>> = p
     ...otherProps
   } = props;
 
-  const [uid, setUid] = React.useState<string>(getUid());
+  const [uid, setUid] = React.useState<string>(getUid);
   const [reqs, setReqs] = React.useState<Record<PropertyKey, any>>({});
 
   const isMountedRef = React.useRef<boolean>(false);
@@ -68,11 +68,8 @@ const AjaxUploader: React.FC<Readonly<React.PropsWithChildren<UploadProps>>> = p
           if (reqs[key]?.abort) {
             reqs[key].abort();
           }
-          setReqs(prev => {
-            const { [key]: _, ...rest } = prev;
-            return rest;
-          });
         });
+        setReqs({});
       }
     },
     [reqs],
