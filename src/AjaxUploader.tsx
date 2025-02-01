@@ -47,33 +47,27 @@ const AjaxUploader: React.FC<Readonly<React.PropsWithChildren<UploadProps>>> = p
   } = props;
 
   const [uid, setUid] = React.useState<string>(getUid);
-  const [reqs, setReqs] = React.useState<Record<PropertyKey, any>>({});
 
   const isMountedRef = React.useRef<boolean>(false);
   const inputRef = React.useRef<HTMLInputElement>(null);
+  const reqsRef = React.useRef<Partial<Record<PropertyKey, any>>>({});
 
-  const abort = React.useCallback(
-    (file?: any) => {
-      if (file) {
-        const internalUid = file.uid ? file.uid : file;
-        if (reqs[internalUid]?.abort) {
-          reqs[internalUid].abort();
-        }
-        setReqs(prev => {
-          const { [internalUid]: _, ...rest } = prev;
-          return rest;
-        });
-      } else {
-        Object.keys(reqs).forEach(key => {
-          if (reqs[key]?.abort) {
-            reqs[key].abort();
-          }
-        });
-        setReqs({});
+  const abort = React.useCallback((file?: any) => {
+    if (file) {
+      const internalUid = file.uid ? file.uid : file;
+      if (reqsRef.current[internalUid]?.abort) {
+        reqsRef.current[internalUid].abort();
       }
-    },
-    [reqs],
-  );
+      reqsRef.current[internalUid] = undefined;
+    } else {
+      Object.keys(reqsRef.current).forEach(key => {
+        if (reqsRef.current[key]?.abort) {
+          reqsRef.current[key].abort();
+        }
+      });
+      reqsRef.current = {};
+    }
+  }, []);
 
   React.useEffect(() => {
     isMountedRef.current = true;
@@ -172,21 +166,15 @@ const AjaxUploader: React.FC<Readonly<React.PropsWithChildren<UploadProps>>> = p
       },
       onSuccess: (ret: any, xhr: XMLHttpRequest) => {
         props.onSuccess?.(ret, parsedFile, xhr);
-        setReqs(prev => {
-          const { [origin.uid]: _, ...rest } = prev;
-          return rest;
-        });
+        reqsRef.current[origin.uid] = undefined;
       },
       onError: (err: UploadRequestError, ret: any) => {
         props.onError?.(err, ret, parsedFile);
-        setReqs(prev => {
-          const { [origin.uid]: _, ...rest } = prev;
-          return rest;
-        });
+        reqsRef.current[origin.uid] = undefined;
       },
     };
     onStart(origin);
-    setReqs(prev => ({ ...prev, [origin.uid]: request(requestOption) }));
+    reqsRef.current[origin.uid] = request(requestOption);
   };
 
   const uploadFiles = (files: File[]) => {
