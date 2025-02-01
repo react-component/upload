@@ -204,7 +204,11 @@ const AjaxUploader: React.FC<Readonly<React.PropsWithChildren<UploadProps>>> = p
       props.onBatchStart?.(
         fileList.map(({ origin, parsedFile }) => ({ file: origin, parsedFile })),
       );
-      fileList.filter(file => file.parsedFile !== null).forEach(file => post(file));
+      fileList
+        .filter(file => file.parsedFile !== null)
+        .forEach(file => {
+          post(file);
+        });
     });
   };
 
@@ -259,14 +263,8 @@ const AjaxUploader: React.FC<Readonly<React.PropsWithChildren<UploadProps>>> = p
     }
   };
 
-  const cls = classnames(prefixCls, className, {
-    [`${prefixCls}-disabled`]: disabled,
-  });
-
   // because input don't have directory/webkitdirectory type declaration
-  const dirProps: any = directory
-    ? { directory: 'directory', webkitdirectory: 'webkitdirectory' }
-    : {};
+  const dirProps = directory ? { directory: 'directory', webkitdirectory: 'webkitdirectory' } : {};
 
   const events = disabled
     ? {}
@@ -277,11 +275,18 @@ const AjaxUploader: React.FC<Readonly<React.PropsWithChildren<UploadProps>>> = p
         onMouseLeave,
         onDrop: onFileDrop,
         onDragOver: onFileDrop,
-        tabIndex: hasControlInside ? undefined : 0,
       };
 
   return (
-    <Tag {...events} className={cls} role={hasControlInside ? undefined : 'button'} style={style}>
+    <Tag
+      {...events}
+      style={style}
+      role={disabled || hasControlInside ? undefined : 'button'}
+      tabIndex={disabled || hasControlInside ? undefined : 0}
+      className={classnames(prefixCls, className, {
+        [`${prefixCls}-disabled`]: disabled,
+      })}
+    >
       <input
         {...pickAttrs(otherProps, { aria: true, data: true })}
         id={id}
@@ -307,5 +312,9 @@ const AjaxUploader: React.FC<Readonly<React.PropsWithChildren<UploadProps>>> = p
     </Tag>
   );
 };
+
+if (process.env.NODE_ENV !== 'production') {
+  AjaxUploader.displayName = 'AjaxUploader';
+}
 
 export default AjaxUploader;

@@ -43,4 +43,8 @@ const Upload: React.FC<Readonly<UploadProps>> = props => {
   );
 };
 
+if (process.env.NODE_ENV !== 'production') {
+  Upload.displayName = 'Upload';
+}
+
 export default Upload;

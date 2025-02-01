@@ -1,8 +1,8 @@
-const now = +new Date();
+const now = Date.now();
+
 let index = 0;
 
 function uid() {
-  // eslint-disable-next-line no-plusplus
   return `rc-upload-${now}-${++index}`;
 }
 
