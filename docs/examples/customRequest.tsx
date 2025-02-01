@@ -2,7 +2,7 @@
 import React from 'react';
 import axios from 'axios';
 import Upload from 'rc-upload';
-import { UploadRequestOption } from '@/interface';
+import type { UploadRequestOption } from '@/interface';
 
 const uploadProps = {
   action: '/upload.do',

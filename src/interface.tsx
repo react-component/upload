@@ -34,9 +34,9 @@ export interface UploadProps
   openFileDialogOnClick?: boolean;
   prefixCls?: string;
   id?: string;
-  onMouseEnter?: (e: React.MouseEvent<HTMLDivElement>) => void;
-  onMouseLeave?: (e: React.MouseEvent<HTMLDivElement>) => void;
-  onClick?: (e: React.MouseEvent<HTMLDivElement> | React.KeyboardEvent<HTMLDivElement>) => void;
+  onMouseEnter?: (e: React.MouseEvent<HTMLElement>) => void;
+  onMouseLeave?: (e: React.MouseEvent<HTMLElement>) => void;
+  onClick?: (e: React.MouseEvent<HTMLElement> | React.KeyboardEvent<HTMLElement>) => void;
   classNames?: {
     input?: string;
   };
