@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 /* eslint react/no-is-mounted:0,react/sort-comp:0,react/prop-types:0 */
 import classnames from 'classnames';
 import pickAttrs from '@rc-component/util/lib/pickAttrs';
@@ -80,10 +81,10 @@ const AjaxUploader: React.FC<Readonly<React.PropsWithChildren<UploadProps>>> = p
   React.useEffect(() => {
     isMountedRef.current = true;
     return () => {
-      isMountedRef.current = false;
       abort();
+      isMountedRef.current = false;
     };
-  }, [abort]);
+  }, []);
 
   /**
    * Process file before upload. When all the file is ready, we start upload.
@@ -251,15 +252,12 @@ const AjaxUploader: React.FC<Readonly<React.PropsWithChildren<UploadProps>>> = p
     if (directory) {
       const files = await traverseFileTree(
         Array.prototype.slice.call(e.dataTransfer.items),
-        (_file: RcFile) => attrAccept(_file, accept),
+        (f: RcFile) => attrAccept(f, accept),
       );
       uploadFiles(files);
     } else {
-      let files = [...e.dataTransfer.files].filter((file: RcFile) => attrAccept(file, accept));
-      if (multiple === false) {
-        files = files.slice(0, 1);
-      }
-      uploadFiles(files);
+      const allFiles = [...e.dataTransfer.files].filter((file: RcFile) => attrAccept(file, accept));
+      uploadFiles(multiple === false ? allFiles.slice(0, 1) : allFiles);
     }
   };
 
