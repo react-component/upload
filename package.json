@@ -44,7 +44,7 @@
   "devDependencies": {
     "@rc-component/father-plugin": "^1.0.0",
     "@testing-library/jest-dom": "^6.1.5",
-    "@testing-library/react": "^14.1.2",
+    "@testing-library/react": "^16.2.0",
     "@types/jest": "^29.5.11",
     "@types/node": "^22.12.0",
     "@types/react": "^19.0.8",
@@ -68,7 +68,7 @@
     "regenerator-runtime": "^0.14.1",
     "sinon": "^9.0.2",
     "typescript": "^5.3.3",
-    "vinyl-fs": "^3.0.3"
+    "vinyl-fs": "^4.0.0"
   },
   "peerDependencies": {
     "react": ">=16.9.0",
