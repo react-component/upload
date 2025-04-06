@@ -54,7 +54,7 @@ const AjaxUploader: React.FC<Readonly<React.PropsWithChildren<UploadProps>>> = p
     ...otherProps
   } = props;
 
-  const [uid, setUid] = React.useState<string>(getUid);
+  const [uid, setUid] = React.useState<string>(getUid());
 
   const isMountedRef = React.useRef<boolean>(false);
   const inputRef = React.useRef<HTMLInputElement>(null);
@@ -80,8 +80,8 @@ const AjaxUploader: React.FC<Readonly<React.PropsWithChildren<UploadProps>>> = p
   React.useEffect(() => {
     isMountedRef.current = true;
     return () => {
-      abort();
       isMountedRef.current = false;
+      abort();
     };
   }, []);
 
@@ -91,10 +91,9 @@ const AjaxUploader: React.FC<Readonly<React.PropsWithChildren<UploadProps>>> = p
   const processFile = async (file: RcFile, fileList: RcFile[]): Promise<ParsedFileInfo> => {
     let transformedFile: BeforeUploadFileType | void = file;
     if (beforeUpload) {
-      try {
+      if (typeof beforeUpload === 'function') {
         transformedFile = await beforeUpload(file, fileList);
-      } catch {
-        // Rejection will also trade as false
+      } else {
         transformedFile = false;
       }
       if (transformedFile === false) {
@@ -193,11 +192,7 @@ const AjaxUploader: React.FC<Readonly<React.PropsWithChildren<UploadProps>>> = p
       props.onBatchStart?.(
         fileList.map(({ origin, parsedFile }) => ({ file: origin, parsedFile })),
       );
-      fileList
-        .filter(file => file.parsedFile !== null)
-        .forEach(file => {
-          post(file);
-        });
+      fileList.filter(file => file.parsedFile !== null).forEach(file => post(file));
     });
   };
 
@@ -217,7 +212,7 @@ const AjaxUploader: React.FC<Readonly<React.PropsWithChildren<UploadProps>>> = p
       return;
     }
     const target = event.target as HTMLElement;
-    if (target?.tagName === 'BUTTON') {
+    if (target?.tagName.toUpperCase() === 'BUTTON') {
       const parent = inputRef.current.parentNode as HTMLInputElement;
       parent.focus();
       target.blur();
