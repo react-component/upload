@@ -1,5 +1,4 @@
 /* eslint-disable react-hooks/exhaustive-deps */
-/* eslint react/no-is-mounted:0,react/sort-comp:0,react/prop-types:0 */
 import classnames from 'classnames';
 import pickAttrs from '@rc-component/util/lib/pickAttrs';
 import React from 'react';

@@ -20,7 +20,8 @@ const Upload: React.FC<Readonly<UploadProps>> = props => {
     withCredentials = false,
     openFileDialogOnClick = true,
     hasControlInside = false,
-    ...rest
+    children,
+    ...otherProps
   } = props;
   return (
     <AjaxUpload
@@ -38,8 +39,10 @@ const Upload: React.FC<Readonly<UploadProps>> = props => {
       withCredentials={withCredentials}
       openFileDialogOnClick={openFileDialogOnClick}
       hasControlInside={hasControlInside}
-      {...rest}
-    />
+      {...otherProps}
+    >
+      {children}
+    </AjaxUpload>
   );
 };
 
