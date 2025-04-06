@@ -40,9 +40,17 @@ const AjaxUploader: React.FC<Readonly<React.PropsWithChildren<UploadProps>>> = p
     children,
     directory,
     openFileDialogOnClick,
+    hasControlInside,
+    action,
+    headers,
+    withCredentials,
+    method,
     onMouseEnter,
     onMouseLeave,
-    hasControlInside,
+    data,
+    beforeUpload,
+    onStart,
+    customRequest,
     ...otherProps
   } = props;
 
@@ -81,7 +89,6 @@ const AjaxUploader: React.FC<Readonly<React.PropsWithChildren<UploadProps>>> = p
    * Process file before upload. When all the file is ready, we start upload.
    */
   const processFile = async (file: RcFile, fileList: RcFile[]): Promise<ParsedFileInfo> => {
-    const { beforeUpload } = props;
     let transformedFile: BeforeUploadFileType | void = file;
     if (beforeUpload) {
       try {
@@ -100,8 +107,6 @@ const AjaxUploader: React.FC<Readonly<React.PropsWithChildren<UploadProps>>> = p
       }
     }
 
-    // Get latest action
-    const { action } = props;
     let mergedAction: string;
     if (typeof action === 'function') {
       mergedAction = await action(file);
@@ -109,8 +114,6 @@ const AjaxUploader: React.FC<Readonly<React.PropsWithChildren<UploadProps>>> = p
       mergedAction = action;
     }
 
-    // Get latest data
-    const { data } = props;
     let mergedData: Record<string, unknown>;
     if (typeof data === 'function') {
       mergedData = await data(file);
@@ -144,19 +147,19 @@ const AjaxUploader: React.FC<Readonly<React.PropsWithChildren<UploadProps>>> = p
     };
   };
 
-  const post = ({ data, origin, action, parsedFile }: ParsedFileInfo) => {
+  const post = (info: ParsedFileInfo) => {
     if (!isMountedRef.current) {
       return;
     }
 
-    const { onStart, customRequest, headers, withCredentials, method } = props;
+    const { origin, parsedFile } = info;
 
     const request = customRequest || defaultRequest;
 
     const requestOption: UploadRequestOption = {
-      action,
+      action: info.action,
       filename: name,
-      data,
+      data: info.data,
       file: parsedFile,
       headers,
       withCredentials,
@@ -266,9 +269,7 @@ const AjaxUploader: React.FC<Readonly<React.PropsWithChildren<UploadProps>>> = p
       style={style}
       role={disabled || hasControlInside ? undefined : 'button'}
       tabIndex={disabled || hasControlInside ? undefined : 0}
-      className={classnames(prefixCls, className, {
-        [`${prefixCls}-disabled`]: disabled,
-      })}
+      className={classnames(prefixCls, className, { [`${prefixCls}-disabled`]: disabled })}
     >
       <input
         {...pickAttrs(otherProps, { aria: true, data: true })}
