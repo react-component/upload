@@ -254,7 +254,8 @@ describe('uploader', () => {
     });
 
     it('drag to upload', done => {
-      const input = uploader.container.querySelector('input')!;
+      const { container } = render(<Upload {...props} type='drag' />);
+      const input = container.querySelector('input')!;
 
       const files = [
         {
@@ -286,7 +287,8 @@ describe('uploader', () => {
     });
 
     it('drag unaccepted type files to upload will not trigger onStart', done => {
-      const input = uploader.container.querySelector('input')!;
+      const { container } = render(<Upload {...props} type='drag'/>);
+      const input = container.querySelector('input')!;
       const files = [
         {
           name: 'success.jpg',
@@ -309,7 +311,7 @@ describe('uploader', () => {
     });
 
     it('drag files with multiple false', done => {
-      const { container } = render(<Upload {...props} multiple={false} />);
+      const { container } = render(<Upload {...props} multiple={false} type='drag'/>);
       const input = container.querySelector('input')!;
       const files = [
         new File([''], 'success.png', { type: 'image/png' }),
@@ -515,7 +517,8 @@ describe('uploader', () => {
     });
 
     it('dragging and dropping a non file with a file does not prevent the file from being uploaded', done => {
-      const input = uploader.container.querySelector('input')!;
+      const { container } = render(<Upload {...props} type='drag' />);
+      const input = container.querySelector('input')!;
       const file = {
         name: 'success.png',
       };
