@@ -6,6 +6,7 @@ const props = {
   action: '/upload.do',
   type: 'drag',
   accept: '.png',
+  allowPasteUpload: true,
   beforeUpload(file) {
     console.log('beforeUpload', file.name);
   },
