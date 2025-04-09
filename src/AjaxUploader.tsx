@@ -103,28 +103,38 @@ class AjaxUploader extends Component<UploadProps> {
     }
   };
 
-  onPrePaste(e: ClipboardEvent) {
-    const { allowPasteUpload } = this.props;
+  onPrePaste = (e: ClipboardEvent) => {
+    const { pastable } = this.props;
 
-    if (allowPasteUpload) {
+    if (pastable) {
       this.onFileDropOrPaste(e);
     }
-  }
+  };
 
   componentDidMount() {
     this._isMounted = true;
 
-    const { allowPasteUpload } = this.props;
+    const { pastable } = this.props;
 
-    if (allowPasteUpload) {
-      document.addEventListener('paste', this.onPrePaste.bind(this));
+    if (pastable) {
+      document.addEventListener('paste', this.onPrePaste);
     }
   }
 
   componentWillUnmount() {
     this._isMounted = false;
     this.abort();
-    document.removeEventListener('paste', this.onPrePaste.bind(this));
+    document.removeEventListener('paste', this.onPrePaste);
+  }
+
+  componentDidUpdate(prevProps: UploadProps) {
+    const { pastable } = this.props;
+
+    if (pastable && !prevProps.pastable) {
+      document.addEventListener('paste', this.onPrePaste);
+    } else if (!pastable && prevProps.pastable) {
+      document.removeEventListener('paste', this.onPrePaste);
+    }
   }
 
   uploadFiles = (files: File[]) => {

@@ -44,7 +44,7 @@ export interface UploadProps
     input?: React.CSSProperties;
   };
   hasControlInside?: boolean;
-  allowPasteUpload?: boolean;
+  pastable?: boolean;
 }
 
 export interface UploadProgressEvent extends Partial<ProgressEvent> {

@@ -350,7 +350,7 @@ describe('uploader', () => {
     });
 
     it('paste to upload', done => {
-      const { container } = render(<Upload {...props} allowPasteUpload />);
+      const { container } = render(<Upload {...props} pastable />);
       const input = container.querySelector('input')!;
 
       const files = [
@@ -406,7 +406,7 @@ describe('uploader', () => {
     });
 
     it('paste files with multiple false', done => {
-      const { container } = render(<Upload {...props} multiple={false} allowPasteUpload />);
+      const { container } = render(<Upload {...props} multiple={false} pastable />);
       const input = container.querySelector('input')!;
       const files = [
         new File([''], 'success.png', { type: 'image/png' }),
@@ -780,7 +780,7 @@ describe('uploader', () => {
     });
 
     it('paste directory', done => {
-      const { container } = render(<Upload {...props} allowPasteUpload />);
+      const { container } = render(<Upload {...props} pastable />);
       const rcUpload = container.querySelector('.rc-upload')!;
       const files = {
         name: 'foo',
