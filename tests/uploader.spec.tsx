@@ -50,13 +50,13 @@ const makeFileSystemEntryAsync = item => {
       return {
         async readEntries(handle, error) {
           await sleep(100);
-        
+
           if (!first) {
             return handle([]);
           }
 
           if (item.error && first) {
-            return error && error(new Error('read file error'))
+            return error && error(new Error('read file error'));
           }
 
           first = false;
@@ -349,6 +349,92 @@ describe('uploader', () => {
       }, 100);
     });
 
+    it('paste to upload', async () => {
+      const { container } = render(<Upload {...props} pastable />);
+      const input = container.querySelector('input')!;
+
+      const files = [
+        {
+          name: 'success.png',
+          toString() {
+            return this.name;
+          },
+        },
+      ];
+      (files as any).item = (i: number) => files[i];
+
+      handlers.onSuccess = (ret, file) => {
+        expect(ret[1]).toEqual(file.name);
+        expect(file).toHaveProperty('uid');
+      };
+
+      handlers.onError = err => {
+        throw err;
+      };
+
+      fireEvent.paste(input, {
+        clipboardData: { files },
+      });
+
+      await sleep(100);
+      requests[0].respond(200, {}, `["","${files[0].name}"]`);
+    });
+
+    it('paste unaccepted type files to upload will not trigger onStart', () => {
+      const input = uploader.container.querySelector('input')!;
+      const files = [
+        {
+          name: 'success.jpg',
+          toString() {
+            return this.name;
+          },
+        },
+      ];
+      (files as any).item = (i: number) => files[i];
+
+      fireEvent.paste(input, {
+        clipboardData: { files },
+      });
+      const mockStart = jest.fn();
+      handlers.onStart = mockStart;
+
+      expect(mockStart.mock.calls.length).toBe(0);
+    });
+
+    it('paste files with multiple false', async () => {
+      const { container } = render(<Upload {...props} multiple={false} pastable />);
+      const input = container.querySelector('input')!;
+      const files = [
+        new File([''], 'success.png', { type: 'image/png' }),
+        new File([''], 'filtered.png', { type: 'image/png' }),
+      ];
+      Object.defineProperty(files, 'item', {
+        value: i => files[i],
+      });
+
+      // Only can trigger once
+      let triggerTimes = 0;
+      handlers.onStart = () => {
+        triggerTimes += 1;
+      };
+      handlers.onSuccess = (ret, file) => {
+        expect(ret[1]).toEqual(file.name);
+        expect(file).toHaveProperty('uid');
+        expect(triggerTimes).toEqual(1);
+      };
+      handlers.onError = error => {
+        throw error;
+      };
+      Object.defineProperty(input, 'files', {
+        value: files,
+      });
+
+      fireEvent.paste(input, { clipboardData: { files } });
+
+      await sleep(100);
+      handlers.onSuccess!(['', files[0].name] as any, files[0] as any, null!);
+    });
+
     it('support action and data is function returns Promise', async () => {
       const action: any = () => {
         return new Promise(resolve => {
@@ -377,16 +463,18 @@ describe('uploader', () => {
     });
 
     it('should pass file to request', done => {
-      const fakeRequest = jest.fn((file) => {
-        expect(file).toEqual(expect.objectContaining({
-          filename: 'file', // <= https://github.com/react-component/upload/pull/574
-          file: expect.any(File),
-          method: 'post',
-          onError: expect.any(Function),
-          onProgress: expect.any(Function),
-          onSuccess: expect.any(Function),
-          data: expect.anything(),
-        }));
+      const fakeRequest = jest.fn(file => {
+        expect(file).toEqual(
+          expect.objectContaining({
+            filename: 'file', // <= https://github.com/react-component/upload/pull/574
+            file: expect.any(File),
+            method: 'post',
+            onError: expect.any(Function),
+            onProgress: expect.any(Function),
+            onSuccess: expect.any(Function),
+            data: expect.anything(),
+          }),
+        );
 
         done();
       });
@@ -441,6 +529,7 @@ describe('uploader', () => {
     beforeEach(() => {
       uploader = render(<Upload {...props} />);
     });
+
     it('beforeUpload should run after all children files are parsed', done => {
       const props = { action: '/test', directory: true, accept: '.png' };
       const mockBeforeUpload = jest.fn();
@@ -489,6 +578,7 @@ describe('uploader', () => {
         done();
       }, 100);
     });
+
     it('unaccepted type files to upload will not trigger onStart', done => {
       const input = uploader.container.querySelector('input')!;
       const files = {
@@ -563,14 +653,14 @@ describe('uploader', () => {
       fireEvent.drop(input, { dataTransfer: { items: [makeDataTransferItemAsync(files)] } });
       const mockStart = jest.fn();
       handlers.onStart = mockStart;
-      
+
       setTimeout(() => {
         expect(mockStart.mock.calls.length).toBe(2);
         done();
       }, 1000);
     });
 
-    it('dragging and dropping files to upload through asynchronous file reading with some readEntries method throw error', (done) => {
+    it('dragging and dropping files to upload through asynchronous file reading with some readEntries method throw error', done => {
       const input = uploader.container.querySelector('input')!;
 
       const files = {
@@ -593,7 +683,7 @@ describe('uploader', () => {
                     name: '8.png',
                   },
                 ],
-              }
+              },
             ],
           },
           {
@@ -612,7 +702,7 @@ describe('uploader', () => {
       fireEvent.drop(input, { dataTransfer: { items: [makeDataTransferItemAsync(files)] } });
       const mockStart = jest.fn();
       handlers.onStart = mockStart;
-      
+
       setTimeout(() => {
         expect(mockStart.mock.calls.length).toBe(1);
         done();
@@ -661,6 +751,27 @@ describe('uploader', () => {
         errSpy.mockRestore();
         done();
       }, 100);
+    });
+
+    it('paste directory', async () => {
+      const { container } = render(<Upload {...props} pastable />);
+      const rcUpload = container.querySelector('.rc-upload')!;
+      const files = {
+        name: 'foo',
+        children: [
+          {
+            name: '1.png',
+          },
+        ],
+      };
+
+      fireEvent.mouseEnter(rcUpload);
+      fireEvent.paste(rcUpload, { clipboardData: { items: [makeDataTransferItem(files)] } });
+      const mockStart = jest.fn();
+      handlers.onStart = mockStart;
+
+      await sleep(100);
+      expect(mockStart.mock.calls.length).toBe(1);
     });
   });
 

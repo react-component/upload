@@ -66,41 +66,75 @@ class AjaxUploader extends Component<UploadProps> {
     }
   };
 
-  onFileDrop = async (e: React.DragEvent<HTMLDivElement>) => {
-    const { multiple } = this.props;
-
+  onFileDropOrPaste = async (e: React.DragEvent<HTMLDivElement> | ClipboardEvent) => {
     e.preventDefault();
 
     if (e.type === 'dragover') {
       return;
     }
 
-    if (this.props.directory) {
-      const files = await traverseFileTree(
-        Array.prototype.slice.call(e.dataTransfer.items),
-        (_file: RcFile) => attrAccept(_file, this.props.accept),
+    const { multiple, accept, directory } = this.props;
+    let items: DataTransferItem[] = [];
+    let files: File[] = [];
+
+    if (e.type === 'drop') {
+      const dataTransfer = (e as React.DragEvent<HTMLDivElement>).dataTransfer;
+      items = [...(dataTransfer.items || [])];
+      files = [...(dataTransfer.files || [])];
+    } else if (e.type === 'paste') {
+      const clipboardData = (e as ClipboardEvent).clipboardData;
+      items = [...(clipboardData.items || [])];
+      files = [...(clipboardData.files || [])];
+    }
+
+    if (directory) {
+      files = await traverseFileTree(Array.prototype.slice.call(items), (_file: RcFile) =>
+        attrAccept(_file, this.props.accept),
       );
       this.uploadFiles(files);
     } else {
-      let files = [...e.dataTransfer.files].filter((file: RcFile) =>
-        attrAccept(file, this.props.accept),
-      );
+      let acceptFiles = [...files].filter((file: RcFile) => attrAccept(file, accept));
 
       if (multiple === false) {
-        files = files.slice(0, 1);
+        acceptFiles = files.slice(0, 1);
       }
 
-      this.uploadFiles(files);
+      this.uploadFiles(acceptFiles);
+    }
+  };
+
+  onPrePaste = (e: ClipboardEvent) => {
+    const { pastable } = this.props;
+
+    if (pastable) {
+      this.onFileDropOrPaste(e);
     }
   };
 
   componentDidMount() {
     this._isMounted = true;
+
+    const { pastable } = this.props;
+
+    if (pastable) {
+      document.addEventListener('paste', this.onPrePaste);
+    }
   }
 
   componentWillUnmount() {
     this._isMounted = false;
     this.abort();
+    document.removeEventListener('paste', this.onPrePaste);
+  }
+
+  componentDidUpdate(prevProps: UploadProps) {
+    const { pastable } = this.props;
+
+    if (pastable && !prevProps.pastable) {
+      document.addEventListener('paste', this.onPrePaste);
+    } else if (!pastable && prevProps.pastable) {
+      document.removeEventListener('paste', this.onPrePaste);
+    }
   }
 
   uploadFiles = (files: File[]) => {
@@ -299,8 +333,8 @@ class AjaxUploader extends Component<UploadProps> {
           onKeyDown: openFileDialogOnClick ? this.onKeyDown : () => {},
           onMouseEnter,
           onMouseLeave,
-          onDrop: this.onFileDrop,
-          onDragOver: this.onFileDrop,
+          onDrop: this.onFileDropOrPaste,
+          onDragOver: this.onFileDropOrPaste,
           tabIndex: hasControlInside ? undefined : '0',
         };
     return (
