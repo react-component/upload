@@ -67,8 +67,6 @@ class AjaxUploader extends Component<UploadProps> {
   };
 
   onFileDropOrPaste = async (e: React.DragEvent<HTMLDivElement> | ClipboardEvent) => {
-    e.preventDefault();
-
     if (e.type === 'dragover') {
       return;
     }
@@ -76,15 +74,22 @@ class AjaxUploader extends Component<UploadProps> {
     const { multiple, accept, directory } = this.props;
     let items: DataTransferItem[] = [];
     let files: File[] = [];
+    let hasFile: boolean = false;
 
     if (e.type === 'drop') {
       const dataTransfer = (e as React.DragEvent<HTMLDivElement>).dataTransfer;
       items = [...(dataTransfer.items || [])];
       files = [...(dataTransfer.files || [])];
+      hasFile = items.some(item => item.kind === 'file');
     } else if (e.type === 'paste') {
       const clipboardData = (e as ClipboardEvent).clipboardData;
       items = [...(clipboardData.items || [])];
       files = [...(clipboardData.files || [])];
+      hasFile = items.some(item => item.kind === 'file') || files.length > 0;
+    }
+
+    if (hasFile) {
+      e.preventDefault();
     }
 
     if (directory) {
