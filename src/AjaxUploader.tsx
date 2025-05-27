@@ -66,28 +66,11 @@ class AjaxUploader extends Component<UploadProps> {
     }
   };
 
-  onFileDropOrPaste = async (e: React.DragEvent<HTMLDivElement> | ClipboardEvent) => {
-    if (e.type === 'dragover') {
-      return;
-    }
-
+  onDataTransferFiles = async (dataTransfer: DataTransfer) => {
     const { multiple, accept, directory } = this.props;
-    let items: DataTransferItem[] = [];
-    let files: File[] = [];
 
-    if (e.type === 'drop') {
-      const dataTransfer = (e as React.DragEvent<HTMLDivElement>).dataTransfer;
-      items = [...(dataTransfer.items || [])];
-      files = [...(dataTransfer.files || [])];
-    } else if (e.type === 'paste') {
-      const clipboardData = (e as ClipboardEvent).clipboardData;
-      items = [...(clipboardData.items || [])];
-      files = [...(clipboardData.files || [])];
-    }
-
-    if (files.length > 0 || items.some(item => item.kind === 'file')) {
-      e.preventDefault();
-    }
+    const items: DataTransferItem[] = [...(dataTransfer.items || [])];
+    let files: File[] = [...(dataTransfer.files || [])];
 
     if (directory) {
       files = await traverseFileTree(Array.prototype.slice.call(items), (_file: RcFile) =>
@@ -105,11 +88,30 @@ class AjaxUploader extends Component<UploadProps> {
     }
   };
 
-  onPrePaste = (e: ClipboardEvent) => {
+  onFilePaste = async (e: ClipboardEvent) => {
     const { pastable } = this.props;
 
-    if (pastable) {
-      this.onFileDropOrPaste(e);
+    if (!pastable) {
+      return;
+    }
+
+    if (e.type === 'paste') {
+      const clipboardData = (e as ClipboardEvent).clipboardData;
+      return this.onDataTransferFiles(clipboardData);
+    }
+  };
+
+  onFileDragOver = (e: React.DragEvent<HTMLDivElement>) => {
+    e.preventDefault();
+  };
+
+  onFileDrop = async (e: React.DragEvent<HTMLDivElement>) => {
+    e.preventDefault();
+
+    if (e.type === 'drop') {
+      const dataTransfer = (e as React.DragEvent<HTMLDivElement>).dataTransfer;
+
+      return this.onDataTransferFiles(dataTransfer);
     }
   };
 
@@ -119,23 +121,23 @@ class AjaxUploader extends Component<UploadProps> {
     const { pastable } = this.props;
 
     if (pastable) {
-      document.addEventListener('paste', this.onPrePaste);
+      document.addEventListener('paste', this.onFilePaste);
     }
   }
 
   componentWillUnmount() {
     this._isMounted = false;
     this.abort();
-    document.removeEventListener('paste', this.onPrePaste);
+    document.removeEventListener('paste', this.onFilePaste);
   }
 
   componentDidUpdate(prevProps: UploadProps) {
     const { pastable } = this.props;
 
     if (pastable && !prevProps.pastable) {
-      document.addEventListener('paste', this.onPrePaste);
+      document.addEventListener('paste', this.onFilePaste);
     } else if (!pastable && prevProps.pastable) {
-      document.removeEventListener('paste', this.onPrePaste);
+      document.removeEventListener('paste', this.onFilePaste);
     }
   }
 
@@ -335,8 +337,8 @@ class AjaxUploader extends Component<UploadProps> {
           onKeyDown: openFileDialogOnClick ? this.onKeyDown : () => {},
           onMouseEnter,
           onMouseLeave,
-          onDrop: this.onFileDropOrPaste,
-          onDragOver: this.onFileDropOrPaste,
+          onDrop: this.onFileDrop,
+          onDragOver: this.onFileDragOver,
           tabIndex: hasControlInside ? undefined : '0',
         };
     return (
