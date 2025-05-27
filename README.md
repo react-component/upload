@@ -9,8 +9,8 @@ React Upload
 [![bundle size][bundlephobia-image]][bundlephobia-url]
 [![dumi][dumi-image]][dumi-url]
 
-[npm-image]: http://img.shields.io/npm/v/rc-select.svg?style=flat-square
-[npm-url]: http://npmjs.org/package/rc-select
+[npm-image]: http://img.shields.io/npm/v/rc-upload.svg?style=flat-square
+[npm-url]: http://npmjs.org/package/rc-upload
 [travis-image]: https://img.shields.io/travis/react-component/upload/master?style=flat-square
 [travis-url]: https://travis-ci.com/react-component/upload
 [github-actions-image]: https://github.com/react-component/upload/workflows/CI/badge.svg
@@ -21,10 +21,10 @@ React Upload
 [david-image]: https://david-dm.org/react-component/upload/status.svg?style=flat-square
 [david-dev-url]: https://david-dm.org/react-component/upload?type=dev
 [david-dev-image]: https://david-dm.org/react-component/upload/dev-status.svg?style=flat-square
-[download-image]: https://img.shields.io/npm/dm/rc-select.svg?style=flat-square
-[download-url]: https://npmjs.org/package/rc-select
-[bundlephobia-url]: https://bundlephobia.com/package/rc-select
-[bundlephobia-image]: https://badgen.net/bundlephobia/minzip/rc-select
+[download-image]: https://img.shields.io/npm/dm/rc-upload.svg?style=flat-square
+[download-url]: https://npmjs.org/package/rc-upload
+[bundlephobia-url]: https://bundlephobia.com/package/rc-upload
+[bundlephobia-image]: https://badgen.net/bundlephobia/minzip/rc-upload
 [dumi-url]: https://github.com/umijs/dumi
 [dumi-image]: https://img.shields.io/badge/docs%20by-dumi-blue?style=flat-square
 
