@@ -488,6 +488,42 @@ describe('uploader', () => {
 
       fireEvent.change(input, { target: { files } });
     });
+
+    it('should call preventDefault when paste contains files', () => {
+      const { container } = render(<Upload {...props} pastable />);
+      const input = container.querySelector('input')!;
+
+      const files = [new File([''], 'test.png', { type: 'image/png' })];
+
+      const preventDefaultSpy = jest.spyOn(Event.prototype, 'preventDefault');
+
+      fireEvent.paste(input, {
+        clipboardData: {
+          items: [{ kind: 'file' }],
+          files,
+        },
+      });
+
+      expect(preventDefaultSpy).toHaveBeenCalledTimes(1);
+      preventDefaultSpy.mockRestore();
+    });
+
+    it('should not call preventDefault when paste contains no files', () => {
+      const { container } = render(<Upload {...props} pastable />);
+      const input = container.querySelector('input')!;
+
+      const preventDefaultSpy = jest.spyOn(Event.prototype, 'preventDefault');
+
+      fireEvent.paste(input, {
+        clipboardData: {
+          items: [{ kind: 'string' }],
+          files: [],
+        },
+      });
+
+      expect(preventDefaultSpy).toHaveBeenCalledTimes(0);
+      preventDefaultSpy.mockRestore();
+    });
   });
 
   describe('directory uploader', () => {

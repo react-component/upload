@@ -67,8 +67,6 @@ class AjaxUploader extends Component<UploadProps> {
   };
 
   onFileDropOrPaste = async (e: React.DragEvent<HTMLDivElement> | ClipboardEvent) => {
-    e.preventDefault();
-
     if (e.type === 'dragover') {
       return;
     }
@@ -85,6 +83,10 @@ class AjaxUploader extends Component<UploadProps> {
       const clipboardData = (e as ClipboardEvent).clipboardData;
       items = [...(clipboardData.items || [])];
       files = [...(clipboardData.files || [])];
+    }
+
+    if (files.length > 0 || items.some(item => item.kind === 'file')) {
+      e.preventDefault();
     }
 
     if (directory) {
