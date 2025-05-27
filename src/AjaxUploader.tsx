@@ -66,11 +66,15 @@ class AjaxUploader extends Component<UploadProps> {
     }
   };
 
-  onDataTransferFiles = async (dataTransfer: DataTransfer) => {
+  onDataTransferFiles = async (dataTransfer: DataTransfer, existFileCallback?: () => void) => {
     const { multiple, accept, directory } = this.props;
 
     const items: DataTransferItem[] = [...(dataTransfer.items || [])];
     let files: File[] = [...(dataTransfer.files || [])];
+
+    if (files.length > 0 || items.some(item => item.kind === 'file')) {
+      existFileCallback?.();
+    }
 
     if (directory) {
       files = await traverseFileTree(Array.prototype.slice.call(items), (_file: RcFile) =>
@@ -97,7 +101,9 @@ class AjaxUploader extends Component<UploadProps> {
 
     if (e.type === 'paste') {
       const clipboardData = (e as ClipboardEvent).clipboardData;
-      return this.onDataTransferFiles(clipboardData);
+      return this.onDataTransferFiles(clipboardData, () => {
+        e.preventDefault();
+      });
     }
   };
 

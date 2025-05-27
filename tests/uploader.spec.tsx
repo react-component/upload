@@ -735,6 +735,12 @@ describe('uploader', () => {
           },
         ],
       };
+
+      const preventDefaultSpy = jest.spyOn(Event.prototype, 'preventDefault');
+
+      fireEvent.dragOver(input);
+      expect(preventDefaultSpy).toHaveBeenCalledTimes(1);
+
       fireEvent.drop(input, { dataTransfer: { items: [makeDataTransferItemAsync(files)] } });
       const mockStart = jest.fn();
       handlers.onStart = mockStart;
@@ -743,6 +749,8 @@ describe('uploader', () => {
         expect(mockStart.mock.calls.length).toBe(1);
         done();
       }, 1000);
+
+      preventDefaultSpy.mockRestore();
     });
 
     it('unaccepted type files to upload will not trigger onStart when select directory', done => {
