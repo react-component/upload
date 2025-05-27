@@ -5,4 +5,4 @@ nav:
   path: /demo
 ---
 
-<code src="../examples/drag.tsx"/></code>
+<code src="../examples/drag.tsx"></code>
