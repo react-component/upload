@@ -85,7 +85,7 @@ class AjaxUploader extends Component<UploadProps> {
       files = [...(clipboardData.files || [])];
     }
 
-    if (items.some(item => item.kind === 'file') || files.length > 0) {
+    if (files.length > 0 || items.some(item => item.kind === 'file')) {
       e.preventDefault();
     }
 
