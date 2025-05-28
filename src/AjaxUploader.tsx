@@ -85,7 +85,7 @@ class AjaxUploader extends Component<UploadProps> {
       let acceptFiles = [...files].filter((file: RcFile) => attrAccept(file, accept));
 
       if (multiple === false) {
-        acceptFiles = files.slice(0, 1);
+        acceptFiles = acceptFiles.slice(0, 1);
       }
 
       this.uploadFiles(acceptFiles);
