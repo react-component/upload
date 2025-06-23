@@ -24,7 +24,7 @@ interface ParsedFileInfo {
 class AjaxUploader extends Component<UploadProps> {
   state = { uid: getUid() };
 
-  reqs: any = {};
+  reqs: Record<string, any> = {};
 
   private fileInput: HTMLInputElement;
 
@@ -66,41 +66,85 @@ class AjaxUploader extends Component<UploadProps> {
     }
   };
 
-  onFileDrop = async (e: React.DragEvent<HTMLDivElement>) => {
-    const { multiple } = this.props;
+  onDataTransferFiles = async (dataTransfer: DataTransfer, existFileCallback?: () => void) => {
+    const { multiple, accept, directory } = this.props;
 
-    e.preventDefault();
+    const items: DataTransferItem[] = [...(dataTransfer.items || [])];
+    let files: File[] = [...(dataTransfer.files || [])];
 
-    if (e.type === 'dragover') {
-      return;
+    if (files.length > 0 || items.some(item => item.kind === 'file')) {
+      existFileCallback?.();
     }
 
-    if (this.props.directory) {
-      const files = await traverseFileTree(
-        Array.prototype.slice.call(e.dataTransfer.items),
-        (_file: RcFile) => attrAccept(_file, this.props.accept),
+    if (directory) {
+      files = await traverseFileTree(Array.prototype.slice.call(items), (_file: RcFile) =>
+        attrAccept(_file, this.props.accept),
       );
       this.uploadFiles(files);
     } else {
-      let files = [...e.dataTransfer.files].filter((file: RcFile) =>
-        attrAccept(file, this.props.accept),
-      );
+      let acceptFiles = [...files].filter((file: RcFile) => attrAccept(file, accept));
 
       if (multiple === false) {
-        files = files.slice(0, 1);
+        acceptFiles = files.slice(0, 1);
       }
 
-      this.uploadFiles(files);
+      this.uploadFiles(acceptFiles);
+    }
+  };
+
+  onFilePaste = async (e: ClipboardEvent) => {
+    const { pastable } = this.props;
+
+    if (!pastable) {
+      return;
+    }
+
+    if (e.type === 'paste') {
+      const clipboardData = (e as ClipboardEvent).clipboardData;
+      return this.onDataTransferFiles(clipboardData, () => {
+        e.preventDefault();
+      });
+    }
+  };
+
+  onFileDragOver = (e: React.DragEvent<HTMLDivElement>) => {
+    e.preventDefault();
+  };
+
+  onFileDrop = async (e: React.DragEvent<HTMLDivElement>) => {
+    e.preventDefault();
+
+    if (e.type === 'drop') {
+      const dataTransfer = (e as React.DragEvent<HTMLDivElement>).dataTransfer;
+
+      return this.onDataTransferFiles(dataTransfer);
     }
   };
 
   componentDidMount() {
     this._isMounted = true;
+
+    const { pastable } = this.props;
+
+    if (pastable) {
+      document.addEventListener('paste', this.onFilePaste);
+    }
   }
 
   componentWillUnmount() {
     this._isMounted = false;
     this.abort();
+    document.removeEventListener('paste', this.onFilePaste);
+  }
+
+  componentDidUpdate(prevProps: UploadProps) {
+    const { pastable } = this.props;
+
+    if (pastable && !prevProps.pastable) {
+      document.addEventListener('paste', this.onFilePaste);
+    } else if (!pastable && prevProps.pastable) {
+      document.removeEventListener('paste', this.onFilePaste);
+    }
   }
 
   uploadFiles = (files: File[]) => {
@@ -305,7 +349,7 @@ class AjaxUploader extends Component<UploadProps> {
           onMouseEnter,
           onMouseLeave,
           onDrop: this.onFileDrop,
-          onDragOver: this.onFileDrop,
+          onDragOver: this.onFileDragOver,
           tabIndex: hasControlInside ? undefined : '0',
         };
     return (

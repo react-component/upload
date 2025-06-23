@@ -5,4 +5,4 @@ nav:
   path: /demo
 ---
 
-<code src="../examples/asyncAction.tsx"/></code>
+<code src="../examples/asyncAction.tsx"></code>
