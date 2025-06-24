@@ -305,7 +305,7 @@ class AjaxUploader extends Component<UploadProps> {
     this.fileInput = node;
   };
 
-  eventHandler = (fn: (() => boolean) | boolean, originFn: Function, e: React.MouseEvent<HTMLDivElement> | React.KeyboardEvent<HTMLDivElement>) => {
+  eventHandler = (fn: (() => boolean) | boolean, originFn: (e: React.MouseEvent<HTMLDivElement> | React.KeyboardEvent<HTMLDivElement>) => void, e: React.MouseEvent<HTMLDivElement> | React.KeyboardEvent<HTMLDivElement>) => {
     if (typeof fn === 'function' ? fn() : fn) {
       originFn(e);
     }
