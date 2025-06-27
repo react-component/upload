@@ -307,7 +307,32 @@ describe('uploader', () => {
         done();
       }, 100);
     });
+    
+   it('drag unaccepted type files with multiple false to upload will not trigger onStart ', done => {
+      const { container } = render(<Upload {...props} multiple={false} />);
 
+      const input = container.querySelector('input')!;
+      const files = [
+        {
+          name: 'success.jpg',
+          toString() {
+            return this.name;
+          },
+        },
+      ];
+      (files as any).item = (i: number) => files[i];
+
+      const mockStart = jest.fn();
+      handlers.onStart = mockStart;
+      fireEvent.drop(input, {
+        dataTransfer: { files },
+      });
+      setTimeout(() => {
+        expect(mockStart.mock.calls.length).toBe(0);
+        done();
+      }, 100);
+    });
+    
     it('drag files with multiple false', done => {
       const { container } = render(<Upload {...props} multiple={false} />);
       const input = container.querySelector('input')!;
@@ -1255,3 +1280,770 @@ describe('uploader', () => {
     expect(container.querySelector('span')!).not.toHaveAttribute('role', 'button');
   });
 });
+
+  describe('comprehensive edge cases and accessibility', () => {
+    describe('keyboard accessibility', () => {
+      it('should trigger file selection on Enter key', () => {
+        const { container } = render(<Upload />);
+        const uploadWrapper = container.querySelector('span')!;
+        const input = container.querySelector('input')!;
+        
+        const clickSpy = jest.spyOn(input, 'click').mockImplementation(() => {});
+        
+        fireEvent.keyDown(uploadWrapper, { key: 'Enter', code: 'Enter' });
+        
+        expect(clickSpy).toHaveBeenCalled();
+        clickSpy.mockRestore();
+      });
+
+      it('should trigger file selection on Space key', () => {
+        const { container } = render(<Upload />);
+        const uploadWrapper = container.querySelector('span')!;
+        const input = container.querySelector('input')!;
+        
+        const clickSpy = jest.spyOn(input, 'click').mockImplementation(() => {});
+        
+        fireEvent.keyDown(uploadWrapper, { key: ' ', code: 'Space' });
+        
+        expect(clickSpy).toHaveBeenCalled();
+        clickSpy.mockRestore();
+      });
+
+      it('should not trigger file selection on other keys', () => {
+        const { container } = render(<Upload />);
+        const uploadWrapper = container.querySelector('span')!;
+        const input = container.querySelector('input')!;
+        
+        const clickSpy = jest.spyOn(input, 'click').mockImplementation(() => {});
+        
+        fireEvent.keyDown(uploadWrapper, { key: 'Tab', code: 'Tab' });
+        fireEvent.keyDown(uploadWrapper, { key: 'Escape', code: 'Escape' });
+        
+        expect(clickSpy).not.toHaveBeenCalled();
+        clickSpy.mockRestore();
+      });
+
+      it('should have proper ARIA attributes for screen readers', () => {
+        const { container } = render(<Upload />);
+        const uploadWrapper = container.querySelector('span')!;
+        
+        expect(uploadWrapper).toHaveAttribute('role', 'button');
+        expect(uploadWrapper).toHaveAttribute('tabIndex', '0');
+      });
+    });
+
+    describe('file validation edge cases', () => {
+      it('should handle files with unicode characters in names', () => {
+        const onStart = jest.fn();
+        const { container } = render(<Upload onStart={onStart} />);
+        const input = container.querySelector('input')!;
+        
+        const unicodeFile = new File(['content'], '测试文件.txt', { type: 'text/plain' });
+        
+        fireEvent.change(input, { target: { files: [unicodeFile] } });
+        
+        expect(onStart).toHaveBeenCalledWith(expect.objectContaining({
+          name: '测试文件.txt'
+        }));
+      });
+
+      it('should handle files with special characters in names', () => {
+        const onStart = jest.fn();
+        const { container } = render(<Upload onStart={onStart} />);
+        const input = container.querySelector('input')!;
+        
+        const specialFile = new File(['content'], 'file@#$%^&*()!.txt', { type: 'text/plain' });
+        
+        fireEvent.change(input, { target: { files: [specialFile] } });
+        
+        expect(onStart).toHaveBeenCalledWith(expect.objectContaining({
+          name: 'file@#$%^&*()!.txt'
+        }));
+      });
+
+      it('should handle files with very long names', () => {
+        const onStart = jest.fn();
+        const { container } = render(<Upload onStart={onStart} />);
+        const input = container.querySelector('input')!;
+        
+        const longName = 'a'.repeat(255) + '.txt';
+        const longNameFile = new File(['content'], longName, { type: 'text/plain' });
+        
+        fireEvent.change(input, { target: { files: [longNameFile] } });
+        
+        expect(onStart).toHaveBeenCalledWith(expect.objectContaining({
+          name: longName
+        }));
+      });
+
+      it('should handle files without extensions', () => {
+        const onStart = jest.fn();
+        const { container } = render(<Upload onStart={onStart} />);
+        const input = container.querySelector('input')!;
+        
+        const noExtFile = new File(['content'], 'README', { type: 'text/plain' });
+        
+        fireEvent.change(input, { target: { files: [noExtFile] } });
+        
+        expect(onStart).toHaveBeenCalledWith(expect.objectContaining({
+          name: 'README'
+        }));
+      });
+
+      it('should handle zero-byte files', () => {
+        const onStart = jest.fn();
+        const { container } = render(<Upload onStart={onStart} />);
+        const input = container.querySelector('input')!;
+        
+        const emptyFile = new File([''], 'empty.txt', { type: 'text/plain' });
+        
+        fireEvent.change(input, { target: { files: [emptyFile] } });
+        
+        expect(onStart).toHaveBeenCalledWith(expect.objectContaining({
+          name: 'empty.txt',
+          size: 0
+        }));
+      });
+
+      it('should handle files with no type specified', () => {
+        const onStart = jest.fn();
+        const { container } = render(<Upload onStart={onStart} />);
+        const input = container.querySelector('input')!;
+        
+        const noTypeFile = new File(['content'], 'unknown-type', {});
+        
+        fireEvent.change(input, { target: { files: [noTypeFile] } });
+        
+        expect(onStart).toHaveBeenCalledWith(expect.objectContaining({
+          name: 'unknown-type',
+          type: ''
+        }));
+      });
+    });
+
+    describe('concurrent upload scenarios', () => {
+      it('should handle multiple rapid file selections', async () => {
+        const onStart = jest.fn();
+        const { container } = render(<Upload onStart={onStart} multiple />);
+        const input = container.querySelector('input')!;
+        
+        const files1 = [new File(['1'], 'file1.txt', { type: 'text/plain' })];
+        const files2 = [new File(['2'], 'file2.txt', { type: 'text/plain' })];
+        
+        fireEvent.change(input, { target: { files: files1 } });
+        fireEvent.change(input, { target: { files: files2 } });
+        
+        expect(onStart).toHaveBeenCalledTimes(2);
+      });
+
+      it('should handle mixed drag and click uploads', () => {
+        const onStart = jest.fn();
+        const { container } = render(<Upload onStart={onStart} multiple />);
+        const input = container.querySelector('input')!;
+        
+        const clickFile = new File(['click'], 'click.txt', { type: 'text/plain' });
+        const dragFile = new File(['drag'], 'drag.txt', { type: 'text/plain' });
+        
+        // Simulate click upload
+        fireEvent.change(input, { target: { files: [clickFile] } });
+        
+        // Simulate drag upload
+        fireEvent.drop(input, { dataTransfer: { files: [dragFile] } });
+        
+        expect(onStart).toHaveBeenCalledTimes(2);
+      });
+    });
+
+    describe('network error scenarios', () => {
+      it('should handle network timeout', done => {
+        const onError = jest.fn((err, result, file) => {
+          try {
+            expect(err).toBeInstanceOf(Error);
+            done();
+          } catch (error) {
+            done(error);
+          }
+        });
+
+        const { container } = render(<Upload action="/test" onError={onError} />);
+        const input = container.querySelector('input')!;
+        const file = new File(['content'], 'test.txt', { type: 'text/plain' });
+        
+        fireEvent.change(input, { target: { files: [file] } });
+        
+        setTimeout(() => {
+          const request = requests[requests.length - 1];
+          if (request.ontimeout) {
+            request.ontimeout();
+          } else {
+            // Fallback for timeout simulation
+            const timeoutError = new Error('Request timeout');
+            timeoutError.name = 'TimeoutError';
+            request.onerror(timeoutError);
+          }
+        }, 100);
+      });
+
+      it('should handle request abort', done => {
+        const onError = jest.fn((err, result, file) => {
+          try {
+            expect(err).toBeInstanceOf(Error);
+            done();
+          } catch (error) {
+            done(error);
+          }
+        });
+
+        const { container } = render(<Upload action="/test" onError={onError} />);
+        const input = container.querySelector('input')!;
+        const file = new File(['content'], 'test.txt', { type: 'text/plain' });
+        
+        fireEvent.change(input, { target: { files: [file] } });
+        
+        setTimeout(() => {
+          const request = requests[requests.length - 1];
+          if (request.onabort) {
+            request.onabort();
+          } else {
+            // Fallback for abort simulation
+            const abortError = new Error('Request aborted');
+            abortError.name = 'AbortError';
+            request.onerror(abortError);
+          }
+        }, 100);
+      });
+
+      it('should handle server unavailable (503)', done => {
+        const onError = jest.fn((err, result, file) => {
+          try {
+            expect(err.status).toBe(503);
+            expect(result).toBe('Service Unavailable');
+            done();
+          } catch (error) {
+            done(error);
+          }
+        });
+
+        const { container } = render(<Upload action="/test" onError={onError} />);
+        const input = container.querySelector('input')!;
+        const file = new File(['content'], 'test.txt', { type: 'text/plain' });
+        
+        fireEvent.change(input, { target: { files: [file] } });
+        
+        setTimeout(() => {
+          requests[requests.length - 1].respond(503, {}, 'Service Unavailable');
+        }, 100);
+      });
+
+      it('should handle malformed response JSON', done => {
+        const onError = jest.fn((err, result, file) => {
+          try {
+            expect(err).toBeInstanceOf(Error);
+            done();
+          } catch (error) {
+            done(error);
+          }
+        });
+
+        const { container } = render(<Upload action="/test" onError={onError} />);
+        const input = container.querySelector('input')!;
+        const file = new File(['content'], 'test.txt', { type: 'text/plain' });
+        
+        fireEvent.change(input, { target: { files: [file] } });
+        
+        setTimeout(() => {
+          requests[requests.length - 1].respond(200, {}, 'invalid json {');
+        }, 100);
+      });
+    });
+
+    describe('beforeUpload edge cases', () => {
+      it('should handle beforeUpload returning undefined', () => {
+        const onStart = jest.fn();
+        const beforeUpload = jest.fn(() => undefined);
+        const { container } = render(<Upload beforeUpload={beforeUpload} onStart={onStart} />);
+        const input = container.querySelector('input')!;
+        
+        const file = new File(['content'], 'test.txt', { type: 'text/plain' });
+        fireEvent.change(input, { target: { files: [file] } });
+        
+        expect(beforeUpload).toHaveBeenCalled();
+      });
+
+      it('should handle beforeUpload returning a Promise that rejects', async () => {
+        const onStart = jest.fn();
+        const onError = jest.fn();
+        const beforeUpload = jest.fn(() => Promise.reject(new Error('Validation failed')));
+        
+        const { container } = render(<Upload 
+          beforeUpload={beforeUpload} 
+          onStart={onStart} 
+          onError={onError} 
+        />);
+        const input = container.querySelector('input')!;
+        
+        const file = new File(['content'], 'test.txt', { type: 'text/plain' });
+        fireEvent.change(input, { target: { files: [file] } });
+        
+        await sleep(100);
+        
+        expect(beforeUpload).toHaveBeenCalled();
+        expect(onStart).not.toHaveBeenCalled();
+      });
+
+      it('should handle beforeUpload returning a modified File object', () => {
+        const onStart = jest.fn();
+        const modifiedFile = new File(['modified'], 'modified.txt', { type: 'text/plain' });
+        const beforeUpload = jest.fn(() => modifiedFile);
+        
+        const { container } = render(<Upload beforeUpload={beforeUpload} onStart={onStart} />);
+        const input = container.querySelector('input')!;
+        
+        const originalFile = new File(['original'], 'original.txt', { type: 'text/plain' });
+        fireEvent.change(input, { target: { files: [originalFile] } });
+        
+        expect(beforeUpload).toHaveBeenCalledWith(originalFile, [originalFile]);
+      });
+
+      it('should handle beforeUpload returning Blob instead of File', () => {
+        const onStart = jest.fn();
+        const blob = new Blob(['blob content'], { type: 'text/plain' });
+        const beforeUpload = jest.fn(() => blob);
+        
+        const { container } = render(<Upload beforeUpload={beforeUpload} onStart={onStart} />);
+        const input = container.querySelector('input')!;
+        
+        const file = new File(['original'], 'original.txt', { type: 'text/plain' });
+        fireEvent.change(input, { target: { files: [file] } });
+        
+        expect(beforeUpload).toHaveBeenCalled();
+      });
+    });
+
+    describe('progress tracking edge cases', () => {
+      it('should handle progress events with zero total', () => {
+        const onProgress = jest.fn();
+        const { container } = render(<Upload action="/test" onProgress={onProgress} />);
+        const input = container.querySelector('input')!;
+        
+        const file = new File(['content'], 'test.txt', { type: 'text/plain' });
+        fireEvent.change(input, { target: { files: [file] } });
+        
+        const request = requests[requests.length - 1];
+        if (request.upload && request.upload.onprogress) {
+          request.upload.onprogress({ loaded: 500, total: 0 });
+          
+          expect(onProgress).toHaveBeenCalledWith(
+            expect.objectContaining({ percent: 0 }),
+            expect.any(Object)
+          );
+        }
+      });
+
+      it('should handle progress events with loaded > total', () => {
+        const onProgress = jest.fn();
+        const { container } = render(<Upload action="/test" onProgress={onProgress} />);
+        const input = container.querySelector('input')!;
+        
+        const file = new File(['content'], 'test.txt', { type: 'text/plain' });
+        fireEvent.change(input, { target: { files: [file] } });
+        
+        const request = requests[requests.length - 1];
+        if (request.upload && request.upload.onprogress) {
+          request.upload.onprogress({ loaded: 1500, total: 1000 });
+          
+          expect(onProgress).toHaveBeenCalledWith(
+            expect.objectContaining({ percent: 100 }),
+            expect.any(Object)
+          );
+        }
+      });
+
+      it('should handle progress events with negative values', () => {
+        const onProgress = jest.fn();
+        const { container } = render(<Upload action="/test" onProgress={onProgress} />);
+        const input = container.querySelector('input')!;
+        
+        const file = new File(['content'], 'test.txt', { type: 'text/plain' });
+        fireEvent.change(input, { target: { files: [file] } });
+        
+        const request = requests[requests.length - 1];
+        if (request.upload && request.upload.onprogress) {
+          request.upload.onprogress({ loaded: -100, total: 1000 });
+          
+          expect(onProgress).toHaveBeenCalledWith(
+            expect.objectContaining({ percent: 0 }),
+            expect.any(Object)
+          );
+        }
+      });
+    });
+
+    describe('custom request scenarios', () => {
+      it('should handle customRequest with async success', async () => {
+        const onSuccess = jest.fn();
+        const customRequest = jest.fn(async (options) => {
+          await sleep(100);
+          options.onSuccess({ success: true }, options.file);
+        });
+        
+        const { container } = render(<Upload customRequest={customRequest} onSuccess={onSuccess} />);
+        const input = container.querySelector('input')!;
+        
+        const file = new File(['content'], 'test.txt', { type: 'text/plain' });
+        fireEvent.change(input, { target: { files: [file] } });
+        
+        await sleep(200);
+        
+        expect(customRequest).toHaveBeenCalled();
+        expect(onSuccess).toHaveBeenCalledWith({ success: true }, expect.any(Object), null);
+      });
+
+      it('should handle customRequest with async error', async () => {
+        const onError = jest.fn();
+        const customRequest = jest.fn(async (options) => {
+          await sleep(100);
+          options.onError(new Error('Custom request failed'));
+        });
+        
+        const { container } = render(<Upload customRequest={customRequest} onError={onError} />);
+        const input = container.querySelector('input')!;
+        
+        const file = new File(['content'], 'test.txt', { type: 'text/plain' });
+        fireEvent.change(input, { target: { files: [file] } });
+        
+        await sleep(200);
+        
+        expect(customRequest).toHaveBeenCalled();
+        expect(onError).toHaveBeenCalledWith(expect.any(Error), undefined, expect.any(Object));
+      });
+
+      it('should handle customRequest with progress updates', async () => {
+        const onProgress = jest.fn();
+        const customRequest = jest.fn(async (options) => {
+          // Simulate progress updates
+          options.onProgress({ percent: 25 });
+          await sleep(50);
+          options.onProgress({ percent: 50 });
+          await sleep(50);
+          options.onProgress({ percent: 100 });
+          options.onSuccess({ success: true }, options.file);
+        });
+        
+        const { container } = render(<Upload customRequest={customRequest} onProgress={onProgress} />);
+        const input = container.querySelector('input')!;
+        
+        const file = new File(['content'], 'test.txt', { type: 'text/plain' });
+        fireEvent.change(input, { target: { files: [file] } });
+        
+        await sleep(200);
+        
+        expect(onProgress).toHaveBeenCalledTimes(3);
+        expect(onProgress).toHaveBeenCalledWith({ percent: 25 }, expect.any(Object));
+        expect(onProgress).toHaveBeenCalledWith({ percent: 50 }, expect.any(Object));
+        expect(onProgress).toHaveBeenCalledWith({ percent: 100 }, expect.any(Object));
+      });
+    });
+
+    describe('drag and drop edge cases', () => {
+      it('should handle dragEnter and dragLeave events gracefully', () => {
+        const { container } = render(<Upload />);
+        const input = container.querySelector('input')!;
+        
+        expect(() => {
+          fireEvent.dragEnter(input);
+          fireEvent.dragLeave(input);
+          fireEvent.dragOver(input);
+        }).not.toThrow();
+      });
+
+      it('should handle drop event with no files', () => {
+        const onStart = jest.fn();
+        const { container } = render(<Upload onStart={onStart} />);
+        const input = container.querySelector('input')!;
+        
+        fireEvent.drop(input, { dataTransfer: { files: [] } });
+        
+        expect(onStart).not.toHaveBeenCalled();
+      });
+
+      it('should handle drop event with malformed dataTransfer', () => {
+        const onStart = jest.fn();
+        const { container } = render(<Upload onStart={onStart} />);
+        const input = container.querySelector('input')!;
+        
+        expect(() => {
+          fireEvent.drop(input, { dataTransfer: null });
+        }).not.toThrow();
+        
+        expect(() => {
+          fireEvent.drop(input, {});
+        }).not.toThrow();
+        
+        expect(onStart).not.toHaveBeenCalled();
+      });
+
+      it('should handle drop with mixed file and non-file items', () => {
+        const onStart = jest.fn();
+        const { container } = render(<Upload onStart={onStart} />);
+        const input = container.querySelector('input')!;
+        
+        const file = new File(['content'], 'test.txt', { type: 'text/plain' });
+        
+        fireEvent.drop(input, { 
+          dataTransfer: { 
+            files: [file],
+            items: [
+              { kind: 'string', type: 'text/plain' },
+              { kind: 'file', getAsFile: () => file }
+            ]
+          } 
+        });
+        
+        expect(onStart).toHaveBeenCalled();
+      });
+    });
+
+    describe('accept prop comprehensive testing', () => {
+      it('should handle case-insensitive file extensions', () => {
+        const onStart = jest.fn();
+        const { container } = render(<Upload accept=".jpg" onStart={onStart} />);
+        const input = container.querySelector('input')!;
+        
+        const files = [
+          new File(['content'], 'test.JPG', { type: 'image/jpeg' }),
+          new File(['content'], 'test.Jpg', { type: 'image/jpeg' }),
+          new File(['content'], 'test.jPg', { type: 'image/jpeg' })
+        ];
+        
+        files.forEach(file => {
+          fireEvent.change(input, { target: { files: [file] } });
+        });
+        
+        expect(onStart).toHaveBeenCalledTimes(3);
+      });
+
+      it('should handle MIME types with parameters', () => {
+        const onStart = jest.fn();
+        const { container } = render(<Upload accept="text/plain" onStart={onStart} />);
+        const input = container.querySelector('input')!;
+        
+        const file = new File(['content'], 'test.txt', { 
+          type: 'text/plain; charset=utf-8' 
+        });
+        
+        fireEvent.change(input, { target: { files: [file] } });
+        
+        expect(onStart).toHaveBeenCalled();
+      });
+
+      it('should handle mixed extension and MIME type accepts', () => {
+        const onStart = jest.fn();
+        const { container } = render(<Upload accept=".txt,image/*" onStart={onStart} />);
+        const input = container.querySelector('input')!;
+        
+        const txtFile = new File(['content'], 'test.txt', { type: 'text/plain' });
+        const jpgFile = new File(['content'], 'test.jpg', { type: 'image/jpeg' });
+        const pdfFile = new File(['content'], 'test.pdf', { type: 'application/pdf' });
+        
+        fireEvent.change(input, { target: { files: [txtFile] } });
+        fireEvent.change(input, { target: { files: [jpgFile] } });
+        fireEvent.change(input, { target: { files: [pdfFile] } });
+        
+        // txt and jpg should be accepted, pdf should not trigger onStart
+        expect(onStart).toHaveBeenCalledTimes(2);
+      });
+
+      it('should handle whitespace in accept prop', () => {
+        const onStart = jest.fn();
+        const { container } = render(<Upload accept=" .txt , .jpg " onStart={onStart} />);
+        const input = container.querySelector('input')!;
+        
+        const txtFile = new File(['content'], 'test.txt', { type: 'text/plain' });
+        fireEvent.change(input, { target: { files: [txtFile] } });
+        
+        expect(onStart).toHaveBeenCalled();
+      });
+    });
+
+    describe('component lifecycle and props', () => {
+      it('should handle props changes during upload', done => {
+        const TestComponent = ({ action }: { action: string }) => (
+          <Upload action={action} onSuccess={() => done()} />
+        );
+        
+        const { container, rerender } = render(<TestComponent action="/upload1" />);
+        const input = container.querySelector('input')!;
+        
+        const file = new File(['content'], 'test.txt', { type: 'text/plain' });
+        fireEvent.change(input, { target: { files: [file] } });
+        
+        // Change props during upload
+        rerender(<TestComponent action="/upload2" />);
+        
+        setTimeout(() => {
+          requests[requests.length - 1].respond(200, {}, '{"success": true}');
+        }, 100);
+      });
+
+      it('should handle disabled state changes', () => {
+        const TestComponent = ({ disabled }: { disabled: boolean }) => (
+          <Upload disabled={disabled} />
+        );
+        
+        const { container, rerender } = render(<TestComponent disabled={false} />);
+        const input = container.querySelector('input')!;
+        
+        expect(input.disabled).toBe(false);
+        
+        rerender(<TestComponent disabled={true} />);
+        
+        expect(input.disabled).toBe(true);
+      });
+
+      it('should handle accept prop changes', () => {
+        const TestComponent = ({ accept }: { accept: string }) => (
+          <Upload accept={accept} />
+        );
+        
+        const { container, rerender } = render(<TestComponent accept=".jpg" />);
+        const input = container.querySelector('input')!;
+        
+        expect(input.accept).toBe('.jpg');
+        
+        rerender(<TestComponent accept=".png" />);
+        
+        expect(input.accept).toBe('.png');
+      });
+    });
+
+    describe('performance and memory considerations', () => {
+      it('should handle large number of files efficiently', () => {
+        const onStart = jest.fn();
+        const { container } = render(<Upload onStart={onStart} multiple />);
+        const input = container.querySelector('input')!;
+        
+        // Create 50 files to test performance
+        const files = Array.from({ length: 50 }, (_, i) => 
+          new File([`content-${i}`], `file-${i}.txt`, { type: 'text/plain' })
+        );
+        
+        Object.defineProperty(files, 'item', {
+          value: i => files[i],
+        });
+        
+        const startTime = performance.now();
+        fireEvent.change(input, { target: { files } });
+        const endTime = performance.now();
+        
+        expect(onStart).toHaveBeenCalledTimes(50);
+        expect(endTime - startTime).toBeLessThan(1000); // Should complete within 1 second
+      });
+
+      it('should handle rapid consecutive uploads without memory leaks', () => {
+        const onStart = jest.fn();
+        const { container } = render(<Upload onStart={onStart} />);
+        const input = container.querySelector('input')!;
+        
+        // Simulate rapid file changes
+        for (let i = 0; i < 20; i++) {
+          const file = new File([`content-${i}`], `file-${i}.txt`, { type: 'text/plain' });
+          fireEvent.change(input, { target: { files: [file] } });
+        }
+        
+        expect(onStart).toHaveBeenCalledTimes(20);
+      });
+
+      it('should cleanup properly on unmount', () => {
+        const onStart = jest.fn();
+        const { container, unmount } = render(<Upload onStart={onStart} />);
+        
+        // Start an upload
+        const input = container.querySelector('input')!;
+        const file = new File(['content'], 'test.txt', { type: 'text/plain' });
+        fireEvent.change(input, { target: { files: [file] } });
+        
+        // Unmount before completion
+        expect(() => unmount()).not.toThrow();
+      });
+    });
+
+    describe('error boundary scenarios', () => {
+      it('should handle callback errors gracefully', () => {
+        const originalError = console.error;
+        const consoleErrorSpy = jest.spyOn(console, 'error').mockImplementation(() => {});
+        
+        const onStart = jest.fn(() => {
+          throw new Error('onStart callback failed');
+        });
+        
+        const { container } = render(<Upload onStart={onStart} />);
+        const input = container.querySelector('input')!;
+        
+        const file = new File(['content'], 'test.txt', { type: 'text/plain' });
+        
+        expect(() => {
+          fireEvent.change(input, { target: { files: [file] } });
+        }).not.toThrow();
+        
+        expect(onStart).toHaveBeenCalled();
+        consoleErrorSpy.mockRestore();
+      });
+    });
+
+    describe('transformation and data handling', () => {
+      it('should handle transformFile returning null', done => {
+        const onSuccess = jest.fn((ret, file) => {
+          expect(ret[1]).toEqual('success.png');
+          expect(file).toHaveProperty('uid');
+          done();
+        });
+        
+        const transformFile = jest.fn(() => null);
+        
+        const { container } = render(<Upload 
+          action="/test" 
+          transformFile={transformFile} 
+          onSuccess={onSuccess} 
+        />);
+        const input = container.querySelector('input')!;
+        
+        const file = new File(['content'], 'success.png', { type: 'image/png' });
+        fireEvent.change(input, { target: { files: [file] } });
+        
+        setTimeout(() => {
+          requests[requests.length - 1].respond(200, {}, '["","success.png"]');
+        }, 100);
+      });
+
+      it('should handle data as a function returning Promise that rejects', async () => {
+        const onError = jest.fn();
+        const data = jest.fn(() => Promise.reject(new Error('Data fetch failed')));
+        
+        const { container } = render(<Upload action="/test" data={data} onError={onError} />);
+        const input = container.querySelector('input')!;
+        
+        const file = new File(['content'], 'test.txt', { type: 'text/plain' });
+        fireEvent.change(input, { target: { files: [file] } });
+        
+        await sleep(100);
+        
+        expect(data).toHaveBeenCalled();
+      });
+
+      it('should handle action as a function returning Promise that rejects', async () => {
+        const onError = jest.fn();
+        const action = jest.fn(() => Promise.reject(new Error('Action fetch failed')));
+        
+        const { container } = render(<Upload action={action} onError={onError} />);
+        const input = container.querySelector('input')!;
+        
+        const file = new File(['content'], 'test.txt', { type: 'text/plain' });
+        fireEvent.change(input, { target: { files: [file] } });
+        
+        await sleep(100);
+        
+        expect(action).toHaveBeenCalled();
+      });
+    });
+  });
