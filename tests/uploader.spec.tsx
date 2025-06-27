@@ -307,7 +307,32 @@ describe('uploader', () => {
         done();
       }, 100);
     });
+    
+   it('drag unaccepted type files with multiple false to upload will not trigger onStart ', done => {
+      const { container } = render(<Upload {...props} multiple={false} />);
 
+      const input = container.querySelector('input')!;
+      const files = [
+        {
+          name: 'success.jpg',
+          toString() {
+            return this.name;
+          },
+        },
+      ];
+      (files as any).item = (i: number) => files[i];
+
+      fireEvent.drop(input, {
+        dataTransfer: { files },
+      });
+      const mockStart = jest.fn();
+      handlers.onStart = mockStart;
+      setTimeout(() => {
+        expect(mockStart.mock.calls.length).toBe(0);
+        done();
+      }, 100);
+    });
+    
     it('drag files with multiple false', done => {
       const { container } = render(<Upload {...props} multiple={false} />);
       const input = container.querySelector('input')!;
