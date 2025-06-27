@@ -322,11 +322,11 @@ describe('uploader', () => {
       ];
       (files as any).item = (i: number) => files[i];
 
+      const mockStart = jest.fn();
+      handlers.onStart = mockStart;
       fireEvent.drop(input, {
         dataTransfer: { files },
       });
-      const mockStart = jest.fn();
-      handlers.onStart = mockStart;
       setTimeout(() => {
         expect(mockStart.mock.calls.length).toBe(0);
         done();
