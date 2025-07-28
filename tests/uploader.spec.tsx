@@ -1038,6 +1038,18 @@ describe('uploader', () => {
         directory: false,
       },
     );
+
+    it('should trigger beforeUpload when uploading non-accepted files in folder mode', () => {
+      const beforeUpload = jest.fn();
+      const { container } = render(<Upload accept=".png" folder beforeUpload={beforeUpload} />);
+
+      fireEvent.change(container.querySelector('input')!, {
+        target: {
+          files: [new File([], 'bamboo.png'), new File([], 'light.jpg')],
+        },
+      });
+      expect(beforeUpload).toHaveBeenCalledTimes(2);
+    });
   });
 
   describe('transform file before request', () => {
