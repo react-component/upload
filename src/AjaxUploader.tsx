@@ -1,6 +1,7 @@
 /* eslint react/no-is-mounted:0,react/sort-comp:0,react/prop-types:0 */
 import clsx from 'classnames';
 import pickAttrs from 'rc-util/lib/pickAttrs';
+import warning from 'rc-util/lib/warning';
 import React, { Component } from 'react';
 import attrAccept from './attr-accept';
 import type {
@@ -321,21 +322,26 @@ class AjaxUploader extends Component<UploadProps> {
       capture,
       children,
       directory,
+      folder,
       openFileDialogOnClick,
       onMouseEnter,
       onMouseLeave,
       hasControlInside,
       ...otherProps
     } = this.props;
+
+    warning(
+      !('directory' in this.props),
+      'directory will be deprecated, please use folder. folder will not filter files other than accept, just like the native method.',
+    );
     const cls = clsx({
       [prefixCls]: true,
       [`${prefixCls}-disabled`]: disabled,
       [className]: className,
     });
     // because input don't have directory/webkitdirectory type declaration
-    const dirProps: any = directory
-      ? { directory: 'directory', webkitdirectory: 'webkitdirectory' }
-      : {};
+    const dirProps: any =
+      directory || folder ? { directory: 'directory', webkitdirectory: 'webkitdirectory' } : {};
     const events = disabled
       ? {}
       : {
