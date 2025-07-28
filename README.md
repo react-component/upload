@@ -83,7 +83,7 @@ React.render(<Upload />, container);
 |beforeUpload| function |null| before upload check, return false or a rejected Promise will stop upload, only for modern browsers|
 |customRequest | function | null | provide an override for the default xhr behavior for additional customization|
 |withCredentials | boolean | false | ajax upload with cookie send |
-|openFileDialogOnClick | boolean | true | useful for drag only upload as it does not trigger on enter key or click event |
+|openFileDialogOnClick | boolean/function():boolean | true | useful for drag only upload as it does not trigger on enter key or click event |
 |pastable | boolean | false | support paste upload |
 
 #### onError arguments
