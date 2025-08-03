@@ -1,6 +1,6 @@
 /* eslint no-console:0 */
 
-import { Action } from '@/interface';
+import type { Action, RcFile } from '@/interface';
 import Upload from 'rc-upload';
 
 const props = {
@@ -15,9 +15,9 @@ const props = {
   onError(err) {
     console.log('onError', err);
   },
-  beforeUpload(file, fileList) {
+  beforeUpload(file: RcFile, fileList: RcFile[]) {
     console.log(file, fileList);
-    return new Promise<string>(resolve => {
+    return new Promise<RcFile>(resolve => {
       console.log('start check');
       setTimeout(() => {
         console.log('check finshed');
