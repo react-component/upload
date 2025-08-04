@@ -1199,6 +1199,53 @@ describe('uploader', () => {
     });
   });
 
+  describe('openFileDialogOnClick', () => {
+    it('should block click when set to false', () => {
+      const onClick = jest.fn();
+      const { container } = render(<Upload openFileDialogOnClick={false} onClick={onClick} />);
+      fireEvent.click(container.querySelector('.rc-upload')!);
+      expect(onClick).not.toHaveBeenCalled();
+    });
+
+    it('should allow click when set to true', () => {
+      const onClick = jest.fn();
+      const { container } = render(<Upload openFileDialogOnClick={true} onClick={onClick} />);
+      fireEvent.click(container.querySelector('.rc-upload')!);
+      expect(onClick).toHaveBeenCalled();
+    });
+
+    it('should block click when function returns false', () => {
+      const onClick = jest.fn();
+      const { container } = render(<Upload openFileDialogOnClick={() => false} onClick={onClick} />);
+      fireEvent.click(container.querySelector('.rc-upload')!);
+      expect(onClick).not.toHaveBeenCalled();
+    });
+
+    it('should allow click when function returns true', () => {
+      const onClick = jest.fn();
+      const { container } = render(<Upload openFileDialogOnClick={() => true} onClick={onClick} />);      
+      fireEvent.click(container.querySelector('.rc-upload')!);
+      expect(onClick).toHaveBeenCalled();
+    });
+
+    it('should support dynamic function return value', () => {
+      let shouldOpen = false;
+      const onClick = jest.fn();
+      const { container, rerender } = render(<Upload openFileDialogOnClick={() => shouldOpen} onClick={onClick} />);
+      
+      // first click (shouldOpen = false)
+      fireEvent.click(container.querySelector('.rc-upload')!);
+      expect(onClick).not.toHaveBeenCalled();
+
+      shouldOpen = true;
+      rerender(<Upload openFileDialogOnClick={() => shouldOpen} onClick={onClick} />);
+
+      // second click (shouldOpen = true)
+      fireEvent.click(container.querySelector('.rc-upload')!);
+      expect(onClick).toHaveBeenCalled();
+    });
+  });
+
   it('dynamic change action in beforeUpload should work', async () => {
     const Test = () => {
       const [action, setAction] = React.useState('light');
