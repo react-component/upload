@@ -1266,30 +1266,31 @@ describe('uploader', () => {
     expect(container.querySelector('span')!.tabIndex).not.toBe(0);
     expect(container.querySelector('span')!).not.toHaveAttribute('role', 'button');
   });
-  it('should support defaultRequest in customRequest', done => {
-    const customRequest = jest.fn(({ file, onSuccess, onError }, { defaultRequest }) => {
-      if (file.name === 'success.png') {
-        defaultRequest({ file, onSuccess, onError });
+
+  it('should receive same defaultRequest as src', done => {
+    const { default: srcRequest } = require('../src/request');
+    let receivedDefaultRequest: any;
+    const customRequest = jest.fn((option, { defaultRequest }) => {
+      if (option.file.name === 'test.png') {
+        defaultRequest(option);
+        receivedDefaultRequest = defaultRequest;
       } else {
-        onError(new Error('custom error'));
+        option.onError(new Error('custom error'));
       }
     });
-    const onSuccess = jest.fn();
-    const onError = jest.fn();
-    const { container } = render(
-      <Upload customRequest={customRequest} onSuccess={onSuccess} onError={onError} />,
-    );
+    const { container } = render(<Upload customRequest={customRequest} />);
+
     const input = container.querySelector('input')!;
-    const files = [new File([''], 'success.png', { type: 'image/png' })];
+    const files = [new File([''], 'test.png')];
     Object.defineProperty(files, 'item', {
       value: i => files[i],
     });
-    fireEvent.change(input, { target: { files } });
 
+    fireEvent.change(input, { target: { files } });
     setTimeout(() => {
       requests[0].respond(200, {}, `["","${files[0].name}"]`);
       expect(customRequest).toHaveBeenCalled();
-      expect(onSuccess).toHaveBeenCalled();
+      expect(receivedDefaultRequest).toBe(srcRequest);
       done();
     }, 100);
   });
