@@ -1267,11 +1267,9 @@ describe('uploader', () => {
     expect(container.querySelector('span')!).not.toHaveAttribute('role', 'button');
   });
   it('should support defaultRequest in customRequest', done => {
-    const mockDefaultRequest = jest.fn();
     const customRequest = jest.fn(({ file, onSuccess, onError, info }) => {
       // 模拟条件判断后使用默认上传
       if (file.name === 'success.png') {
-        info.defaultRequest = mockDefaultRequest;
         info.defaultRequest({ file, onSuccess, onError });
       } else {
         onError(new Error('custom error'));
@@ -1293,11 +1291,6 @@ describe('uploader', () => {
       setTimeout(() => {
         expect(customRequest).toHaveBeenCalled();
         expect(onSuccess).toHaveBeenCalled();
-        expect(mockDefaultRequest).toHaveBeenCalledWith({
-          file: expect.any(File),
-          onSuccess: expect.any(Function),
-          onError: expect.any(Function),
-        });
         done();
       }, 100);
     }, 100);
