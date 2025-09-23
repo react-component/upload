@@ -31,7 +31,7 @@ export interface UploadProps
     file: RcFile,
     FileList: RcFile[],
   ) => BeforeUploadFileType | Promise<void | BeforeUploadFileType> | void;
-  customRequest?: (option: CustomUploadRequestOption) => void | { abort: () => void };
+  customRequest?: CustomUploadRequestOption;
   withCredentials?: boolean;
   openFileDialogOnClick?: boolean;
   prefixCls?: string;
@@ -78,11 +78,10 @@ export interface UploadRequestOption<T = any> {
   method: UploadRequestMethod;
 }
 
-export interface CustomUploadRequestOption extends UploadRequestOption {
-  info: {
-    defaultRequest: (option: UploadRequestOption) => { abort: () => void } | void;
-  };
-}
+export type CustomUploadRequestOption = (
+  option: UploadRequestOption,
+  info: { defaultRequest: (option: UploadRequestOption) => { abort: () => void } | void },
+) => void | { abort: () => void };
 export interface RcFile extends File {
   uid: string;
 }

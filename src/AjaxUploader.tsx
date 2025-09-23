@@ -255,7 +255,7 @@ class AjaxUploader extends Component<UploadProps> {
 
     const request =
       typeof propsCustomRequest === 'function'
-        ? args => propsCustomRequest({ ...args, info: { defaultRequest } })
+        ? args => propsCustomRequest(args, { defaultRequest })
         : propsCustomRequest || defaultRequest;
 
     const requestOption = {

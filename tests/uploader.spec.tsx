@@ -1267,10 +1267,9 @@ describe('uploader', () => {
     expect(container.querySelector('span')!).not.toHaveAttribute('role', 'button');
   });
   it('should support defaultRequest in customRequest', done => {
-    const customRequest = jest.fn(({ file, onSuccess, onError, info }) => {
-      // 模拟条件判断后使用默认上传
+    const customRequest = jest.fn(({ file, onSuccess, onError }, { defaultRequest }) => {
       if (file.name === 'success.png') {
-        info.defaultRequest({ file, onSuccess, onError });
+        defaultRequest({ file, onSuccess, onError });
       } else {
         onError(new Error('custom error'));
       }
@@ -1286,13 +1285,12 @@ describe('uploader', () => {
       value: i => files[i],
     });
     fireEvent.change(input, { target: { files } });
+
     setTimeout(() => {
       requests[0].respond(200, {}, `["","${files[0].name}"]`);
-      setTimeout(() => {
-        expect(customRequest).toHaveBeenCalled();
-        expect(onSuccess).toHaveBeenCalled();
-        done();
-      }, 100);
+      expect(customRequest).toHaveBeenCalled();
+      expect(onSuccess).toHaveBeenCalled();
+      done();
     }, 100);
   });
 });
