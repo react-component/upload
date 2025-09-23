@@ -1266,4 +1266,40 @@ describe('uploader', () => {
     expect(container.querySelector('span')!.tabIndex).not.toBe(0);
     expect(container.querySelector('span')!).not.toHaveAttribute('role', 'button');
   });
+  it('should support defaultRequest in customRequest', done => {
+    const mockDefaultRequest = jest.fn();
+    const customRequest = jest.fn(({ file, onSuccess, onError, info }) => {
+      // 模拟条件判断后使用默认上传
+      if (file.name === 'success.png') {
+        info.defaultRequest = mockDefaultRequest;
+        info.defaultRequest({ file, onSuccess, onError });
+      } else {
+        onError(new Error('custom error'));
+      }
+    });
+    const onSuccess = jest.fn();
+    const onError = jest.fn();
+    const { container } = render(
+      <Upload customRequest={customRequest} onSuccess={onSuccess} onError={onError} />,
+    );
+    const input = container.querySelector('input')!;
+    const files = [new File([''], 'success.png', { type: 'image/png' })];
+    Object.defineProperty(files, 'item', {
+      value: i => files[i],
+    });
+    fireEvent.change(input, { target: { files } });
+    setTimeout(() => {
+      requests[0].respond(200, {}, `["","${files[0].name}"]`);
+      setTimeout(() => {
+        expect(customRequest).toHaveBeenCalled();
+        expect(onSuccess).toHaveBeenCalled();
+        expect(mockDefaultRequest).toHaveBeenCalledWith({
+          file: expect.any(File),
+          onSuccess: expect.any(Function),
+          onError: expect.any(Function),
+        });
+        done();
+      }, 100);
+    }, 100);
+  });
 });

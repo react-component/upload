@@ -242,10 +242,24 @@ class AjaxUploader extends Component<UploadProps> {
       return;
     }
 
-    const { onStart, customRequest, name, headers, withCredentials, method } = this.props;
+    const {
+      onStart,
+      customRequest: propsCustomRequest,
+      name,
+      headers,
+      withCredentials,
+      method,
+    } = this.props;
 
     const { uid } = origin;
-    const request = customRequest || defaultRequest;
+
+    const customRequest = agu => {
+      return propsCustomRequest({ ...agu, info: { defaultRequest } });
+    };
+
+    const request =
+      (typeof propsCustomRequest === 'function' ? customRequest : propsCustomRequest) ||
+      defaultRequest;
 
     const requestOption = {
       action,
