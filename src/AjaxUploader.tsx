@@ -245,6 +245,7 @@ class AjaxUploader extends Component<UploadProps> {
     const { onStart, customRequest, name, headers, withCredentials, method } = this.props;
 
     const { uid } = origin;
+
     const request = customRequest || defaultRequest;
 
     const requestOption = {
@@ -274,7 +275,7 @@ class AjaxUploader extends Component<UploadProps> {
     };
 
     onStart(origin);
-    this.reqs[uid] = request(requestOption);
+    this.reqs[uid] = request(requestOption, { defaultRequest });
   }
 
   reset() {

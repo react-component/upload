@@ -1266,4 +1266,32 @@ describe('uploader', () => {
     expect(container.querySelector('span')!.tabIndex).not.toBe(0);
     expect(container.querySelector('span')!).not.toHaveAttribute('role', 'button');
   });
+
+  it('should receive same defaultRequest as src', done => {
+    const { default: srcRequest } = require('../src/request');
+    let receivedDefaultRequest: any;
+    const customRequest = jest.fn((option, { defaultRequest }) => {
+      if (option.file.name === 'test.png') {
+        defaultRequest(option);
+        receivedDefaultRequest = defaultRequest;
+      } else {
+        option.onError(new Error('custom error'));
+      }
+    });
+    const { container } = render(<Upload customRequest={customRequest} />);
+
+    const input = container.querySelector('input')!;
+    const files = [new File([''], 'test.png')];
+    Object.defineProperty(files, 'item', {
+      value: i => files[i],
+    });
+
+    fireEvent.change(input, { target: { files } });
+    setTimeout(() => {
+      requests[0].respond(200, {}, `["","${files[0].name}"]`);
+      expect(customRequest).toHaveBeenCalled();
+      expect(receivedDefaultRequest).toBe(srcRequest);
+      done();
+    }, 100);
+  });
 });
