@@ -14,7 +14,7 @@ export interface UploadProps
   action?: Action;
   method?: UploadRequestMethod;
   /** @deprecated Please use `folder` instead */
-  directory?: boolean;
+  directory?: boolean | 'nonClick';
   folder?: boolean;
   data?: Record<string, unknown> | ((file: RcFile | string | Blob) => Record<string, unknown>);
   headers?: UploadRequestHeader;
