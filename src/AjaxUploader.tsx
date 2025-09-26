@@ -306,6 +306,11 @@ class AjaxUploader extends Component<UploadProps> {
     this.fileInput = node;
   };
 
+  eventHandler = (fn: (() => boolean) | boolean, originFn: (e: React.MouseEvent<HTMLDivElement> | React.KeyboardEvent<HTMLDivElement>) => void, e: React.MouseEvent<HTMLDivElement> | React.KeyboardEvent<HTMLDivElement>) => {
+    if (typeof fn === 'function' ? fn() : fn) {
+      originFn(e);
+    }
+  };
   render() {
     const {
       component: Tag,
@@ -340,8 +345,8 @@ class AjaxUploader extends Component<UploadProps> {
     const events = disabled
       ? {}
       : {
-          onClick: openFileDialogOnClick ? this.onClick : () => {},
-          onKeyDown: openFileDialogOnClick ? this.onKeyDown : () => {},
+          onClick: (e) => this.eventHandler(openFileDialogOnClick, this.onClick, e),
+          onKeyDown: (e) => this.eventHandler(openFileDialogOnClick, this.onKeyDown, e),
           onMouseEnter,
           onMouseLeave,
           onDrop: this.onFileDrop,

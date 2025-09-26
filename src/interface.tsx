@@ -33,7 +33,7 @@ export interface UploadProps
   ) => BeforeUploadFileType | Promise<void | BeforeUploadFileType> | void;
   customRequest?: CustomUploadRequestOption;
   withCredentials?: boolean;
-  openFileDialogOnClick?: boolean;
+  openFileDialogOnClick?: boolean | (() => boolean);
   prefixCls?: string;
   id?: string;
   onMouseEnter?: (e: React.MouseEvent<HTMLDivElement>) => void;
