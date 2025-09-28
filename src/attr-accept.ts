@@ -1,4 +1,4 @@
-import warning from '@rc-component/util/lib/warning';
+import { warning } from '@rc-component/util';
 import type { RcFile } from './interface';
 
 export default (file: RcFile, acceptedFiles: string | string[]) => {
