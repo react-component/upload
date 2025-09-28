@@ -57,12 +57,12 @@ React.render(<Upload />, container);
 ### props
 
 | name | type | default | description |
-| --- | --- | --- | --- | --- |
+| --- | --- | --- | --- |
 | name | string | file | file param post to server |
 | style | object | {} | root component inline style |
 | className | string | - | root component className |
 | disabled | boolean | false | whether disabled |
-| component | "div" | "span" | "span" | wrap component name |
+| component | "div" \| "span" | "span" | wrap component name |
 | action | string &#124; function(file): string &#124; Promise&lt;string&gt; |  | form action url |
 | method | string | post | request method |
 | directory | boolean | false | support upload whole directory |
