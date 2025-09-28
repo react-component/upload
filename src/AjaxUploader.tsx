@@ -1,5 +1,5 @@
 /* eslint react/no-is-mounted:0,react/sort-comp:0,react/prop-types:0 */
-import clsx from 'classnames';
+import { clsx } from 'clsx';
 import pickAttrs from '@rc-component/util/lib/pickAttrs';
 import React, { Component } from 'react';
 import attrAccept from './attr-accept';
@@ -329,11 +329,7 @@ class AjaxUploader extends Component<UploadProps> {
       hasControlInside,
       ...otherProps
     } = this.props;
-    const cls = clsx({
-      [prefixCls]: true,
-      [`${prefixCls}-disabled`]: disabled,
-      [className]: className,
-    });
+    const cls = clsx(prefixCls, { [`${prefixCls}-disabled`]: disabled, [className]: className });
     // because input don't have directory/webkitdirectory type declaration
     const dirProps: any =
       directory || folder ? { directory: 'directory', webkitdirectory: 'webkitdirectory' } : {};
