@@ -1,5 +1,5 @@
 ---
-title: rc-upload
+title: @rc-component/upload
 ---
 
 <embed src="../README.md"></embed>

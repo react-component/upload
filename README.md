@@ -1,11 +1,11 @@
-# rc-upload
+# @rc-component/upload
 
 React Upload
 
 [![NPM version][npm-image]][npm-url] [![npm download][download-image]][download-url] [![build status][github-actions-image]][github-actions-url] [![Codecov][codecov-image]][codecov-url] [![bundle size][bundlephobia-image]][bundlephobia-url] [![dumi][dumi-image]][dumi-url]
 
-[npm-image]: http://img.shields.io/npm/v/rc-upload.svg?style=flat-square
-[npm-url]: http://npmjs.org/package/rc-upload
+[npm-image]: http://img.shields.io/npm/v/@rc-component/upload.svg?style=flat-square
+[npm-url]: http://npmjs.org/package/@rc-component/upload
 [travis-image]: https://img.shields.io/travis/react-component/upload/master?style=flat-square
 [travis-url]: https://travis-ci.com/react-component/upload
 [github-actions-image]: https://github.com/react-component/upload/workflows/CI/badge.svg
@@ -16,10 +16,10 @@ React Upload
 [david-image]: https://david-dm.org/react-component/upload/status.svg?style=flat-square
 [david-dev-url]: https://david-dm.org/react-component/upload?type=dev
 [david-dev-image]: https://david-dm.org/react-component/upload/dev-status.svg?style=flat-square
-[download-image]: https://img.shields.io/npm/dm/rc-upload.svg?style=flat-square
-[download-url]: https://npmjs.org/package/rc-upload
-[bundlephobia-url]: https://bundlephobia.com/package/rc-upload
-[bundlephobia-image]: https://badgen.net/bundlephobia/minzip/rc-upload
+[download-image]: https://img.shields.io/npm/dm/@rc-component/upload.svg?style=flat-square
+[download-url]: https://npmjs.org/package/@rc-component/upload
+[bundlephobia-url]: https://bundlephobia.com/package/@rc-component/upload
+[bundlephobia-image]: https://badgen.net/bundlephobia/minzip/@rc-component/upload
 [dumi-url]: https://github.com/umijs/dumi
 [dumi-image]: https://img.shields.io/badge/docs%20by-dumi-blue?style=flat-square
 
@@ -42,7 +42,7 @@ online example: https://upload.react-component.vercel.app/
 
 ## install
 
-[![rc-upload](https://nodei.co/npm/rc-upload.png)](https://npmjs.org/package/rc-upload)
+[![@rc-component/upload](https://nodei.co/npm/@rc-component/upload.png)](https://npmjs.org/package/@rc-component/upload)
 
 ## Usage
 
@@ -115,4 +115,4 @@ abort(file?: File) => void: abort the uploading file
 
 ## License
 
-rc-upload is released under the MIT license.
+@rc-component/upload is released under the MIT license.
