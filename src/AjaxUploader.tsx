@@ -1,6 +1,6 @@
 /* eslint react/no-is-mounted:0,react/sort-comp:0,react/prop-types:0 */
 import clsx from 'classnames';
-import pickAttrs from 'rc-util/lib/pickAttrs';
+import pickAttrs from '@rc-component/util/lib/pickAttrs';
 import React, { Component } from 'react';
 import attrAccept from './attr-accept';
 import type {

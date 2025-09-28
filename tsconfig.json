@@ -8,21 +8,10 @@
     "skipLibCheck": true,
     "esModuleInterop": true,
     "paths": {
-      "@/*": [
-        "src/*"
-      ],
-      "@@/*": [
-        "src/.umi/*"
-      ],
-      "rc-upload": [
-        "src/index.ts"
-      ]
+      "@/*": ["src/*"],
+      "@@/*": ["src/.umi/*"],
+      "@rc-component/upload": ["src/index.ts"]
     }
   },
-  "include": [
-    ".dumirc.ts",
-    "./src/**/*.ts",
-    "./src/**/*.tsx",
-    "./docs/**/*.tsx"
-  ]
+  "include": [".dumirc.ts", "./src/**/*.ts", "./src/**/*.tsx", "./docs/**/*.tsx"]
 }

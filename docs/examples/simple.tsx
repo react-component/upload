@@ -1,6 +1,6 @@
 /* eslint no-console:0 */
 
-import Upload, { type UploadProps } from 'rc-upload';
+import Upload, { type UploadProps } from '@rc-component/upload';
 import React from 'react';
 
 const style = `

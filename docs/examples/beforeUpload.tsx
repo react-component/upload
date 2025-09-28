@@ -1,7 +1,7 @@
 /* eslint no-console:0 */
 
 import type { Action, RcFile } from '@/interface';
-import Upload from 'rc-upload';
+import Upload from '@rc-component/upload';
 
 const props = {
   action: '/upload.do' as Action,
