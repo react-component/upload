@@ -34,7 +34,7 @@ class AjaxUploader extends Component<UploadProps> {
     const { accept, directory } = this.props;
     const { files } = e.target;
     const acceptedFiles = [...files].filter(
-      (file: RcFile) => !directory || attrAccept(file, accept),
+      (file: RcFile) => !directory && attrAccept(file, accept),
     );
     this.uploadFiles(acceptedFiles);
     this.reset();
