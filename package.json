@@ -55,7 +55,7 @@
     "coveralls": "^3.0.3",
     "cross-env": "^10.1.0",
     "dumi": "^2.1.0",
-    "eslint": "^8.0.0",
+    "eslint": "^9.37.0",
     "father": "^4.0.0",
     "fs-extra": "^11.2.0",
     "gh-pages": "^6.1.1",
