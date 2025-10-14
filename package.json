@@ -53,7 +53,7 @@
     "axios": "^1.9.0",
     "co-busboy": "^2.0.2",
     "coveralls": "^3.0.3",
-    "cross-env": "^7.0.0",
+    "cross-env": "^10.1.0",
     "dumi": "^2.1.0",
     "eslint": "^8.0.0",
     "father": "^4.0.0",
