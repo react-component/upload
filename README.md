@@ -8,14 +8,10 @@ React Upload
 [npm-url]: http://npmjs.org/package/@rc-component/upload
 [travis-image]: https://img.shields.io/travis/react-component/upload/master?style=flat-square
 [travis-url]: https://travis-ci.com/react-component/upload
-[github-actions-image]: https://github.com/react-component/upload/workflows/CI/badge.svg
-[github-actions-url]: https://github.com/react-component/upload/actions
+[github-actions-image]: https://github.com/react-component/upload/actions/workflows/react-component-ci.yml/badge.svg
+[github-actions-url]: https://github.com/react-component/upload/actions/workflows/react-component-ci.yml
 [codecov-image]: https://img.shields.io/codecov/c/github/react-component/upload/master.svg?style=flat-square
 [codecov-url]: https://app.codecov.io/gh/react-component/upload
-[david-url]: https://david-dm.org/react-component/upload
-[david-image]: https://david-dm.org/react-component/upload/status.svg?style=flat-square
-[david-dev-url]: https://david-dm.org/react-component/upload?type=dev
-[david-dev-image]: https://david-dm.org/react-component/upload/dev-status.svg?style=flat-square
 [download-image]: https://img.shields.io/npm/dm/@rc-component/upload.svg?style=flat-square
 [download-url]: https://npmjs.org/package/@rc-component/upload
 [bundlephobia-url]: https://bundlephobia.com/package/@rc-component/upload
