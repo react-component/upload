@@ -10,7 +10,7 @@ export type AcceptConfig = {
 };
 
 export interface UploadProps
-  extends Omit<React.InputHTMLAttributes<HTMLInputElement>, 'onError' | 'onProgress'> {
+  extends Omit<React.InputHTMLAttributes<HTMLInputElement>, 'onError' | 'onProgress' | 'accept'> {
   name?: string;
   style?: React.CSSProperties;
   className?: string;
