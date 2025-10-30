@@ -1,9 +1,10 @@
 /* eslint react/no-is-mounted:0,react/sort-comp:0,react/prop-types:0 */
-import { clsx } from 'clsx';
 import pickAttrs from '@rc-component/util/lib/pickAttrs';
+import { clsx } from 'clsx';
 import React, { Component } from 'react';
 import attrAccept from './attr-accept';
 import type {
+  AcceptConfig,
   BeforeUploadFileType,
   RcFile,
   UploadProgressEvent,
@@ -29,6 +30,28 @@ class AjaxUploader extends Component<UploadProps> {
   private fileInput: HTMLInputElement;
 
   private _isMounted: boolean;
+
+  private getFilterFn = () => {
+    const { accept, directory } = this.props;
+
+    let filterFn: AcceptConfig['filter'];
+    let acceptFormat: string | undefined;
+
+    if (typeof accept === 'string') {
+      acceptFormat = accept;
+    } else {
+      const { filter, format } = accept || {};
+
+      acceptFormat = format;
+      if (filter === 'native') {
+        filterFn = () => true;
+      } else {
+        filterFn = filter;
+      }
+    }
+
+    return filterFn || (directory ? (file: RcFile) => attrAccept(file, acceptFormat) : () => true);
+  };
 
   onChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { accept, directory } = this.props;
