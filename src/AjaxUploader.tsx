@@ -31,10 +31,10 @@ class AjaxUploader extends Component<UploadProps> {
 
   private _isMounted: boolean;
 
-  private getFilterFn = () => {
+  private filterFile = (file: RcFile | File, force = false) => {
     const { accept, directory } = this.props;
 
-    let filterFn: AcceptConfig['filter'];
+    let filterFn: Exclude<AcceptConfig['filter'], 'native'>;
     let acceptFormat: string | undefined;
 
     if (typeof accept === 'string') {
@@ -50,15 +50,17 @@ class AjaxUploader extends Component<UploadProps> {
       }
     }
 
-    return filterFn || (directory ? (file: RcFile) => attrAccept(file, acceptFormat) : () => true);
+    const mergedFilter =
+      filterFn ||
+      (directory || force
+        ? (currentFile: RcFile) => attrAccept(currentFile, acceptFormat)
+        : () => true);
+    return mergedFilter(file as RcFile);
   };
 
   onChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const { accept, directory } = this.props;
     const { files } = e.target;
-    const acceptedFiles = [...files].filter(
-      (file: RcFile) => !directory || attrAccept(file, accept),
-    );
+    const acceptedFiles = [...files].filter(file => this.filterFile(file));
     this.uploadFiles(acceptedFiles);
     this.reset();
   };
@@ -90,7 +92,7 @@ class AjaxUploader extends Component<UploadProps> {
   };
 
   onDataTransferFiles = async (dataTransfer: DataTransfer, existFileCallback?: () => void) => {
-    const { multiple, accept, directory } = this.props;
+    const { multiple, directory } = this.props;
 
     const items: DataTransferItem[] = [...(dataTransfer.items || [])];
     let files: File[] = [...(dataTransfer.files || [])];
@@ -100,12 +102,10 @@ class AjaxUploader extends Component<UploadProps> {
     }
 
     if (directory) {
-      files = await traverseFileTree(Array.prototype.slice.call(items), (_file: RcFile) =>
-        attrAccept(_file, this.props.accept),
-      );
+      files = await traverseFileTree(Array.prototype.slice.call(items), this.filterFile);
       this.uploadFiles(files);
     } else {
-      let acceptFiles = [...files].filter((file: RcFile) => attrAccept(file, accept));
+      let acceptFiles = [...files].filter(file => this.filterFile(file, true));
 
       if (multiple === false) {
         acceptFiles = files.slice(0, 1);
@@ -351,6 +351,9 @@ class AjaxUploader extends Component<UploadProps> {
       hasControlInside,
       ...otherProps
     } = this.props;
+
+    // Extract accept format for input element
+    const acceptFormat = typeof accept === 'string' ? accept : accept?.format;
     const cls = clsx(prefixCls, { [`${prefixCls}-disabled`]: disabled, [className]: className });
     // because input don't have directory/webkitdirectory type declaration
     const dirProps: any = directory
@@ -384,7 +387,7 @@ class AjaxUploader extends Component<UploadProps> {
           key={this.state.uid}
           style={{ display: 'none', ...styles.input }}
           className={classNames.input}
-          accept={accept}
+          accept={acceptFormat}
           {...dirProps}
           multiple={multiple}
           onChange={this.onChange}
