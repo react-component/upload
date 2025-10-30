@@ -322,7 +322,6 @@ class AjaxUploader extends Component<UploadProps> {
       capture,
       children,
       directory,
-      folder,
       openFileDialogOnClick,
       onMouseEnter,
       onMouseLeave,
@@ -331,8 +330,9 @@ class AjaxUploader extends Component<UploadProps> {
     } = this.props;
     const cls = clsx(prefixCls, { [`${prefixCls}-disabled`]: disabled, [className]: className });
     // because input don't have directory/webkitdirectory type declaration
-    const dirProps: any =
-      directory || folder ? { directory: 'directory', webkitdirectory: 'webkitdirectory' } : {};
+    const dirProps: any = directory
+      ? { directory: 'directory', webkitdirectory: 'webkitdirectory' }
+      : {};
     const events = disabled
       ? {}
       : {
