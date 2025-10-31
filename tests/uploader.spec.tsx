@@ -1,5 +1,5 @@
-import { fireEvent, render } from '@testing-library/react';
 import { resetWarned } from '@rc-component/util/lib/warning';
+import { fireEvent, render } from '@testing-library/react';
 import React from 'react';
 import sinon from 'sinon';
 import { format } from 'util';
@@ -1038,18 +1038,71 @@ describe('uploader', () => {
         directory: false,
       },
     );
+  });
 
-    it('should trigger beforeUpload when uploading non-accepted files in folder mode', () => {
-      const beforeUpload = jest.fn();
-      const { container } = render(<Upload accept=".png" folder beforeUpload={beforeUpload} />);
+  describe('AcceptConfig', () => {
+    let uploader: ReturnType<typeof render>;
+    const handlers: UploadProps = {};
 
-      fireEvent.change(container.querySelector('input')!, {
-        target: {
-          files: [new File([], 'bamboo.png'), new File([], 'light.jpg')],
-        },
+    const props: UploadProps = {
+      action: '/test',
+      data: { a: 1, b: 2 },
+      directory: true, // Enable format filtering
+      onStart(file) {
+        if (handlers.onStart) {
+          handlers.onStart(file);
+        }
+      },
+    };
+
+    function testAcceptConfig(desc: string, accept: any, files: object[], expectCallTimes: number) {
+      it(desc, done => {
+        uploader = render(<Upload {...props} accept={accept} />);
+        const input = uploader.container.querySelector('input')!;
+        fireEvent.change(input, { target: { files } });
+        const mockStart = jest.fn();
+        handlers.onStart = mockStart;
+
+        setTimeout(() => {
+          expect(mockStart.mock.calls.length).toBe(expectCallTimes);
+          done();
+        }, 100);
       });
-      expect(beforeUpload).toHaveBeenCalledTimes(2);
-    });
+    }
+
+    testAcceptConfig(
+      'should work with format only',
+      { format: '.png' },
+      [{ name: 'test.png' }, { name: 'test.jpg' }],
+      1,
+    );
+
+    testAcceptConfig(
+      'should work with filter: native',
+      { format: '.png', filter: 'native' },
+      [{ name: 'test.png' }, { name: 'test.jpg' }],
+      2, // native filter bypasses format check
+    );
+
+    testAcceptConfig(
+      'should work with custom filter function',
+      {
+        format: '.png',
+        filter: (file: any) => file.name.includes('custom'),
+      },
+      [{ name: 'custom.jpg' }, { name: 'test.png' }],
+      1, // only custom.jpg passes custom filter
+    );
+
+    testAcceptConfig(
+      'should work with MIME type format',
+      { format: 'image/*' },
+      [
+        { name: 'test.png', type: 'image/png' },
+        { name: 'doc.txt', type: 'text/plain' },
+      ],
+      1, // only image file passes
+    );
   });
 
   describe('transform file before request', () => {

@@ -4,8 +4,13 @@ export type BeforeUploadFileType = File | Blob | boolean | string;
 
 export type Action = string | ((file: RcFile) => string | PromiseLike<string>);
 
+export type AcceptConfig = {
+  format: string;
+  filter?: 'native' | ((file: RcFile) => boolean);
+};
+
 export interface UploadProps
-  extends Omit<React.InputHTMLAttributes<HTMLInputElement>, 'onError' | 'onProgress'> {
+  extends Omit<React.InputHTMLAttributes<HTMLInputElement>, 'onError' | 'onProgress' | 'accept'> {
   name?: string;
   style?: React.CSSProperties;
   className?: string;
@@ -13,12 +18,10 @@ export interface UploadProps
   component?: React.ComponentType<any> | string;
   action?: Action;
   method?: UploadRequestMethod;
-  /** @deprecated Please use `folder` instead */
   directory?: boolean;
-  folder?: boolean;
   data?: Record<string, unknown> | ((file: RcFile | string | Blob) => Record<string, unknown>);
   headers?: UploadRequestHeader;
-  accept?: string;
+  accept?: string | AcceptConfig;
   multiple?: boolean;
   onBatchStart?: (
     fileList: { file: RcFile; parsedFile: Exclude<BeforeUploadFileType, boolean> }[],
