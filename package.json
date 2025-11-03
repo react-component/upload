@@ -51,21 +51,16 @@
     "@types/react-dom": "^19.2.2",
     "@umijs/fabric": "^4.0.1",
     "axios": "^1.9.0",
-    "co-busboy": "^2.0.2",
-    "coveralls": "^3.0.3",
-    "cross-env": "^10.1.0",
     "dumi": "^2.1.0",
     "eslint": "^8.0.0",
     "father": "^4.0.0",
-    "fs-extra": "^11.2.0",
     "gh-pages": "^6.1.1",
     "rc-test": "^7.0.13",
     "react": "^18.0.0",
     "react-dom": "^18.0.0",
     "regenerator-runtime": "^0.14.1",
     "sinon": "^9.0.2",
-    "typescript": "^5.3.3",
-    "vinyl-fs": "^4.0.0"
+    "typescript": "^5.3.3"
   },
   "peerDependencies": {
     "react": ">=16.9.0",
