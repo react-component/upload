@@ -305,6 +305,8 @@ class AjaxUploader extends Component<UploadProps> {
     this.setState({
       uid: getUid(),
     });
+    // After changing here, can uid be removed?
+    if (this.fileInput) this.fileInput.value = "";
   }
 
   abort(file?: any) {
