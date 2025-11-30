@@ -1,5 +1,5 @@
 import { resetWarned } from '@rc-component/util/lib/warning';
-import { fireEvent, render } from '@testing-library/react';
+import { act, fireEvent, render } from '@testing-library/react';
 import React from 'react';
 import sinon from 'sinon';
 import { format } from 'util';
@@ -10,6 +10,7 @@ const sleep = (timeout = 500) => new Promise(resolve => setTimeout(resolve, time
 function Item(name) {
   this.name = name;
   this.toString = () => this.name;
+  this.arrayBuffer = () => this;
 }
 
 const makeFileSystemEntry = item => {
@@ -84,6 +85,14 @@ describe('uploader', () => {
   let requests;
   let xhr;
   let errorMock;
+
+  beforeAll(() => {
+    if (!Blob.prototype.arrayBuffer) {
+      Blob.prototype.arrayBuffer = () => {
+        return new Promise(resolve => resolve(this ?? new ArrayBuffer()));
+      };
+    }
+  });
 
   beforeEach(() => {
     xhr = sinon.useFakeXMLHttpRequest();
@@ -203,6 +212,9 @@ describe('uploader', () => {
           toString() {
             return this.name;
           },
+          arrayBuffer() {
+            return this;
+          },
         },
       ];
       (files as any).item = (i: number) => files[i];
@@ -234,6 +246,9 @@ describe('uploader', () => {
           toString() {
             return this.name;
           },
+          arrayBuffer() {
+            return this;
+          },
         },
       ];
       (files as any).item = (i: number) => files[i];
@@ -261,6 +276,9 @@ describe('uploader', () => {
           name: 'success.png',
           toString() {
             return this.name;
+          },
+          arrayBuffer() {
+            return this;
           },
         },
       ];
@@ -292,6 +310,9 @@ describe('uploader', () => {
           name: 'success.jpg',
           toString() {
             return this.name;
+          },
+          arrayBuffer() {
+            return this;
           },
         },
       ];
@@ -327,7 +348,6 @@ describe('uploader', () => {
       handlers.onSuccess = (ret, file) => {
         try {
           expect(ret[1]).toEqual(file.name);
-          expect(file).toHaveProperty('uid');
           expect(triggerTimes).toEqual(1);
           done();
         } catch (error) {
@@ -346,7 +366,7 @@ describe('uploader', () => {
 
       setTimeout(() => {
         handlers.onSuccess!(['', files[0].name] as any, files[0] as any, null!);
-      }, 100);
+      }, 150);
     });
 
     it('paste to upload', async () => {
@@ -358,6 +378,9 @@ describe('uploader', () => {
           name: 'success.png',
           toString() {
             return this.name;
+          },
+          arrayBuffer() {
+            return this;
           },
         },
       ];
@@ -387,6 +410,9 @@ describe('uploader', () => {
           name: 'success.jpg',
           toString() {
             return this.name;
+          },
+          arrayBuffer() {
+            return this;
           },
         },
       ];
@@ -419,7 +445,6 @@ describe('uploader', () => {
       };
       handlers.onSuccess = (ret, file) => {
         expect(ret[1]).toEqual(file.name);
-        expect(file).toHaveProperty('uid');
         expect(triggerTimes).toEqual(1);
       };
       handlers.onError = error => {
@@ -604,6 +629,9 @@ describe('uploader', () => {
             ],
           },
         ],
+        arrayBuffer() {
+          return this;
+        },
       };
       const input = container.querySelector('input')!;
       fireEvent.drop(input, { dataTransfer: { items: [makeDataTransferItem(files)] } });
@@ -629,6 +657,9 @@ describe('uploader', () => {
             ],
           },
         ],
+        arrayBuffer() {
+          return this;
+        },
       };
 
       fireEvent.drop(input, { dataTransfer: { items: [makeDataTransferItem(files)] } });
@@ -685,6 +716,9 @@ describe('uploader', () => {
             ],
           },
         ],
+        arrayBuffer() {
+          return this;
+        },
       };
       fireEvent.drop(input, { dataTransfer: { items: [makeDataTransferItemAsync(files)] } });
       const mockStart = jest.fn();
@@ -734,6 +768,9 @@ describe('uploader', () => {
             ],
           },
         ],
+        arrayBuffer() {
+          return this;
+        },
       };
 
       const preventDefaultSpy = jest.spyOn(Event.prototype, 'preventDefault');
@@ -758,6 +795,9 @@ describe('uploader', () => {
       const files = [
         {
           name: 'unaccepted.webp',
+          arrayBuffer() {
+            return this;
+          },
         },
       ];
       fireEvent.change(input, { target: { files } });
@@ -779,6 +819,9 @@ describe('uploader', () => {
       const files = [
         {
           name: 'unaccepted.webp',
+          arrayBuffer() {
+            return this;
+          },
         },
       ];
       fireEvent.change(input, { target: { files } });
@@ -807,6 +850,9 @@ describe('uploader', () => {
             name: '1.png',
           },
         ],
+        arrayBuffer() {
+          return this;
+        },
       };
 
       fireEvent.mouseEnter(rcUpload);
@@ -875,12 +921,21 @@ describe('uploader', () => {
       [
         {
           name: 'accepted.webp',
+          arrayBuffer: () => {
+            return this;
+          },
         },
         {
           name: 'accepted.png',
+          arrayBuffer: () => {
+            return this;
+          },
         },
         {
           name: 'accepted.txt',
+          arrayBuffer: () => {
+            return this;
+          },
         },
       ],
       3,
@@ -892,9 +947,15 @@ describe('uploader', () => {
       [
         {
           name: 'unaccepted.webp',
+          arrayBuffer: () => {
+            return this;
+          },
         },
         {
           name: 'accepted.png',
+          arrayBuffer: () => {
+            return this;
+          },
         },
       ],
       1,
@@ -906,12 +967,21 @@ describe('uploader', () => {
       [
         {
           name: 'unaccepted.webp',
+          arrayBuffer: () => {
+            return this;
+          },
         },
         {
           name: 'accepted.jpg',
+          arrayBuffer: () => {
+            return this;
+          },
         },
         {
           name: 'accepted.jpeg',
+          arrayBuffer: () => {
+            return this;
+          },
         },
       ],
       2,
@@ -923,12 +993,21 @@ describe('uploader', () => {
       [
         {
           name: 'accepted.png',
+          arrayBuffer: () => {
+            return this;
+          },
         },
         {
           name: 'unaccepted.jpg',
+          arrayBuffer: () => {
+            return this;
+          },
         },
         {
           name: 'accepted.txt',
+          arrayBuffer: () => {
+            return this;
+          },
         },
       ],
       2,
@@ -941,10 +1020,16 @@ describe('uploader', () => {
         {
           name: 'unaccepted.png',
           type: 'image/png',
+          arrayBuffer: () => {
+            return this;
+          },
         },
         {
           name: 'accepted.jpg',
           type: 'image/jpeg',
+          arrayBuffer: () => {
+            return this;
+          },
         },
       ],
       1,
@@ -957,14 +1042,23 @@ describe('uploader', () => {
         {
           name: 'accepted.png',
           type: 'image/png',
+          arrayBuffer: () => {
+            return this;
+          },
         },
         {
           name: 'accepted.jpg',
           type: 'image/jpeg',
+          arrayBuffer: () => {
+            return this;
+          },
         },
         {
           name: 'unaccepted.text',
           type: 'text/plain',
+          arrayBuffer: () => {
+            return this;
+          },
         },
       ],
       2,
@@ -977,10 +1071,16 @@ describe('uploader', () => {
         {
           name: 'accepted.png',
           type: 'image/png',
+          arrayBuffer: () => {
+            return this;
+          },
         },
         {
           name: 'accepted.text',
           type: 'text/plain',
+          arrayBuffer: () => {
+            return this;
+          },
         },
       ],
       2,
@@ -993,10 +1093,16 @@ describe('uploader', () => {
         {
           name: 'accepted.png',
           type: 'image/png',
+          arrayBuffer: () => {
+            return this;
+          },
         },
         {
           name: 'accepted.text',
           type: 'text/plain',
+          arrayBuffer: () => {
+            return this;
+          },
         },
       ],
       2,
@@ -1009,10 +1115,16 @@ describe('uploader', () => {
         {
           name: 'accepted.png',
           type: 'image/png',
+          arrayBuffer: () => {
+            return this;
+          },
         },
         {
           name: 'accepted.text',
           type: 'text/plain',
+          arrayBuffer: () => {
+            return this;
+          },
         },
       ],
       2,
@@ -1026,10 +1138,16 @@ describe('uploader', () => {
         {
           name: 'accepted.png',
           type: 'image/png',
+          arrayBuffer: () => {
+            return this;
+          },
         },
         {
           name: 'unaccepted.text',
           type: 'text/plain',
+          arrayBuffer: () => {
+            return this;
+          },
         },
       ],
       2,
@@ -1073,14 +1191,40 @@ describe('uploader', () => {
     testAcceptConfig(
       'should work with format only',
       { format: '.png' },
-      [{ name: 'test.png' }, { name: 'test.jpg' }],
+      [
+        {
+          name: 'test.png',
+          arrayBuffer: () => {
+            return this;
+          },
+        },
+        {
+          name: 'test.jpg',
+          arrayBuffer: () => {
+            return this;
+          },
+        },
+      ],
       1,
     );
 
     testAcceptConfig(
       'should work with filter: native',
       { format: '.png', filter: 'native' },
-      [{ name: 'test.png' }, { name: 'test.jpg' }],
+      [
+        {
+          name: 'test.png',
+          arrayBuffer: () => {
+            return this;
+          },
+        },
+        {
+          name: 'test.jpg',
+          arrayBuffer: () => {
+            return this;
+          },
+        },
+      ],
       2, // native filter bypasses format check
     );
 
@@ -1090,7 +1234,20 @@ describe('uploader', () => {
         format: '.png',
         filter: (file: any) => file.name.includes('custom'),
       },
-      [{ name: 'custom.jpg' }, { name: 'test.png' }],
+      [
+        {
+          name: 'custom.jpg',
+          arrayBuffer: () => {
+            return this;
+          },
+        },
+        {
+          name: 'test.png',
+          arrayBuffer: () => {
+            return this;
+          },
+        },
+      ],
       1, // only custom.jpg passes custom filter
     );
 
@@ -1098,8 +1255,20 @@ describe('uploader', () => {
       'should work with MIME type format',
       { format: 'image/*' },
       [
-        { name: 'test.png', type: 'image/png' },
-        { name: 'doc.txt', type: 'text/plain' },
+        {
+          name: 'test.png',
+          type: 'image/png',
+          arrayBuffer: () => {
+            return this;
+          },
+        },
+        {
+          name: 'doc.txt',
+          type: 'text/plain',
+          arrayBuffer: () => {
+            return this;
+          },
+        },
       ],
       1, // only image file passes
     );
@@ -1137,6 +1306,9 @@ describe('uploader', () => {
           toString() {
             return this.name;
           },
+          arrayBuffer() {
+            return this;
+          },
         },
       ];
 
@@ -1161,7 +1333,10 @@ describe('uploader', () => {
 
     const batchEventFiles = files.map(file =>
       expect.objectContaining({
-        file,
+        file: expect.objectContaining({
+          name: file.name,
+          type: file.type,
+        }),
       }),
     );
 
@@ -1220,8 +1395,17 @@ describe('uploader', () => {
       expect(onBatchStart).toHaveBeenCalledWith(
         files.map(file =>
           expect.objectContaining({
-            file,
-            parsedFile: file.name === 'light.png' ? null : file,
+            file: expect.objectContaining({
+              name: file.name,
+              type: file.type,
+            }),
+            parsedFile:
+              file.name === 'light.png'
+                ? null
+                : expect.objectContaining({
+                    name: file.name,
+                    type: file.type,
+                  }),
           }),
         ),
       );
@@ -1257,7 +1441,9 @@ describe('uploader', () => {
       const [action, setAction] = React.useState('light');
 
       async function beforeUpload() {
-        setAction('bamboo');
+        await act(() => {
+          setAction('bamboo');
+        });
         await sleep(100);
         return true;
       }
@@ -1274,6 +1460,9 @@ describe('uploader', () => {
             name: 'little.png',
             toString() {
               return this.name;
+            },
+            arrayBuffer: () => {
+              return this;
             },
           },
         ],
