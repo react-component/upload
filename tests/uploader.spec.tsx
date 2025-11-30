@@ -10,7 +10,7 @@ const sleep = (timeout = 500) => new Promise(resolve => setTimeout(resolve, time
 function Item(name) {
   this.name = name;
   this.toString = () => this.name;
-  this.arrayBuffer = () => Promise.resolve(this);
+  this.arrayBuffer = () => Promise.resolve(this.name);
 }
 
 const makeFileSystemEntry = item => {
@@ -88,8 +88,12 @@ describe('uploader', () => {
 
   beforeAll(() => {
     if (!Blob.prototype.arrayBuffer) {
-      Blob.prototype.arrayBuffer = () => {
-        return new Promise(resolve => resolve(this ?? new ArrayBuffer()));
+      Blob.prototype.arrayBuffer = function () {
+        return new Promise(resolve => {
+          const reader = new FileReader();
+          reader.onloadend = () => resolve(reader.result as ArrayBuffer);
+          reader.readAsArrayBuffer(this);
+        });
       };
     }
   });
@@ -213,7 +217,7 @@ describe('uploader', () => {
             return this.name;
           },
           arrayBuffer() {
-            return Promise.resolve(this);
+            return Promise.resolve(this.name);
           },
         },
       ];
@@ -247,7 +251,7 @@ describe('uploader', () => {
             return this.name;
           },
           arrayBuffer() {
-            return Promise.resolve(this);
+            return Promise.resolve(this.name);
           },
         },
       ];
@@ -278,7 +282,7 @@ describe('uploader', () => {
             return this.name;
           },
           arrayBuffer() {
-            return Promise.resolve(this);
+            return Promise.resolve(this.name);
           },
         },
       ];
@@ -312,7 +316,7 @@ describe('uploader', () => {
             return this.name;
           },
           arrayBuffer() {
-            return Promise.resolve(this);
+            return Promise.resolve(this.name);
           },
         },
       ];
@@ -380,7 +384,7 @@ describe('uploader', () => {
             return this.name;
           },
           arrayBuffer() {
-            return Promise.resolve(this);
+            return Promise.resolve(this.name);
           },
         },
       ];
@@ -412,7 +416,7 @@ describe('uploader', () => {
             return this.name;
           },
           arrayBuffer() {
-            return Promise.resolve(this);
+            return Promise.resolve(this.name);
           },
         },
       ];
@@ -630,7 +634,7 @@ describe('uploader', () => {
           },
         ],
         arrayBuffer() {
-          return Promise.resolve(this);
+          return Promise.resolve(this.name);
         },
       };
       const input = container.querySelector('input')!;
@@ -658,7 +662,7 @@ describe('uploader', () => {
           },
         ],
         arrayBuffer() {
-          return Promise.resolve(this);
+          return Promise.resolve(this.name);
         },
       };
 
@@ -717,7 +721,7 @@ describe('uploader', () => {
           },
         ],
         arrayBuffer() {
-          return Promise.resolve(this);
+          return Promise.resolve(this.name);
         },
       };
       fireEvent.drop(input, { dataTransfer: { items: [makeDataTransferItemAsync(files)] } });
@@ -769,7 +773,7 @@ describe('uploader', () => {
           },
         ],
         arrayBuffer() {
-          return Promise.resolve(this);
+          return Promise.resolve(this.name);
         },
       };
 
@@ -796,7 +800,7 @@ describe('uploader', () => {
         {
           name: 'unaccepted.webp',
           arrayBuffer() {
-            return Promise.resolve(this);
+            return Promise.resolve(this.name);
           },
         },
       ];
@@ -820,7 +824,7 @@ describe('uploader', () => {
         {
           name: 'unaccepted.webp',
           arrayBuffer() {
-            return Promise.resolve(this);
+            return Promise.resolve(this.name);
           },
         },
       ];
@@ -851,7 +855,7 @@ describe('uploader', () => {
           },
         ],
         arrayBuffer() {
-          return Promise.resolve(this);
+          return Promise.resolve(this.name);
         },
       };
 
@@ -921,20 +925,20 @@ describe('uploader', () => {
       [
         {
           name: 'accepted.webp',
-          arrayBuffer: () => {
-            return Promise.resolve(this);
+          arrayBuffer: function () {
+            return Promise.resolve(this.name);
           },
         },
         {
           name: 'accepted.png',
-          arrayBuffer: () => {
-            return Promise.resolve(this);
+          arrayBuffer: function () {
+            return Promise.resolve(this.name);
           },
         },
         {
           name: 'accepted.txt',
-          arrayBuffer: () => {
-            return Promise.resolve(this);
+          arrayBuffer: function () {
+            return Promise.resolve(this.name);
           },
         },
       ],
@@ -947,14 +951,14 @@ describe('uploader', () => {
       [
         {
           name: 'unaccepted.webp',
-          arrayBuffer: () => {
-            return Promise.resolve(this);
+          arrayBuffer: function () {
+            return Promise.resolve(this.name);
           },
         },
         {
           name: 'accepted.png',
-          arrayBuffer: () => {
-            return Promise.resolve(this);
+          arrayBuffer: function () {
+            return Promise.resolve(this.name);
           },
         },
       ],
@@ -967,20 +971,20 @@ describe('uploader', () => {
       [
         {
           name: 'unaccepted.webp',
-          arrayBuffer: () => {
-            return Promise.resolve(this);
+          arrayBuffer: function () {
+            return Promise.resolve(this.name);
           },
         },
         {
           name: 'accepted.jpg',
-          arrayBuffer: () => {
-            return Promise.resolve(this);
+          arrayBuffer: function () {
+            return Promise.resolve(this.name);
           },
         },
         {
           name: 'accepted.jpeg',
-          arrayBuffer: () => {
-            return Promise.resolve(this);
+          arrayBuffer: function () {
+            return Promise.resolve(this.name);
           },
         },
       ],
@@ -993,20 +997,20 @@ describe('uploader', () => {
       [
         {
           name: 'accepted.png',
-          arrayBuffer: () => {
-            return Promise.resolve(this);
+          arrayBuffer: function () {
+            return Promise.resolve(this.name);
           },
         },
         {
           name: 'unaccepted.jpg',
-          arrayBuffer: () => {
-            return Promise.resolve(this);
+          arrayBuffer: function () {
+            return Promise.resolve(this.name);
           },
         },
         {
           name: 'accepted.txt',
-          arrayBuffer: () => {
-            return Promise.resolve(this);
+          arrayBuffer: function () {
+            return Promise.resolve(this.name);
           },
         },
       ],
@@ -1020,15 +1024,15 @@ describe('uploader', () => {
         {
           name: 'unaccepted.png',
           type: 'image/png',
-          arrayBuffer: () => {
-            return Promise.resolve(this);
+          arrayBuffer: function () {
+            return Promise.resolve(this.name);
           },
         },
         {
           name: 'accepted.jpg',
           type: 'image/jpeg',
-          arrayBuffer: () => {
-            return Promise.resolve(this);
+          arrayBuffer: function () {
+            return Promise.resolve(this.name);
           },
         },
       ],
@@ -1042,22 +1046,22 @@ describe('uploader', () => {
         {
           name: 'accepted.png',
           type: 'image/png',
-          arrayBuffer: () => {
-            return Promise.resolve(this);
+          arrayBuffer: function () {
+            return Promise.resolve(this.name);
           },
         },
         {
           name: 'accepted.jpg',
           type: 'image/jpeg',
-          arrayBuffer: () => {
-            return Promise.resolve(this);
+          arrayBuffer: function () {
+            return Promise.resolve(this.name);
           },
         },
         {
           name: 'unaccepted.text',
           type: 'text/plain',
-          arrayBuffer: () => {
-            return Promise.resolve(this);
+          arrayBuffer: function () {
+            return Promise.resolve(this.name);
           },
         },
       ],
@@ -1071,15 +1075,15 @@ describe('uploader', () => {
         {
           name: 'accepted.png',
           type: 'image/png',
-          arrayBuffer: () => {
-            return Promise.resolve(this);
+          arrayBuffer: function () {
+            return Promise.resolve(this.name);
           },
         },
         {
           name: 'accepted.text',
           type: 'text/plain',
-          arrayBuffer: () => {
-            return Promise.resolve(this);
+          arrayBuffer: function () {
+            return Promise.resolve(this.name);
           },
         },
       ],
@@ -1093,15 +1097,15 @@ describe('uploader', () => {
         {
           name: 'accepted.png',
           type: 'image/png',
-          arrayBuffer: () => {
-            return Promise.resolve(this);
+          arrayBuffer: function () {
+            return Promise.resolve(this.name);
           },
         },
         {
           name: 'accepted.text',
           type: 'text/plain',
-          arrayBuffer: () => {
-            return Promise.resolve(this);
+          arrayBuffer: function () {
+            return Promise.resolve(this.name);
           },
         },
       ],
@@ -1115,15 +1119,15 @@ describe('uploader', () => {
         {
           name: 'accepted.png',
           type: 'image/png',
-          arrayBuffer: () => {
-            return Promise.resolve(this);
+          arrayBuffer: function () {
+            return Promise.resolve(this.name);
           },
         },
         {
           name: 'accepted.text',
           type: 'text/plain',
-          arrayBuffer: () => {
-            return Promise.resolve(this);
+          arrayBuffer: function () {
+            return Promise.resolve(this.name);
           },
         },
       ],
@@ -1138,15 +1142,15 @@ describe('uploader', () => {
         {
           name: 'accepted.png',
           type: 'image/png',
-          arrayBuffer: () => {
-            return Promise.resolve(this);
+          arrayBuffer: function () {
+            return Promise.resolve(this.name);
           },
         },
         {
           name: 'unaccepted.text',
           type: 'text/plain',
-          arrayBuffer: () => {
-            return Promise.resolve(this);
+          arrayBuffer: function () {
+            return Promise.resolve(this.name);
           },
         },
       ],
@@ -1194,14 +1198,14 @@ describe('uploader', () => {
       [
         {
           name: 'test.png',
-          arrayBuffer: () => {
-            return Promise.resolve(this);
+          arrayBuffer: function () {
+            return Promise.resolve(this.name);
           },
         },
         {
           name: 'test.jpg',
-          arrayBuffer: () => {
-            return Promise.resolve(this);
+          arrayBuffer: function () {
+            return Promise.resolve(this.name);
           },
         },
       ],
@@ -1214,14 +1218,14 @@ describe('uploader', () => {
       [
         {
           name: 'test.png',
-          arrayBuffer: () => {
-            return Promise.resolve(this);
+          arrayBuffer: function () {
+            return Promise.resolve(this.name);
           },
         },
         {
           name: 'test.jpg',
-          arrayBuffer: () => {
-            return Promise.resolve(this);
+          arrayBuffer: function () {
+            return Promise.resolve(this.name);
           },
         },
       ],
@@ -1237,14 +1241,14 @@ describe('uploader', () => {
       [
         {
           name: 'custom.jpg',
-          arrayBuffer: () => {
-            return Promise.resolve(this);
+          arrayBuffer: function () {
+            return Promise.resolve(this.name);
           },
         },
         {
           name: 'test.png',
-          arrayBuffer: () => {
-            return Promise.resolve(this);
+          arrayBuffer: function () {
+            return Promise.resolve(this.name);
           },
         },
       ],
@@ -1258,15 +1262,15 @@ describe('uploader', () => {
         {
           name: 'test.png',
           type: 'image/png',
-          arrayBuffer: () => {
-            return Promise.resolve(this);
+          arrayBuffer: function () {
+            return Promise.resolve(this.name);
           },
         },
         {
           name: 'doc.txt',
           type: 'text/plain',
-          arrayBuffer: () => {
-            return Promise.resolve(this);
+          arrayBuffer: function () {
+            return Promise.resolve(this.name);
           },
         },
       ],
@@ -1307,7 +1311,7 @@ describe('uploader', () => {
             return this.name;
           },
           arrayBuffer() {
-            return Promise.resolve(this);
+            return Promise.resolve(this.name);
           },
         },
       ];
@@ -1461,8 +1465,8 @@ describe('uploader', () => {
             toString() {
               return this.name;
             },
-            arrayBuffer: () => {
-              return Promise.resolve(this);
+            arrayBuffer: function () {
+              return Promise.resolve(this.name);
             },
           },
         ],
