@@ -170,12 +170,10 @@ class AjaxUploader extends Component<UploadProps> {
     }
   }
 
-  cacheFiles = async (files: File[]): Promise<RcFile[]> => {
+  cacheFiles = async (files: File[]) => {
     if (files?.length) {
-      const filesArray = [...files];
-
       const cachedFiles = await Promise.all(
-        filesArray.map(async file => {
+        files.map(async file => {
           const buffer = await file.arrayBuffer();
           return new File([buffer], file.name, {
             type: file.type,
@@ -184,14 +182,14 @@ class AjaxUploader extends Component<UploadProps> {
         }),
       );
 
-      return cachedFiles as RcFile[];
+      return cachedFiles;
     }
 
     return [];
   };
 
   uploadFiles = async (files: File[]) => {
-    const originFiles = await this.cacheFiles(files);
+    const originFiles = (await this.cacheFiles(files)) as RcFile[];
     const postFiles = originFiles.map((file: RcFile & { uid?: string }) => {
       // eslint-disable-next-line no-param-reassign
       file.uid = getUid();
