@@ -318,7 +318,7 @@ describe('uploader', () => {
       Object.defineProperty(files, 'item', {
         value: i => files[i],
       });
-
+      
       // Only can trigger once
       let triggerTimes = 0;
       handlers.onStart = () => {
@@ -345,7 +345,7 @@ describe('uploader', () => {
       fireEvent.drop(input, { dataTransfer: { files } });
 
       setTimeout(() => {
-        handlers.onSuccess!(['', files[0].name] as any, files[0] as any, null!);
+        requests[0].respond(200, {}, `["","${files[0].name}"]`);
       }, 100);
     });
 
@@ -432,7 +432,7 @@ describe('uploader', () => {
       fireEvent.paste(input, { clipboardData: { files } });
 
       await sleep(100);
-      handlers.onSuccess!(['', files[0].name] as any, files[0] as any, null!);
+      requests[0].respond(200, {}, `["","${files[0].name}"]`);
     });
 
     it('support action and data is function returns Promise', async () => {
@@ -523,6 +523,122 @@ describe('uploader', () => {
 
       expect(preventDefaultSpy).toHaveBeenCalledTimes(0);
       preventDefaultSpy.mockRestore();
+    });
+
+    it('should prevent uid overwritten when multiple upload components paste simultaneously', async () => {
+      const handlers1: UploadProps = {};
+      const handlers2: UploadProps = {};
+
+      const props1: UploadProps = {
+        ...props,
+        beforeUpload(file, fileList) {
+          if (handlers1.beforeUpload) {
+            return handlers1.beforeUpload(file, fileList);
+          }
+          return true;
+        },
+        onStart(file) {
+          if (handlers1.onStart) {
+            handlers1.onStart(file);
+          }
+        },
+        onSuccess(ret, file) {
+          if (handlers1.onSuccess) {
+            handlers1.onSuccess(ret, file, null!);
+          }
+        },
+        onError(err, result, file) {
+          if (handlers1.onError) {
+            handlers1.onError(err, result, file);
+          }
+        },
+      };
+
+      const props2: UploadProps = {
+        ...props,
+        beforeUpload(file, fileList) {
+          if (handlers2.beforeUpload) {
+            return handlers2.beforeUpload(file, fileList);
+          }
+          return true;
+        },
+        onStart(file) {
+          if (handlers2.onStart) {
+            handlers2.onStart(file);
+          }
+        },
+        onSuccess(ret, file) {
+          if (handlers2.onSuccess) {
+            handlers2.onSuccess(ret, file, null!);
+          }
+        },
+        onError(err, result, file) {
+          if (handlers2.onError) {
+            handlers2.onError(err, result, file);
+          }
+        },
+      };
+
+      let uid1: string | undefined;
+      handlers1.beforeUpload = (file, fileList) => {
+        expect(file).toHaveProperty('uid');
+        uid1 = file.uid;
+        return true;
+      };
+      handlers1.onStart = file => {
+        expect(file).toHaveProperty('uid');
+        expect(file.uid).toEqual(uid1);
+      };
+      handlers1.onSuccess = (ret, file) => {
+        expect(ret[1]).toEqual(file.name);
+        expect(file).toHaveProperty('uid');
+        expect(file.uid).toEqual(uid1);
+      };
+      handlers1.onError = (err, result, file) => {
+        expect(file).toHaveProperty('uid');
+        expect(file.uid).toEqual(uid1);
+        throw err;
+      };
+
+      let uid2: string | undefined;
+      handlers2.beforeUpload = (file, fileList) => {
+        expect(file).toHaveProperty('uid');
+        uid2 = file.uid;
+        return true;
+      };
+      handlers2.onStart = file => {
+        expect(file).toHaveProperty('uid');
+        expect(file.uid).toEqual(uid2);
+      };
+      handlers2.onSuccess = (ret, file) => {
+        expect(ret[1]).toEqual(file.name);
+        expect(file).toHaveProperty('uid');
+        expect(file.uid).toEqual(uid2);
+      };
+      handlers2.onError = (err, result, file) => {
+        expect(file).toHaveProperty('uid');
+        expect(file.uid).toEqual(uid2);
+        throw err;
+      };
+
+      const { container: container } = render(<Upload {...props1} pastable />);
+      render(<Upload {...props2} pastable />);
+
+      const input = container.querySelector('input')!;
+
+      const files = [
+        new File([''], 'success.png', { type: 'image/png' }),
+      ];
+      Object.defineProperty(files, 'item', {
+        value: i => files[i],
+      });
+
+      fireEvent.paste(input, {
+        clipboardData: { files },
+      });
+
+      await sleep(100);
+      requests[0].respond(200, {}, `["","${files[0].name}"]`);
     });
   });
 
