@@ -95,12 +95,12 @@ class AjaxUploader extends Component<UploadProps> {
     const { multiple, directory } = this.props;
 
     const items: DataTransferItem[] = [...(dataTransfer.items || [])];
-    let files: File[] = [...(dataTransfer.files || [])].map((file: File) => {
-      return new File([file], file.name, {
+    let files: File[] = [...(dataTransfer.files || [])].map(file => (
+      new File([file], file.name, {
         type: file.type,
         lastModified: file.lastModified,
-      });
-    });
+      })
+    ));
 
     if (files.length > 0 || items.some(item => item.kind === 'file')) {
       existFileCallback?.();
