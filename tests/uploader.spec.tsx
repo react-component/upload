@@ -638,7 +638,14 @@ describe('uploader', () => {
       });
 
       await sleep(100);
+
+      expect(requests).toHaveLength(2);
+      expect(uid1).toBeDefined();
+      expect(uid2).toBeDefined();
+      expect(uid1).not.toEqual(uid2);
+
       requests[0].respond(200, {}, `["","${files[0].name}"]`);
+      requests[1].respond(200, {}, `["","${files[0].name}"]`);
     });
   });
 
