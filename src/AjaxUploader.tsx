@@ -170,8 +170,26 @@ class AjaxUploader extends Component<UploadProps> {
     }
   }
 
-  uploadFiles = (files: File[]) => {
-    const originFiles = [...files] as RcFile[];
+  cacheFiles = async (files: File[]) => {
+    if (files?.length) {
+      const cachedFiles = await Promise.all(
+        files.map(async file => {
+          const buffer = await file.arrayBuffer();
+          return new File([buffer], file.name, {
+            type: file.type,
+            lastModified: file.lastModified,
+          });
+        }),
+      );
+
+      return cachedFiles;
+    }
+
+    return [];
+  };
+
+  uploadFiles = async (files: File[]) => {
+    const originFiles = (await this.cacheFiles(files)) as RcFile[];
     const postFiles = originFiles.map((file: RcFile & { uid?: string }) => {
       // eslint-disable-next-line no-param-reassign
       file.uid = getUid();
