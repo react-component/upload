@@ -95,6 +95,7 @@ class AjaxUploader extends Component<UploadProps> {
     const { multiple, directory } = this.props;
 
     const items: DataTransferItem[] = [...(dataTransfer.items || [])];
+    // Clone File objects to avoid shared uid mutation between multiple Upload components
     let files: File[] = [...(dataTransfer.files || [])].map(file => (
       new File([file], file.name, {
         type: file.type,
