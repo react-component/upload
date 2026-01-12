@@ -96,12 +96,12 @@ class AjaxUploader extends Component<UploadProps> {
 
     const items: DataTransferItem[] = [...(dataTransfer.items || [])];
     // Clone File objects to avoid shared uid mutation between multiple Upload components
-    let files: File[] = [...(dataTransfer.files || [])].map(file => (
+    let files: File[] = Array.from(dataTransfer.files ?? [], file =>
       new File([file], file.name, {
         type: file.type,
         lastModified: file.lastModified,
       })
-    ));
+    );
 
     if (files.length > 0 || items.some(item => item.kind === 'file')) {
       existFileCallback?.();
