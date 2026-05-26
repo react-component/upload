@@ -1,4 +1,4 @@
-import { resetWarned } from '@rc-component/util/lib/warning';
+import { resetWarned } from '@rc-component/util';
 import { fireEvent, render } from '@testing-library/react';
 import React from 'react';
 import sinon from 'sinon';

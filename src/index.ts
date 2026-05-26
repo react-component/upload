@@ -1,6 +1,16 @@
-import type { UploadProps } from './interface';
+import type {
+  AcceptConfig,
+  RcFile,
+  UploadProps,
+  UploadRequestOption,
+} from './interface';
 import Upload from './Upload';
 
-export type { UploadProps };
+export type {
+  AcceptConfig,
+  RcFile,
+  UploadProps,
+  UploadRequestOption,
+};
 
 export default Upload;
