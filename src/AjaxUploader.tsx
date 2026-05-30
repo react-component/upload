@@ -95,7 +95,13 @@ class AjaxUploader extends Component<UploadProps> {
     const { multiple, directory } = this.props;
 
     const items: DataTransferItem[] = [...(dataTransfer.items || [])];
-    let files: File[] = [...(dataTransfer.files || [])];
+    // Clone File objects to avoid shared uid mutation between multiple Upload components
+    let files: File[] = Array.from(dataTransfer.files ?? [], file =>
+      new File([file], file.name, {
+        type: file.type,
+        lastModified: file.lastModified,
+      })
+    );
 
     if (files.length > 0 || items.some(item => item.kind === 'file')) {
       existFileCallback?.();
@@ -296,7 +302,6 @@ class AjaxUploader extends Component<UploadProps> {
         delete this.reqs[uid];
       },
     };
-
     onStart(origin);
     this.reqs[uid] = request(requestOption, { defaultRequest });
   }
