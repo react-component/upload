@@ -39,19 +39,18 @@ export default function upload(option: UploadRequestOption) {
   const formData = new FormData();
 
   if (option.data) {
-    Object.keys(option.data).forEach(key => {
-      const value = option.data[key];
+    Object.entries(option.data).forEach(([header, value]) => {
       // support key-value array data
       if (Array.isArray(value)) {
         value.forEach(item => {
           // { list: [ 11, 22 ] }
           // formData.append('list[]', 11);
-          formData.append(`${key}[]`, item);
+          formData.append(`${header}[]`, item);
         });
         return;
       }
 
-      formData.append(key, value as string | Blob);
+      formData.append(header, value as string | Blob);
     });
   }
 
@@ -91,11 +90,9 @@ export default function upload(option: UploadRequestOption) {
     xhr.setRequestHeader('X-Requested-With', 'XMLHttpRequest');
   }
 
-  Object.keys(headers).forEach(h => {
-    if (headers[h] !== null) {
-      xhr.setRequestHeader(h, headers[h]);
-    }
-  });
+  Object.entries(headers)
+    .filter(([, value]) => value !== null)
+    .forEach(([header, value]) => xhr.setRequestHeader(header, value));
 
   xhr.send(formData);
 
