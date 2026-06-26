@@ -1,8 +1,7 @@
 /* eslint no-console:0 */
-import React from 'react';
-import axios from 'axios';
-import Upload from '@rc-component/upload';
 import { UploadRequestOption } from '@/interface';
+import Upload from '@rc-component/upload';
+import axios from 'axios';
 
 const uploadProps = {
   action: '/upload.do',

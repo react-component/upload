@@ -1,5 +1,4 @@
 /* eslint no-console:0 */
-import React from 'react';
 import Upload from '@rc-component/upload';
 
 const props = {
