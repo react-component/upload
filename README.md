@@ -100,7 +100,7 @@ Then open `http://localhost:8000`.
 
 | Name    | Type                      | Description             |
 | ------- | ------------------------- | ----------------------- |
-| `abort` | `(file?: RcFile) => void` | Abort an active upload. |
+| `abort` | `(file: RcFile) => void` | Abort an active upload. |
 
 ## Development
 

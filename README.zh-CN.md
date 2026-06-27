@@ -71,8 +71,8 @@ npm start
 | `accept` | string \| AcceptConfig | - | input accept 配置。 |
 | `action` | string \| `(file) => string \| PromiseLike<string>` | - | 上传地址或异步解析函数。 |
 | `beforeUpload` | `(file, fileList) => BeforeUploadFileType \| Promise<void \| BeforeUploadFileType> \| void` | - | 上传前校验或转换文件。返回 false 可阻止上传。 |
-| `className` | string | - | 根className。 |
-| `classNames` | `{ input?: string }` | - | 语义className。 |
+| `className` | string | - | 根 className。 |
+| `classNames` | `{ input?: string }` | - | 语义化类名。 |
 | `component` | React.ComponentType<any> \| string | `'span'` | 根组件。 |
 | `customRequest` | CustomUploadRequestOption | - | 覆盖默认请求行为。 |
 | `data` | object \| `(file) => object` | `{}` | 额外上传数据。 |
@@ -91,7 +91,7 @@ npm start
 | `onSuccess` | `(response, file, xhr) => void` | - | 上传成功回调。 |
 | `openFileDialogOnClick` | boolean | true | 点击根节点时打开文件选择框。 |
 | `pastable` | boolean | false | 启用粘贴上传。 |
-| `prefixCls` | string | `'rc-upload'` | 前缀className。 |
+| `prefixCls` | string | `'rc-upload'` | 前缀 className。 |
 | `style` | React.CSSProperties | - | 根样式。 |
 | `styles` | `{ input?: React.CSSProperties }` | - | 语义化样式。 |
 | `withCredentials` | boolean | false | 随 Ajax 上传发送凭证。 |
@@ -100,7 +100,7 @@ npm start
 
 | 名称    | 类型                      | 说明             |
 | ------- | ------------------------- | ----------------------- |
-| `abort` | `(file?: RcFile) => void` | 中止进行中的上传。 |
+| `abort` | `(file: RcFile) => void` | 中止进行中的上传。 |
 
 ## 本地开发
 
