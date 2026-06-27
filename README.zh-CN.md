@@ -1,7 +1,6 @@
 <div align="center">
   <h1>@rc-component/upload</h1>
-  <p><sub>Ant Design 生态的一部分。</sub></p>
-  <img alt="Ant Design" height="32" src="https://gw.alipayobjects.com/zos/rmsportal/KDpgvguMpGfqaHPjicRK.svg" />
+  <p><sub><img alt="Ant Design" height="14" src="https://gw.alipayobjects.com/zos/rmsportal/KDpgvguMpGfqaHPjicRK.svg" style="vertical-align: -0.125em;" /> Ant Design 生态的一部分。</sub></p>
   <p>📤 React 文件上传基础组件，支持拖拽、请求定制和上传列表。</p>
 
   <p>
@@ -19,10 +18,10 @@
 
 ## 特性
 
-- 支持 Ajax uploads with progress, headers, credentials, and custom request overrides.
-- 支持 directory, drag, paste, async action, and before-upload flows.
-- 暴露 `abort(file)` through the component instance for active requests.
-- 提供 semantic `classNames` and `styles` slots for the hidden input.
+- 支持带进度、请求头、凭证和自定义请求覆盖的 Ajax 上传。
+- 支持目录上传、拖拽、粘贴、异步 action 和上传前处理流程。
+- 通过组件实例暴露 `abort(file)`，用于中止进行中的请求。
+- 为隐藏 input 提供语义化 `classNames` 和 `styles` 插槽。
 
 ## 安装
 
@@ -50,7 +49,7 @@ export default () => (
 );
 ```
 
-Online preview: https://upload.react-component.vercel.app/
+在线预览：https://upload.react-component.vercel.app/
 
 ## API
 
@@ -58,39 +57,39 @@ Online preview: https://upload.react-component.vercel.app/
 
 | 名称 | 类型 | 默认值 | 说明 |
 | --- | --- | --- | --- |
-| `accept` | string \| AcceptConfig | - | Input accept config. |
-| `action` | string \| `(file) => string \| PromiseLike<string>` | - | Upload URL or async resolver. |
-| `beforeUpload` | `(file, fileList) => BeforeUploadFileType \| Promise<void \| BeforeUploadFileType> \| void` | - | Validate or transform before upload. Return false to stop upload. |
-| `className` | string | - | Root class name. |
-| `classNames` | `{ input?: string }` | - | Semantic class names. |
-| `component` | React.ComponentType<any> \| string | `'span'` | Root component. |
-| `customRequest` | CustomUploadRequestOption | - | Override default request behavior. |
-| `data` | object \| `(file) => object` | `{}` | Extra upload data. |
-| `directory` | boolean | false | Enable directory upload. |
-| `disabled` | boolean | false | Disable upload trigger. |
-| `hasControlInside` | boolean | false | Whether child already contains a control element. |
-| `headers` | Record<string, string> | `{}` | Request headers. |
-| `id` | string | - | Input id. |
-| `method` | `'POST' \| 'PUT' \| 'PATCH' \| 'post' \| 'put' \| 'patch'` | `'post'` | Request method. |
-| `multiple` | boolean | false | Allow multiple file selection. |
-| `name` | string | `'file'` | File field name. |
-| `onBatchStart` | `(fileList) => void` | - | Called when a batch starts. |
-| `onError` | `(error, response, file) => void` | - | Upload error callback. |
-| `onProgress` | `(event, file) => void` | - | Upload progress callback. |
-| `onStart` | `(file) => void` | - | Upload start callback. |
-| `onSuccess` | `(response, file, xhr) => void` | - | Upload success callback. |
-| `openFileDialogOnClick` | boolean | true | Open file dialog when root is clicked. |
-| `pastable` | boolean | false | Enable paste upload. |
-| `prefixCls` | string | `'rc-upload'` | Prefix class name. |
-| `style` | React.CSSProperties | - | Root style. |
-| `styles` | `{ input?: React.CSSProperties }` | - | Semantic styles. |
-| `withCredentials` | boolean | false | Send credentials with Ajax upload. |
+| `accept` | string \| AcceptConfig | - | input accept 配置。 |
+| `action` | string \| `(file) => string \| PromiseLike<string>` | - | 上传地址或异步解析函数。 |
+| `beforeUpload` | `(file, fileList) => BeforeUploadFileType \| Promise<void \| BeforeUploadFileType> \| void` | - | 上传前校验或转换文件。返回 false 可阻止上传。 |
+| `className` | string | - | 根className。 |
+| `classNames` | `{ input?: string }` | - | 语义className。 |
+| `component` | React.ComponentType<any> \| string | `'span'` | 根组件。 |
+| `customRequest` | CustomUploadRequestOption | - | 覆盖默认请求行为。 |
+| `data` | object \| `(file) => object` | `{}` | 额外上传数据。 |
+| `directory` | boolean | false | 启用目录上传。 |
+| `disabled` | boolean | false | 禁用上传触发器。 |
+| `hasControlInside` | boolean | false | 子节点是否已包含控制元素。 |
+| `headers` | Record<string, string> | `{}` | 请求头。 |
+| `id` | string | - | Input id。 |
+| `method` | `'POST' \| 'PUT' \| 'PATCH' \| 'post' \| 'put' \| 'patch'` | `'post'` | 请求方法。 |
+| `multiple` | boolean | false | 允许多文件选择。 |
+| `name` | string | `'file'` | 文件字段名。 |
+| `onBatchStart` | `(fileList) => void` | - | 批量开始时调用。 |
+| `onError` | `(error, response, file) => void` | - | 上传错误回调。 |
+| `onProgress` | `(event, file) => void` | - | 上传进度回调。 |
+| `onStart` | `(file) => void` | - | 上传开始回调。 |
+| `onSuccess` | `(response, file, xhr) => void` | - | 上传成功回调。 |
+| `openFileDialogOnClick` | boolean | true | 点击根节点时打开文件选择框。 |
+| `pastable` | boolean | false | 启用粘贴上传。 |
+| `prefixCls` | string | `'rc-upload'` | 前缀className。 |
+| `style` | React.CSSProperties | - | 根样式。 |
+| `styles` | `{ input?: React.CSSProperties }` | - | 语义化样式。 |
+| `withCredentials` | boolean | false | 随 Ajax 上传发送凭证。 |
 
-### Methods
+### 方法
 
 | 名称    | 类型                      | 说明             |
 | ------- | ------------------------- | ----------------------- |
-| `abort` | `(file?: RcFile) => void` | Abort an active upload. |
+| `abort` | `(file?: RcFile) => void` | 中止进行中的上传。 |
 
 ## 本地开发
 
@@ -109,8 +108,8 @@ npm run build
 npm run prepublishOnly
 ```
 
-The release flow is handled by `@rc-component/np` through the `rc-np` command after the package build.
+包构建完成后，发布流程由 `@rc-component/np` 通过 `rc-np` 命令处理。
 
 ## 许可证
 
-@rc-component/upload is released under the [MIT](./LICENSE) license.
+@rc-component/upload 基于 [MIT](./LICENSE) 许可证发布。
