@@ -8,13 +8,33 @@
     "skipLibCheck": true,
     "esModuleInterop": true,
     "paths": {
-      "@/*": ["src/*"],
-      "@@/*": [".dumi/tmp/*"],
-      "@rc-component/upload": ["src/index.ts"],
-      "@rc-component/upload/es": ["src"],
-      "@rc-component/upload/es/*": ["src/*"]
-    }
+      "@/*": [
+        "src/*"
+      ],
+      "@@/*": [
+        ".dumi/tmp/*"
+      ],
+      "@rc-component/upload": [
+        "src/index.ts"
+      ],
+      "@rc-component/upload/es": [
+        "src"
+      ],
+      "@rc-component/upload/es/*": [
+        "src/*"
+      ]
+    },
+    "ignoreDeprecations": "5.0"
   },
-  "include": [".dumirc.ts", "src", "tests", "docs/examples"],
-  "exclude": ["docs-dist", "lib", "es"]
+  "include": [
+    ".dumirc.ts",
+    "src",
+    "tests",
+    "docs/examples"
+  ],
+  "exclude": [
+    "docs-dist",
+    "lib",
+    "es"
+  ]
 }
