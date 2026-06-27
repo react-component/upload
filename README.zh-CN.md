@@ -1,7 +1,7 @@
 <div align="center">
   <h1>@rc-component/upload</h1>
-  <p><sub>Part of the Ant Design ecosystem.</sub></p>
-  <p>📤 Low-level React upload primitive for Ajax, drag, paste, directory, and custom requests.</p>
+  <p><sub>Ant Design 生态的一部分。</sub></p>
+  <p>📤 React 文件上传基础组件，支持拖拽、请求定制和上传列表。</p>
 
   <p>
     <a href="https://www.npmjs.com/package/@rc-component/upload"><img src="https://img.shields.io/npm/v/@rc-component/upload.svg?style=flat-square" alt="npm version" /></a>
@@ -13,23 +13,23 @@
   </p>
 </div>
 
-<p align="center">English | <a href="./README.zh-CN.md">简体中文</a></p>
+<p align="center"><a href="./README.md">English</a> | 简体中文</p>
 
 
-## Highlights
+## 特性
 
-- Supports Ajax uploads with progress, headers, credentials, and custom request overrides.
-- Supports directory, drag, paste, async action, and before-upload flows.
-- Exposes `abort(file)` through the component instance for active requests.
-- Provides semantic `classNames` and `styles` slots for the hidden input.
+- 支持 Ajax uploads with progress, headers, credentials, and custom request overrides.
+- 支持 directory, drag, paste, async action, and before-upload flows.
+- 暴露 `abort(file)` through the component instance for active requests.
+- 提供 semantic `classNames` and `styles` slots for the hidden input.
 
-## Install
+## 安装
 
 ```bash
 npm install @rc-component/upload
 ```
 
-## Usage
+## 使用
 
 ```tsx pure
 import Upload from '@rc-component/upload';
@@ -55,7 +55,7 @@ Online preview: https://upload.react-component.vercel.app/
 
 ### Upload
 
-| Name | Type | Default | Description |
+| 名称 | 类型 | 默认值 | 说明 |
 | --- | --- | --- | --- |
 | `accept` | string \| AcceptConfig | - | Input accept config. |
 | `action` | string \| `(file) => string \| PromiseLike<string>` | - | Upload URL or async resolver. |
@@ -87,11 +87,11 @@ Online preview: https://upload.react-component.vercel.app/
 
 ### Methods
 
-| Name    | Type                      | Description             |
+| 名称    | 类型                      | 说明             |
 | ------- | ------------------------- | ----------------------- |
 | `abort` | `(file?: RcFile) => void` | Abort an active upload. |
 
-## Development
+## 本地开发
 
 ```bash
 npm install
@@ -102,7 +102,7 @@ npm run compile
 npm run build
 ```
 
-## Release
+## 发布
 
 ```bash
 npm run prepublishOnly
@@ -110,6 +110,6 @@ npm run prepublishOnly
 
 The release flow is handled by `@rc-component/np` through the `rc-np` command after the package build.
 
-## License
+## 许可证
 
 @rc-component/upload is released under the [MIT](./LICENSE) license.
