@@ -1,6 +1,7 @@
 <div align="center">
   <h1>@rc-component/upload</h1>
   <p><sub>Ant Design 生态的一部分。</sub></p>
+  <img alt="Ant Design" height="32" src="https://gw.alipayobjects.com/zos/rmsportal/KDpgvguMpGfqaHPjicRK.svg" />
   <p>📤 React 文件上传基础组件，支持拖拽、请求定制和上传列表。</p>
 
   <p>
