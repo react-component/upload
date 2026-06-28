@@ -19,7 +19,7 @@
   "license": "MIT",
   "main": "./lib/index",
   "module": "./es/index",
-  "types": "./lib/index.d.ts",
+  "types": "./es/index.d.ts",
   "files": [
     "lib",
     "es"
