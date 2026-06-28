@@ -10,11 +10,11 @@
   ],
   "homepage": "https://react-component.github.io/upload",
   "bugs": {
-    "url": "http://github.com/react-component/upload/issues"
+    "url": "https://github.com/react-component/upload/issues"
   },
   "repository": {
     "type": "git",
-    "url": "git@github.com:react-component/upload.git"
+    "url": "https://github.com/react-component/upload.git"
   },
   "license": "MIT",
   "main": "./lib/index",
@@ -69,5 +69,8 @@
   "peerDependencies": {
     "react": ">=16.9.0",
     "react-dom": ">=16.9.0"
+  },
+  "publishConfig": {
+    "access": "public"
   }
 }
