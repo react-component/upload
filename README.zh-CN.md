@@ -4,12 +4,12 @@
   <p>📤 React 文件上传基础组件，支持拖拽、请求定制和上传列表。</p>
 
   <p>
-    <a href="https://www.npmjs.com/package/@rc-component/upload"><img src="https://img.shields.io/npm/v/@rc-component/upload.svg?style=flat-square" alt="npm version" /></a>
-    <a href="https://www.npmjs.com/package/@rc-component/upload"><img src="https://img.shields.io/npm/dm/@rc-component/upload.svg?style=flat-square" alt="npm downloads" /></a>
-    <a href="https://github.com/react-component/upload/actions"><img src="https://github.com/react-component/upload/actions/workflows/react-component-ci.yml/badge.svg" alt="CI" /></a>
-    <a href="https://codecov.io/gh/react-component/upload"><img src="https://img.shields.io/codecov/c/github/react-component/upload/master.svg?style=flat-square" alt="Codecov" /></a>
-    <a href="https://bundlephobia.com/package/@rc-component/upload"><img src="https://badgen.net/bundlephobia/minzip/@rc-component/upload" alt="bundle size" /></a>
-    <a href="https://github.com/umijs/dumi"><img src="https://img.shields.io/badge/docs%20by-dumi-blue?style=flat-square" alt="dumi" /></a>
+    <a href="https://npmjs.org/package/@rc-component/upload"><img alt="NPM version" src="https://img.shields.io/npm/v/@rc-component/upload.svg?style=flat-square"></a>
+    <a href="https://npmjs.org/package/@rc-component/upload"><img alt="npm downloads" src="https://img.shields.io/npm/dm/@rc-component/upload.svg?style=flat-square"></a>
+    <a href="https://github.com/react-component/upload/actions/workflows/react-component-ci.yml"><img alt="build status" src="https://github.com/react-component/upload/actions/workflows/react-component-ci.yml/badge.svg"></a>
+    <a href="https://app.codecov.io/gh/react-component/upload"><img alt="Codecov" src="https://img.shields.io/codecov/c/github/react-component/upload/master.svg?style=flat-square"></a>
+    <a href="https://bundlephobia.com/package/@rc-component/upload"><img alt="bundle size" src="https://img.shields.io/bundlephobia/minzip/@rc-component/upload?style=flat-square"></a>
+    <a href="https://github.com/umijs/dumi"><img alt="dumi" src="https://img.shields.io/badge/docs%20by-dumi-blue?style=flat-square"></a>
   </p>
 </div>
 
