@@ -68,7 +68,7 @@
     "sinon": "^9.0.2",
     "typescript": "^5.9.3",
     "husky": "^9.1.7",
-    "lint-staged": "^16.4.0"
+    "lint-staged": "^17.0.8"
   },
   "peerDependencies": {
     "react": ">=16.9.0",
