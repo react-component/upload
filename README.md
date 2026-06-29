@@ -1,114 +1,128 @@
-# @rc-component/upload
+<div align="center">
+  <h1>@rc-component/upload</h1>
+  <p><sub><img alt="Ant Design" height="14" src="https://gw.alipayobjects.com/zos/rmsportal/KDpgvguMpGfqaHPjicRK.svg" style="vertical-align: -0.125em;" /> Part of the Ant Design ecosystem.</sub></p>
+  <p>📤 Low-level React upload primitive for Ajax, drag, paste, directory, and custom requests.</p>
 
-React Upload
+  <p>
+    <a href="https://npmjs.org/package/@rc-component/upload"><img alt="NPM version" src="https://img.shields.io/npm/v/@rc-component/upload.svg?style=flat-square"></a>
+    <a href="https://npmjs.org/package/@rc-component/upload"><img alt="npm downloads" src="https://img.shields.io/npm/dm/@rc-component/upload.svg?style=flat-square"></a>
+    <a href="https://github.com/react-component/upload/actions/workflows/react-component-ci.yml"><img alt="build status" src="https://github.com/react-component/upload/actions/workflows/react-component-ci.yml/badge.svg"></a>
+    <a href="https://app.codecov.io/gh/react-component/upload"><img alt="Codecov" src="https://img.shields.io/codecov/c/github/react-component/upload/master.svg?style=flat-square"></a>
+    <a href="https://bundlephobia.com/package/@rc-component/upload"><img alt="bundle size" src="https://img.shields.io/bundlephobia/minzip/@rc-component/upload?style=flat-square"></a>
+    <a href="https://github.com/umijs/dumi"><img alt="dumi" src="https://img.shields.io/badge/docs%20by-dumi-blue?style=flat-square"></a>
+  </p>
+</div>
 
-[![NPM version][npm-image]][npm-url] [![npm download][download-image]][download-url] [![build status][github-actions-image]][github-actions-url] [![Codecov][codecov-image]][codecov-url] [![bundle size][bundlephobia-image]][bundlephobia-url] [![dumi][dumi-image]][dumi-url]
+<p align="center">English | <a href="./README.zh-CN.md">简体中文</a></p>
 
-[npm-image]: http://img.shields.io/npm/v/@rc-component/upload.svg?style=flat-square
-[npm-url]: http://npmjs.org/package/@rc-component/upload
-[travis-image]: https://img.shields.io/travis/react-component/upload/master?style=flat-square
-[travis-url]: https://travis-ci.com/react-component/upload
-[github-actions-image]: https://github.com/react-component/upload/actions/workflows/react-component-ci.yml/badge.svg
-[github-actions-url]: https://github.com/react-component/upload/actions/workflows/react-component-ci.yml
-[codecov-image]: https://img.shields.io/codecov/c/github/react-component/upload/master.svg?style=flat-square
-[codecov-url]: https://app.codecov.io/gh/react-component/upload
-[download-image]: https://img.shields.io/npm/dm/@rc-component/upload.svg?style=flat-square
-[download-url]: https://npmjs.org/package/@rc-component/upload
-[bundlephobia-url]: https://bundlephobia.com/package/@rc-component/upload
-[bundlephobia-image]: https://badgen.net/bundlephobia/minzip/@rc-component/upload
-[dumi-url]: https://github.com/umijs/dumi
-[dumi-image]: https://img.shields.io/badge/docs%20by-dumi-blue?style=flat-square
 
-## Development
+## Highlights
 
+- Supports Ajax uploads with progress, headers, credentials, and custom request overrides.
+- Supports directory, drag, paste, async action, and before-upload flows.
+- Exposes `abort(file)` through the component instance for active requests.
+- Provides semantic `classNames` and `styles` slots for the hidden input.
+
+## Install
+
+```bash
+npm install @rc-component/upload
 ```
+
+## Usage
+
+```tsx pure
+import Upload from '@rc-component/upload';
+
+export default () => (
+  <Upload
+    action="/upload"
+    onStart={file => {
+      console.log('start', file.name);
+    }}
+    onSuccess={(response, file) => {
+      console.log('success', file.name, response);
+    }}
+  >
+    <button type="button">Upload</button>
+  </Upload>
+);
+```
+
+Online preview: https://upload.react-component.vercel.app/
+
+## Examples
+
+Run the local dumi site:
+
+```bash
 npm install
 npm start
 ```
 
-## Example
-
-http://localhost:8000/
-
-online example: https://upload.react-component.vercel.app/
-
-## Feature
-
-- support IE11+, Chrome, Firefox, Safari
-
-## install
-
-[![@rc-component/upload](https://nodei.co/npm/@rc-component/upload.png)](https://npmjs.org/package/@rc-component/upload)
-
-## Usage
-
-```js
-var Upload = require('@rc-component/upload');
-var React = require('react');
-React.render(<Upload />, container);
-```
+Then open `http://localhost:8000`.
 
 ## API
 
-### props
+### Upload
 
-| name | type | default | description |
+| Name | Type | Default | Description |
 | --- | --- | --- | --- |
-| name | string | file | file param post to server |
-| style | object | {} | root component inline style |
-| className | string | - | root component className |
-| disabled | boolean | false | whether disabled |
-| component | "div" \| "span" | "span" | wrap component name |
-| action | string &#124; function(file): string &#124; Promise&lt;string&gt; |  | form action url |
-| method | string | post | request method |
-| directory | boolean | false | support upload whole directory |
-| data | object/function(file) |  | other data object to post or a function which returns a data object(a promise object which resolve a data object) |
-| headers | object | {} | http headers to post, available in modern browsers |
-| accept | string |  | input accept attribute |
-| capture | string |  | input capture attribute |
-| multiple | boolean | false | only support ie10+ |
-| onStart | function |  | start upload file |
-| onError | function |  | error callback |
-| onSuccess | function |  | success callback |
-| onProgress | function |  | progress callback, only for modern browsers |
-| beforeUpload | function | null | before upload check, return false or a rejected Promise will stop upload, only for modern browsers |
-| customRequest | function | null | provide an override for the default xhr behavior for additional customization |
-| withCredentials | boolean | false | ajax upload with cookie send |
-| openFileDialogOnClick | boolean | true | useful for drag only upload as it does not trigger on enter key or click event |
-| pastable | boolean | false | support paste upload |
+| `accept` | string \| AcceptConfig | - | Input accept config. |
+| `action` | string \| `(file) => string \| PromiseLike<string>` | - | Upload URL or async resolver. |
+| `beforeUpload` | `(file, fileList) => BeforeUploadFileType \| Promise<void \| BeforeUploadFileType> \| void` | - | Validate or transform before upload. Return false to stop upload. |
+| `className` | string | - | Root class name. |
+| `classNames` | `{ input?: string }` | - | Semantic class names. |
+| `component` | React.ComponentType<any> \| string | `'span'` | Root component. |
+| `customRequest` | CustomUploadRequestOption | - | Override default request behavior. |
+| `data` | object \| `(file) => object` | `{}` | Extra upload data. |
+| `directory` | boolean | false | Enable directory upload. |
+| `disabled` | boolean | false | Disable upload trigger. |
+| `hasControlInside` | boolean | false | Whether child already contains a control element. |
+| `headers` | Record<string, string> | `{}` | Request headers. |
+| `id` | string | - | Input id. |
+| `method` | `'POST' \| 'PUT' \| 'PATCH' \| 'post' \| 'put' \| 'patch'` | `'post'` | Request method. |
+| `multiple` | boolean | false | Allow multiple file selection. |
+| `name` | string | `'file'` | File field name. |
+| `onBatchStart` | `(fileList) => void` | - | Called when a batch starts. |
+| `onError` | `(error, response, file) => void` | - | Upload error callback. |
+| `onProgress` | `(event, file) => void` | - | Upload progress callback. |
+| `onStart` | `(file) => void` | - | Upload start callback. |
+| `onSuccess` | `(response, file, xhr) => void` | - | Upload success callback. |
+| `openFileDialogOnClick` | boolean | true | Open file dialog when root is clicked. |
+| `pastable` | boolean | false | Enable paste upload. |
+| `prefixCls` | string | `'rc-upload'` | Prefix class name. |
+| `style` | React.CSSProperties | - | Root style. |
+| `styles` | `{ input?: React.CSSProperties }` | - | Semantic styles. |
+| `withCredentials` | boolean | false | Send credentials with Ajax upload. |
 
-#### onError arguments
+### Methods
 
-1. `err`: request error message
-2. `response`: request response, not support on iframeUpload
-3. `file`: upload file
+| Name    | Type                      | Description             |
+| ------- | ------------------------- | ----------------------- |
+| `abort` | `(file: RcFile) => void` | Abort an active upload. |
 
-### onSuccess arguments
+## Development
 
-1. `result`: response body
-2. `file`: upload file
-3. `xhr`: xhr header, only for modern browsers which support AJAX upload. since 2.4.0
+```bash
+npm install
+npm start
+npm test
+npm run tsc
+npm run compile
+npm run build
+```
 
-### customRequest
+The dumi site runs at `http://localhost:8000` by default.
 
-Allows for advanced customization by overriding default behavior in AjaxUploader. Provide your own XMLHttpRequest calls to interface with custom backend processes or interact with AWS S3 service through the aws-sdk-js package.
+## Release
 
-customRequest callback is passed an object with:
+```bash
+npm run prepublishOnly
+```
 
-- `onProgress: (event: { percent: number }): void`
-- `onError: (event: Error, body?: Object): void`
-- `onSuccess: (body: Object): void`
-- `data: Object`
-- `filename: String`
-- `file: File`
-- `withCredentials: Boolean`
-- `action: String`
-- `headers: Object`
-
-### methods
-
-abort(file?: File) => void: abort the uploading file
+The release flow is handled by `@rc-component/np` through the `rc-np` command after the package build.
 
 ## License
 
-@rc-component/upload is released under the MIT license.
+@rc-component/upload is released under the [MIT](./LICENSE) license.
