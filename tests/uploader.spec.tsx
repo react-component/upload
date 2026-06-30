@@ -1,5 +1,6 @@
+import { fireEvent } from '@testing-library/dom';
 import { resetWarned } from '@rc-component/util';
-import { fireEvent, render } from '@testing-library/react';
+import { render } from '@testing-library/react';
 import React from 'react';
 import sinon from 'sinon';
 import { format } from 'util';
