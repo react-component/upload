@@ -56,7 +56,7 @@ export default () => (
 运行本地 dumi 站点：
 
 ```bash
-ut install
+npm install
 npm start
 ```
 
@@ -105,7 +105,7 @@ npm start
 ## 本地开发
 
 ```bash
-ut install
+npm install
 npm start
 npm test
 npm run tsc
