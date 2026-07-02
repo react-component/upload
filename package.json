@@ -45,9 +45,6 @@
     "clsx": "^2.1.1"
   },
   "devDependencies": {
-    "@babel/eslint-parser": "^7.29.7",
-    "@babel/eslint-plugin": "^7.29.7",
-    "@eslint/eslintrc": "^3.3.5",
     "@eslint/js": "^9.39.4",
     "@rc-component/father-plugin": "^2.2.0",
     "@rc-component/np": "^1.0.4",
@@ -58,9 +55,6 @@
     "@types/node": "^26.0.1",
     "@types/react": "^19.2.17",
     "@types/react-dom": "^19.2.3",
-    "@typescript-eslint/eslint-plugin": "^8.62.1",
-    "@typescript-eslint/parser": "^8.62.1",
-    "@umijs/fabric": "^4.0.1",
     "axios": "^1.9.0",
     "cross-env": "^10.1.0",
     "dumi": "^2.4.38",
@@ -69,9 +63,9 @@
     "eslint-plugin-jest": "^29.15.4",
     "eslint-plugin-react": "^7.37.5",
     "eslint-plugin-react-hooks": "^7.1.1",
-    "eslint-plugin-unicorn": "^65.0.1",
     "father": "^4.6.24",
     "gh-pages": "^6.3.0",
+    "globals": "^17.7.0",
     "husky": "^9.1.7",
     "lint-staged": "^17.0.8",
     "prettier": "^3.9.4",
@@ -80,7 +74,8 @@
     "react-dom": "^19.2.7",
     "regenerator-runtime": "^0.14.1",
     "sinon": "^9.0.2",
-    "typescript": "^6.0.3"
+    "typescript": "^6.0.3",
+    "typescript-eslint": "^8.62.1"
   },
   "peerDependencies": {
     "react": ">=16.9.0",
