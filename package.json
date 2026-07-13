@@ -74,8 +74,8 @@
     "react": "^19.2.7",
     "react-dom": "^19.2.7",
     "regenerator-runtime": "^0.14.1",
-    "sinon": "^9.0.2",
-    "typescript": "^6.0.3",
+    "sinon": "^22.0.0",
+    "typescript": "^7.0.2",
     "typescript-eslint": "^8.62.1"
   },
   "peerDependencies": {
