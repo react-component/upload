@@ -318,7 +318,7 @@ describe('uploader', () => {
       Object.defineProperty(files, 'item', {
         value: i => files[i],
       });
-
+      
       // Only can trigger once
       let triggerTimes = 0;
       handlers.onStart = () => {
@@ -345,7 +345,7 @@ describe('uploader', () => {
       fireEvent.drop(input, { dataTransfer: { files } });
 
       setTimeout(() => {
-        handlers.onSuccess!(['', files[0].name] as any, files[0] as any, null!);
+        requests[0].respond(200, {}, `["","${files[0].name}"]`);
       }, 100);
     });
 
@@ -432,7 +432,7 @@ describe('uploader', () => {
       fireEvent.paste(input, { clipboardData: { files } });
 
       await sleep(100);
-      handlers.onSuccess!(['', files[0].name] as any, files[0] as any, null!);
+      requests[0].respond(200, {}, `["","${files[0].name}"]`);
     });
 
     it('support action and data is function returns Promise', async () => {
@@ -523,6 +523,65 @@ describe('uploader', () => {
 
       expect(preventDefaultSpy).toHaveBeenCalledTimes(0);
       preventDefaultSpy.mockRestore();
+    });
+
+    it('should prevent uid overwritten when multiple upload components paste simultaneously', async () => {
+      const uidsInBeforeUpload: string[] = [];
+      const uidsInOnStart: string[] = [];
+      const uidsInOnSuccess: string[] = [];
+
+      const createUploadProps = (index: number): UploadProps => ({
+        ...props,
+        pastable: true,
+        beforeUpload(file) {
+          uidsInBeforeUpload[index] = file.uid;
+          return true;
+        },
+        onStart(file) {
+          uidsInOnStart[index] = file.uid;
+        },
+        onSuccess(ret, file) {
+          uidsInOnSuccess[index] = file.uid;
+        },
+        onError(err) {
+          throw err;
+        },
+      });
+
+      const { container } = render(<Upload {...createUploadProps(0)} />);
+      render(<Upload {...createUploadProps(1)} />);
+
+      const input = container.querySelector('input')!;
+      const files = [new File([''], 'success.png', { type: 'image/png' })];
+      Object.defineProperty(files, 'item', {
+        value: i => files[i],
+      });
+
+      fireEvent.paste(input, { clipboardData: { files } });
+
+      await sleep(100);
+
+      expect(uidsInBeforeUpload[0]).toBeDefined();
+      expect(uidsInBeforeUpload[1]).toBeDefined();
+      expect(uidsInBeforeUpload[0]).not.toEqual(uidsInBeforeUpload[1]);
+
+      expect(uidsInOnStart[0]).toBeDefined();
+      expect(uidsInOnStart[1]).toBeDefined();
+      expect(uidsInOnStart[0]).not.toEqual(uidsInOnStart[1]);
+
+      expect(uidsInOnStart[0]).toEqual(uidsInBeforeUpload[0]);
+      expect(uidsInOnStart[1]).toEqual(uidsInBeforeUpload[1]);
+
+      expect(requests).toHaveLength(2);
+      requests[0].respond(200, {}, `["","${files[0].name}"]`);
+      requests[1].respond(200, {}, `["","${files[0].name}"]`);
+
+      expect(uidsInOnSuccess[0]).toBeDefined();
+      expect(uidsInOnSuccess[1]).toBeDefined();
+      expect(uidsInOnSuccess[0]).not.toEqual(uidsInOnSuccess[1]);
+      
+      expect(uidsInOnSuccess[0]).toEqual(uidsInBeforeUpload[0]);
+      expect(uidsInOnSuccess[1]).toEqual(uidsInBeforeUpload[1]);
     });
   });
 
