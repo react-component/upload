@@ -24,7 +24,7 @@ export interface UploadProps
   accept?: string | AcceptConfig;
   multiple?: boolean;
   onBatchStart?: (
-    fileList: { file: RcFile; parsedFile: Exclude<BeforeUploadFileType, boolean> }[],
+    fileList: { file: RcFile; parsedFile: RcFile }[],
   ) => void;
   onStart?: (file: RcFile) => void;
   onError?: (error: Error, ret: Record<string, unknown>, file: RcFile) => void;
@@ -60,7 +60,7 @@ export type UploadRequestMethod = 'POST' | 'PUT' | 'PATCH' | 'post' | 'put' | 'p
 
 export type UploadRequestHeader = Record<string, string>;
 
-export type UploadRequestFile = Exclude<BeforeUploadFileType, File | boolean> | RcFile;
+export type UploadRequestFile = RcFile;
 
 export interface UploadRequestError extends Error {
   status?: number;
