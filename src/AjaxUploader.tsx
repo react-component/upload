@@ -368,10 +368,15 @@ class AjaxUploader extends Component<UploadProps> {
           onMouseLeave,
           onDrop: this.onFileDrop,
           onDragOver: this.onFileDragOver,
-          tabIndex: hasControlInside ? undefined : '0',
+          tabIndex: hasControlInside || !openFileDialogOnClick ? undefined : '0',
         };
     return (
-      <Tag {...events} className={cls} role={hasControlInside ? undefined : 'button'} style={style}>
+      <Tag
+        {...events}
+        className={cls}
+        role={hasControlInside || !openFileDialogOnClick ? undefined : 'button'}
+        style={style}
+      >
         <input
           {...pickAttrs(otherProps, { aria: true, data: true })}
           id={id}

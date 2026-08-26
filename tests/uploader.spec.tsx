@@ -1320,6 +1320,13 @@ describe('uploader', () => {
     expect(container.querySelector('span')!).not.toHaveAttribute('role', 'button');
   });
 
+  it("Should not be focusable and doesn't have role=button when click upload is disabled", () => {
+    const { container } = render(<Upload openFileDialogOnClick={false} />);
+
+    expect(container.querySelector('span')!.tabIndex).not.toBe(0);
+    expect(container.querySelector('span')!).not.toHaveAttribute('role', 'button');
+  });
+
   it('should receive same defaultRequest as src', done => {
     const { default: srcRequest } = require('../src/request');
     let receivedDefaultRequest: any;
