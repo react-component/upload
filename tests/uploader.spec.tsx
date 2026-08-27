@@ -1313,8 +1313,49 @@ describe('uploader', () => {
     expect(container.querySelector('span')).toHaveAttribute('role', 'button');
   });
 
+  it.each(['Enter', ' '])('Should open the file dialog with the %p key', key => {
+    const { container } = render(<Upload />);
+    const input = container.querySelector('input')!;
+    const clickSpy = jest.spyOn(input, 'click').mockImplementation(() => {});
+    const preventDefaultSpy = jest.spyOn(Event.prototype, 'preventDefault');
+
+    fireEvent.keyDown(container.querySelector('span')!, { key });
+
+    expect(clickSpy).toHaveBeenCalledTimes(1);
+    expect(preventDefaultSpy).toHaveBeenCalledTimes(1);
+
+    clickSpy.mockRestore();
+    preventDefaultSpy.mockRestore();
+  });
+
   it("Should not be focusable and doesn't have role=button with hasControlInside=true", () => {
     const { container } = render(<Upload hasControlInside />);
+
+    expect(container.querySelector('span')!.tabIndex).not.toBe(0);
+    expect(container.querySelector('span')!).not.toHaveAttribute('role', 'button');
+  });
+
+  it.each(['Enter', ' '])('Should leave %p activation to the child control', key => {
+    const { container } = render(
+      <Upload hasControlInside>
+        <button type="button">Upload</button>
+      </Upload>,
+    );
+    const input = container.querySelector('input')!;
+    const button = container.querySelector('button')!;
+    const clickSpy = jest.spyOn(input, 'click').mockImplementation(() => {});
+
+    expect(fireEvent.keyDown(button, { key })).toBe(true);
+    expect(clickSpy).not.toHaveBeenCalled();
+
+    fireEvent.click(button);
+    expect(clickSpy).toHaveBeenCalledTimes(1);
+
+    clickSpy.mockRestore();
+  });
+
+  it("Should not be focusable and doesn't have role=button when click upload is disabled", () => {
+    const { container } = render(<Upload openFileDialogOnClick={false} />);
 
     expect(container.querySelector('span')!.tabIndex).not.toBe(0);
     expect(container.querySelector('span')!).not.toHaveAttribute('role', 'button');
