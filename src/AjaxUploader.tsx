@@ -86,7 +86,8 @@ class AjaxUploader extends Component<UploadProps> {
   };
 
   onKeyDown = (e: React.KeyboardEvent<HTMLDivElement>) => {
-    if (e.key === 'Enter') {
+    if (e.key === 'Enter' || e.key === ' ') {
+      e.preventDefault();
       this.onClick(e);
     }
   };

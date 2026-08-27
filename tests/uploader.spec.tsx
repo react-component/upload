@@ -1313,6 +1313,21 @@ describe('uploader', () => {
     expect(container.querySelector('span')).toHaveAttribute('role', 'button');
   });
 
+  it.each(['Enter', ' '])('Should open the file dialog with the %p key', key => {
+    const { container } = render(<Upload />);
+    const input = container.querySelector('input')!;
+    const clickSpy = jest.spyOn(input, 'click').mockImplementation(() => {});
+    const preventDefaultSpy = jest.spyOn(Event.prototype, 'preventDefault');
+
+    fireEvent.keyDown(container.querySelector('span')!, { key });
+
+    expect(clickSpy).toHaveBeenCalledTimes(1);
+    expect(preventDefaultSpy).toHaveBeenCalledTimes(1);
+
+    clickSpy.mockRestore();
+    preventDefaultSpy.mockRestore();
+  });
+
   it("Should not be focusable and doesn't have role=button with hasControlInside=true", () => {
     const { container } = render(<Upload hasControlInside />);
 
