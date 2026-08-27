@@ -1335,6 +1335,25 @@ describe('uploader', () => {
     expect(container.querySelector('span')!).not.toHaveAttribute('role', 'button');
   });
 
+  it.each(['Enter', ' '])('Should leave %p activation to the child control', key => {
+    const { container } = render(
+      <Upload hasControlInside>
+        <button type="button">Upload</button>
+      </Upload>,
+    );
+    const input = container.querySelector('input')!;
+    const button = container.querySelector('button')!;
+    const clickSpy = jest.spyOn(input, 'click').mockImplementation(() => {});
+
+    expect(fireEvent.keyDown(button, { key })).toBe(true);
+    expect(clickSpy).not.toHaveBeenCalled();
+
+    fireEvent.click(button);
+    expect(clickSpy).toHaveBeenCalledTimes(1);
+
+    clickSpy.mockRestore();
+  });
+
   it("Should not be focusable and doesn't have role=button when click upload is disabled", () => {
     const { container } = render(<Upload openFileDialogOnClick={false} />);
 

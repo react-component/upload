@@ -364,7 +364,7 @@ class AjaxUploader extends Component<UploadProps> {
       ? {}
       : {
           onClick: openFileDialogOnClick ? this.onClick : () => {},
-          onKeyDown: openFileDialogOnClick ? this.onKeyDown : () => {},
+          onKeyDown: openFileDialogOnClick && !hasControlInside ? this.onKeyDown : () => {},
           onMouseEnter,
           onMouseLeave,
           onDrop: this.onFileDrop,
