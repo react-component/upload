@@ -15,7 +15,6 @@
 
 <p align="center">English | <a href="./README.zh-CN.md">简体中文</a></p>
 
-
 ## Highlights
 
 - Supports Ajax uploads with progress, headers, credentials, and custom request overrides.
@@ -98,9 +97,10 @@ Then open `http://localhost:8000`.
 
 ### Methods
 
-| Name    | Type                      | Description             |
-| ------- | ------------------------- | ----------------------- |
-| `abort` | `(file: RcFile) => void` | Abort an active upload. |
+| Name    | Type                     | Description                          |
+| ------- | ------------------------ | ------------------------------------ |
+| `abort` | `(file: RcFile) => void` | Abort an active upload.              |
+| `retry` | `(file: RcFile) => void` | Retry an upload for a specific file. |
 
 ## Development
 

@@ -253,6 +253,85 @@ describe('uploader', () => {
       }, 100);
     });
 
+    it('retry should make new request', done => {
+      const uploadRef = React.createRef<any>();
+      render(<Upload ref={uploadRef} action="/test" />);
+
+      const file = {
+        name: 'retry.png',
+        toString() {
+          return this.name;
+        },
+      };
+      const files = [file];
+      (files as any).item = (i: number) => files[i];
+
+      const initialRequestCount = requests.length;
+
+      uploadRef.current.retry(file as any);
+
+      setTimeout(() => {
+        expect(requests.length).toBe(initialRequestCount + 1);
+        done();
+      }, 100);
+    });
+
+    it('retry should not make request when action rejects', done => {
+      const uploadRef = React.createRef<any>();
+      render(
+        <Upload
+          ref={uploadRef}
+          action={async () => {
+            throw new Error('action error');
+          }}
+        />,
+      );
+
+      const file = {
+        name: 'reject.png',
+        toString() {
+          return this.name;
+        },
+      };
+
+      const initialRequestCount = requests.length;
+
+      uploadRef.current.retry(file as any);
+
+      setTimeout(() => {
+        expect(requests.length).toBe(initialRequestCount);
+        done();
+      }, 100);
+    });
+
+    it('retry should not start overlapping request for the same file', done => {
+      const uploadRef = React.createRef<any>();
+      render(<Upload ref={uploadRef} action="/test" />);
+
+      const file = {
+        name: 'overlap.png',
+        toString() {
+          return this.name;
+        },
+      };
+      (file as any).uid = 'fixed-overlap-uid';
+
+      const initialRequestCount = requests.length;
+
+      uploadRef.current.retry(file as any);
+      uploadRef.current.retry(file as any);
+
+      setTimeout(() => {
+        expect(requests.length).toBe(initialRequestCount + 1);
+
+        expect(requests[requests.length - 1].aborted).toBeFalsy();
+
+        uploadRef.current.abort(file);
+        expect(requests[requests.length - 1].aborted).toBe(true);
+        done();
+      }, 100);
+    });
+
     it('drag to upload', done => {
       const input = uploader.container.querySelector('input')!;
 
