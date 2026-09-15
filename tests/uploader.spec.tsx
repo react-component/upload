@@ -300,6 +300,25 @@ describe('uploader', () => {
       expect(requests.length).toBe(initialRequestCount);
     });
 
+    it('retry should resolve false when beforeUpload rejects', async () => {
+      const uploadRef = React.createRef<any>();
+      render(<Upload ref={uploadRef} action="/test" beforeUpload={() => false} />);
+
+      const file = {
+        name: 'before-reject.png',
+        toString() {
+          return this.name;
+        },
+      };
+
+      const initialRequestCount = requests.length;
+
+      const result = await uploadRef.current.retry(file as any);
+
+      expect(result).toBe(false);
+      expect(requests.length).toBe(initialRequestCount);
+    });
+
     it('retry should not start overlapping request for the same file', async () => {
       const uploadRef = React.createRef<any>();
       render(<Upload ref={uploadRef} action="/test" />);
