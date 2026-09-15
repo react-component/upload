@@ -316,9 +316,10 @@ describe('uploader', () => {
 
       const firstResult = uploadRef.current.retry(file as any);
       const secondResult = uploadRef.current.retry(file as any);
-      const [first] = await Promise.all([firstResult, secondResult]);
+      const [first, second] = await Promise.all([firstResult, secondResult]);
 
       expect(first).toBe(true);
+      expect(second).toBe(false);
       expect(requests.length).toBe(initialRequestCount + 1);
 
       expect(requests[requests.length - 1].aborted).toBeFalsy();

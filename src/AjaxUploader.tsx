@@ -306,12 +306,13 @@ class AjaxUploader extends Component<UploadProps> {
     return this.processFile(originFile, [originFile])
       .then(fileInfo => {
         if (this.reqs[uid]) {
-          return;
+          return false;
         }
         if (fileInfo.parsedFile) {
           this.post(fileInfo);
           return true;
         }
+        return false;
       })
       .catch(() => false);
   };
