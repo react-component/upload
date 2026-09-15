@@ -301,18 +301,19 @@ class AjaxUploader extends Component<UploadProps> {
     this.reqs[uid] = request(requestOption, { defaultRequest });
   }
 
-  retry = (originFile: RcFile) => {
+  retry = async (originFile: RcFile): Promise<boolean> => {
     const { uid } = originFile;
-    this.processFile(originFile, [originFile])
+    return this.processFile(originFile, [originFile])
       .then(fileInfo => {
         if (this.reqs[uid]) {
           return;
         }
         if (fileInfo.parsedFile) {
           this.post(fileInfo);
+          return true;
         }
       })
-      .catch(() => {});
+      .catch(() => false);
   };
 
   reset() {

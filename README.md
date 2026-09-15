@@ -97,10 +97,10 @@ Then open `http://localhost:8000`.
 
 ### Methods
 
-| Name    | Type                     | Description                          |
-| ------- | ------------------------ | ------------------------------------ |
-| `abort` | `(file: RcFile) => void` | Abort an active upload.              |
-| `retry` | `(file: RcFile) => void` | Retry an upload for a specific file. |
+| Name    | Type                                 | Description                          |
+| ------- | ------------------------------------ | ------------------------------------ |
+| `abort` | `(file: RcFile) => void`             | Abort an active upload.              |
+| `retry` | `(file: RcFile) => Promise<boolean>` | Retry an upload for a specific file. |
 
 ## Development
 

@@ -253,7 +253,7 @@ describe('uploader', () => {
       }, 100);
     });
 
-    it('retry should make new request', done => {
+    it('retry should make new request', async () => {
       const uploadRef = React.createRef<any>();
       render(<Upload ref={uploadRef} action="/test" />);
 
@@ -268,15 +268,13 @@ describe('uploader', () => {
 
       const initialRequestCount = requests.length;
 
-      uploadRef.current.retry(file as any);
+      const result = await uploadRef.current.retry(file as any);
 
-      setTimeout(() => {
-        expect(requests.length).toBe(initialRequestCount + 1);
-        done();
-      }, 100);
+      expect(result).toBe(true);
+      expect(requests.length).toBe(initialRequestCount + 1);
     });
 
-    it('retry should not make request when action rejects', done => {
+    it('retry should not make request when action rejects', async () => {
       const uploadRef = React.createRef<any>();
       render(
         <Upload
@@ -296,15 +294,13 @@ describe('uploader', () => {
 
       const initialRequestCount = requests.length;
 
-      uploadRef.current.retry(file as any);
+      const result = await uploadRef.current.retry(file as any);
 
-      setTimeout(() => {
-        expect(requests.length).toBe(initialRequestCount);
-        done();
-      }, 100);
+      expect(result).toBe(false);
+      expect(requests.length).toBe(initialRequestCount);
     });
 
-    it('retry should not start overlapping request for the same file', done => {
+    it('retry should not start overlapping request for the same file', async () => {
       const uploadRef = React.createRef<any>();
       render(<Upload ref={uploadRef} action="/test" />);
 
@@ -318,18 +314,17 @@ describe('uploader', () => {
 
       const initialRequestCount = requests.length;
 
-      uploadRef.current.retry(file as any);
-      uploadRef.current.retry(file as any);
+      const firstResult = uploadRef.current.retry(file as any);
+      const secondResult = uploadRef.current.retry(file as any);
+      const [first] = await Promise.all([firstResult, secondResult]);
 
-      setTimeout(() => {
-        expect(requests.length).toBe(initialRequestCount + 1);
+      expect(first).toBe(true);
+      expect(requests.length).toBe(initialRequestCount + 1);
 
-        expect(requests[requests.length - 1].aborted).toBeFalsy();
+      expect(requests[requests.length - 1].aborted).toBeFalsy();
 
-        uploadRef.current.abort(file);
-        expect(requests[requests.length - 1].aborted).toBe(true);
-        done();
-      }, 100);
+      uploadRef.current.abort(file);
+      expect(requests[requests.length - 1].aborted).toBe(true);
     });
 
     it('drag to upload', done => {
