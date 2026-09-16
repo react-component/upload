@@ -97,10 +97,10 @@ Then open `http://localhost:8000`.
 
 ### Methods
 
-| Name    | Type                     | Description                          |
-| ------- | ------------------------ | ------------------------------------ |
-| `abort` | `(file: RcFile) => void` | Abort an active upload.              |
-| `retry` | `(file: RcFile) => void` | Retry an upload for a specific file. |
+| Name | Type | Description |
+| --- | --- | --- |
+| `abort` | `(file: RcFile) => void` | Abort an active upload. |
+| `retry` | `(file: RcFile) => Promise<boolean>` | Retry an upload for a specific file. Resolves `true` if a request was started, otherwise `false` (file never uploaded, an upload is in flight, or unmounted). Reuses the fileInfo from the first upload (does not re-run `beforeUpload` / `action` / `data`), so only files that have been uploaded before can be retried. |
 
 ## Development
 

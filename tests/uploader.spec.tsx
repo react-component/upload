@@ -253,9 +253,30 @@ describe('uploader', () => {
       }, 100);
     });
 
-    it('retry should make new request', done => {
+    it('retry should return false when the file was never uploaded', async () => {
       const uploadRef = React.createRef<any>();
       render(<Upload ref={uploadRef} action="/test" />);
+
+      const file = {
+        name: 'never-uploaded.png',
+        toString() {
+          return this.name;
+        },
+      };
+
+      const initialRequestCount = requests.length;
+
+      const result = await uploadRef.current.retry(file as any);
+
+      expect(result).toBe(false);
+      expect(requests.length).toBe(initialRequestCount);
+    });
+
+    it('retry should make a new request for a previously uploaded file', async () => {
+      const uploadRef = React.createRef<any>();
+      const retryUploader = render(
+        <Upload ref={uploadRef} action="/test" data={{ a: 1, b: 2 }} onError={() => {}} />,
+      );
 
       const file = {
         name: 'retry.png',
@@ -266,47 +287,24 @@ describe('uploader', () => {
       const files = [file];
       (files as any).item = (i: number) => files[i];
 
-      const initialRequestCount = requests.length;
+      const input = retryUploader.container.querySelector('input')!;
+      fireEvent.change(input, { target: { files } });
 
-      uploadRef.current.retry(file as any);
-
-      setTimeout(() => {
-        expect(requests.length).toBe(initialRequestCount + 1);
-        done();
-      }, 100);
-    });
-
-    it('retry should not make request when action rejects', done => {
-      const uploadRef = React.createRef<any>();
-      render(
-        <Upload
-          ref={uploadRef}
-          action={async () => {
-            throw new Error('action error');
-          }}
-        />,
-      );
-
-      const file = {
-        name: 'reject.png',
-        toString() {
-          return this.name;
-        },
-      };
+      await sleep(0);
+      requests[0].respond(400, {}, `error 400`);
 
       const initialRequestCount = requests.length;
 
-      uploadRef.current.retry(file as any);
+      const result = await uploadRef.current.retry(file as any);
 
-      setTimeout(() => {
-        expect(requests.length).toBe(initialRequestCount);
-        done();
-      }, 100);
+      expect(result).toBe(true);
+      expect(requests.length).toBe(initialRequestCount + 1);
+      retryUploader.unmount();
     });
 
-    it('retry should not start overlapping request for the same file', done => {
+    it('retry should not start overlapping request for the same file', async () => {
       const uploadRef = React.createRef<any>();
-      render(<Upload ref={uploadRef} action="/test" />);
+      const retryUploader = render(<Upload ref={uploadRef} action="/test" onError={() => {}} />);
 
       const file = {
         name: 'overlap.png',
@@ -315,21 +313,104 @@ describe('uploader', () => {
         },
       };
       (file as any).uid = 'fixed-overlap-uid';
+      const files = [file];
+      (files as any).item = (i: number) => files[i];
+
+      const input = retryUploader.container.querySelector('input')!;
+      fireEvent.change(input, { target: { files } });
+
+      await sleep(0);
+      requests[0].respond(400, {}, `error 400`);
 
       const initialRequestCount = requests.length;
 
-      uploadRef.current.retry(file as any);
-      uploadRef.current.retry(file as any);
+      const firstResult = uploadRef.current.retry(file as any);
+      const secondResult = uploadRef.current.retry(file as any);
+      const [first, second] = await Promise.all([firstResult, secondResult]);
 
-      setTimeout(() => {
-        expect(requests.length).toBe(initialRequestCount + 1);
+      expect(first).toBe(true);
+      expect(second).toBe(false);
+      expect(requests.length).toBe(initialRequestCount + 1);
 
-        expect(requests[requests.length - 1].aborted).toBeFalsy();
+      expect(requests[requests.length - 1].aborted).toBeFalsy();
 
-        uploadRef.current.abort(file);
-        expect(requests[requests.length - 1].aborted).toBe(true);
-        done();
-      }, 100);
+      uploadRef.current.abort(file);
+      expect(requests[requests.length - 1].aborted).toBe(true);
+
+      retryUploader.unmount();
+    });
+
+    it('retry should not overlap when customRequest returns void', async () => {
+      const uploadRef = React.createRef<any>();
+      const retryUploader = render(
+        <Upload ref={uploadRef} action="/test" onError={() => {}} customRequest={() => {}} />,
+      );
+
+      const file = {
+        name: 'void-retry.png',
+        toString() {
+          return this.name;
+        },
+      };
+      const files = [file];
+      (files as any).item = (i: number) => files[i];
+
+      const input = retryUploader.container.querySelector('input')!;
+      // First upload caches the fileInfo; customRequest returns void so reqs[uid]
+      // is the `{}` placeholder, which never gets cleared by any callback.
+      fireEvent.change(input, { target: { files } });
+      await sleep(0);
+      // Abort clears reqs[uid] (the `{}` has no .abort, so the call is skipped)
+      // while leaving fileInfoCache intact for retry to reuse.
+      uploadRef.current.abort(file);
+
+      // Two concurrent retries race: the `|| {}` placeholder keeps reqs[uid] truthy
+      // after the first post(), so the second retry must be blocked.
+      const [first, second] = await Promise.all([
+        uploadRef.current.retry(file as any),
+        uploadRef.current.retry(file as any),
+      ]);
+
+      expect(first).toBe(true);
+      expect(second).toBe(false);
+
+      retryUploader.unmount();
+    });
+
+    it('retry should work after customRequest fails synchronously', async () => {
+      const uploadRef = React.createRef<any>();
+      const retryUploader = render(
+        <Upload
+          ref={uploadRef}
+          action="/test"
+          onError={() => {}}
+          customRequest={option => {
+            // Synchronously fail and return void.
+            option.onError(new Error('sync fail'), null);
+          }}
+        />,
+      );
+
+      const file = {
+        name: 'sync-fail.png',
+        toString() {
+          return this.name;
+        },
+      };
+      const files = [file];
+      (files as any).item = (i: number) => files[i];
+
+      const input = retryUploader.container.querySelector('input')!;
+      fireEvent.change(input, { target: { files } });
+      await sleep(0);
+
+      // After a synchronous failure the in-flight marker must be cleared,
+      // otherwise retry would permanently see reqs[uid] and bail out.
+      const result = await uploadRef.current.retry(file as any);
+
+      expect(result).toBe(true);
+
+      retryUploader.unmount();
     });
 
     it('drag to upload', done => {
