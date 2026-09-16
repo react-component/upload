@@ -27,6 +27,8 @@ class AjaxUploader extends Component<UploadProps> {
 
   reqs: Record<string, any> = {};
 
+  private fileInfoCache: Map<string, ParsedFileInfo> = new Map();
+
   private fileInput: HTMLInputElement;
 
   private _isMounted: boolean;
@@ -260,14 +262,16 @@ class AjaxUploader extends Component<UploadProps> {
     };
   };
 
-  post({ data, origin, action, parsedFile }: ParsedFileInfo) {
+  post({ data, origin, action, parsedFile }: ParsedFileInfo): boolean {
     if (!this._isMounted) {
-      return;
+      return false;
     }
 
-    const { onStart, customRequest, name, headers, withCredentials, method } = this.props;
-
     const { uid } = origin;
+
+    this.fileInfoCache.set(uid, { data, origin, action, parsedFile });
+
+    const { onStart, customRequest, name, headers, withCredentials, method } = this.props;
 
     const request = customRequest || defaultRequest;
 
@@ -287,6 +291,7 @@ class AjaxUploader extends Component<UploadProps> {
         const { onSuccess } = this.props;
         onSuccess?.(ret, parsedFile, xhr);
 
+        this.fileInfoCache.delete(uid);
         delete this.reqs[uid];
       },
       onError: (err: UploadRequestError, ret: any) => {
@@ -298,23 +303,27 @@ class AjaxUploader extends Component<UploadProps> {
     };
 
     onStart(origin);
-    this.reqs[uid] = request(requestOption, { defaultRequest });
+    this.reqs[uid] = {};
+    try {
+      const handle = request(requestOption, { defaultRequest });
+      if (this.reqs[uid]) {
+        this.reqs[uid] = handle || {};
+      }
+    } catch (e) {
+      delete this.reqs[uid];
+      return false;
+    }
+    return true;
   }
 
   retry = async (originFile: RcFile): Promise<boolean> => {
     const { uid } = originFile;
-    return this.processFile(originFile, [originFile])
-      .then(fileInfo => {
-        if (this.reqs[uid]) {
-          return false;
-        }
-        if (fileInfo.parsedFile) {
-          this.post(fileInfo);
-          return true;
-        }
-        return false;
-      })
-      .catch(() => false);
+    const cachedFileInfo = this.fileInfoCache.get(uid);
+    if (!cachedFileInfo || this.reqs[uid]) {
+      return false;
+    }
+
+    return this.post(cachedFileInfo);
   };
 
   reset() {
