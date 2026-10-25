@@ -373,6 +373,7 @@ class AjaxUploader extends Component<UploadProps> {
     const dirProps: any = directory
       ? { directory: 'directory', webkitdirectory: 'webkitdirectory' }
       : {};
+    const isInteractive = openFileDialogOnClick && !hasControlInside;
     const events = disabled
       ? {}
       : {
@@ -382,10 +383,10 @@ class AjaxUploader extends Component<UploadProps> {
           onMouseLeave,
           onDrop: this.onFileDrop,
           onDragOver: this.onFileDragOver,
-          tabIndex: hasControlInside ? undefined : '0',
+          tabIndex: isInteractive ? '0' : undefined,
         };
     return (
-      <Tag {...events} className={cls} role={hasControlInside ? undefined : 'button'} style={style}>
+      <Tag {...events} className={cls} role={isInteractive ? 'button' : undefined} style={style}>
         <input
           {...pickAttrs(otherProps, { aria: true, data: true })}
           id={id}
