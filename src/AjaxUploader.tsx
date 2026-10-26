@@ -27,6 +27,8 @@ class AjaxUploader extends Component<UploadProps> {
 
   reqs: Record<string, any> = {};
 
+  private fileInfoCache: Map<string, ParsedFileInfo> = new Map();
+
   private fileInput: HTMLInputElement;
 
   private _isMounted: boolean;
@@ -157,6 +159,7 @@ class AjaxUploader extends Component<UploadProps> {
   componentWillUnmount() {
     this._isMounted = false;
     this.abort();
+    this.fileInfoCache.clear();
     document.removeEventListener('paste', this.onFilePaste);
   }
 
@@ -269,6 +272,8 @@ class AjaxUploader extends Component<UploadProps> {
 
     const { uid } = origin;
 
+    this.fileInfoCache.set(uid, { data, origin, action, parsedFile });
+
     const request = customRequest || defaultRequest;
 
     const requestOption = {
@@ -297,22 +302,42 @@ class AjaxUploader extends Component<UploadProps> {
       },
     };
 
-    onStart(origin);
-    this.reqs[uid] = request(requestOption, { defaultRequest });
+    this.reqs[uid] = {};
+    try {
+      onStart(origin);
+    } catch (e) {
+      delete this.reqs[uid];
+      throw e;
+    }
+    try {
+      const handle = request(requestOption, { defaultRequest });
+      if (this.reqs[uid]) {
+        this.reqs[uid] = handle || {};
+      }
+    } catch (e) {
+      delete this.reqs[uid];
+      const { onError } = this.props;
+      const err = e instanceof Error ? e : new Error(String(e));
+      onError?.(err as UploadRequestError, null, parsedFile);
+    }
   }
 
   retry = (originFile: RcFile) => {
     const { uid } = originFile;
-    this.processFile(originFile, [originFile])
-      .then(fileInfo => {
-        if (this.reqs[uid]) {
-          return;
-        }
-        if (fileInfo.parsedFile) {
-          this.post(fileInfo);
-        }
-      })
-      .catch(() => {});
+    if (this.reqs[uid]) {
+      return;
+    }
+
+    const cachedFileInfo = this.fileInfoCache.get(uid);
+    if (!cachedFileInfo) {
+      const { onError } = this.props;
+      const err = new Error('retry skipped: file was never uploaded') as UploadRequestError;
+      err.name = 'UploadRetrySkipError';
+      onError?.(err, null, originFile);
+      return;
+    }
+
+    this.post(cachedFileInfo);
   };
 
   reset() {

@@ -97,10 +97,10 @@ npm start
 
 ### 方法
 
-| 名称    | 类型                     | 说明                 |
-| ------- | ------------------------ | -------------------- |
-| `abort` | `(file: RcFile) => void` | 中止进行中的上传。   |
-| `retry` | `(file: RcFile) => void` | 重试特定文件的上传。 |
+| 名称 | 类型 | 说明 |
+| --- | --- | --- |
+| `abort` | `(file: RcFile) => void` | 中止进行中的上传。 |
+| `retry` | `(file: RcFile) => void` | 重试特定文件的上传。仅对至少上传过一次（有缓存信息）的文件生效，复用首次处理的 `beforeUpload`、`action` 和 `data`。若缓存不存在，通过 `onError` 通知 `UploadRetrySkipError`；若文件已有活动请求则静默跳过。 |
 
 ## 本地开发
 

@@ -97,10 +97,10 @@ Then open `http://localhost:8000`.
 
 ### Methods
 
-| Name    | Type                     | Description                          |
-| ------- | ------------------------ | ------------------------------------ |
-| `abort` | `(file: RcFile) => void` | Abort an active upload.              |
-| `retry` | `(file: RcFile) => void` | Retry an upload for a specific file. |
+| Name | Type | Description |
+| --- | --- | --- |
+| `abort` | `(file: RcFile) => void` | Abort an active upload. |
+| `retry` | `(file: RcFile) => void` | Retry an upload for a specific file. Only works for files that have been uploaded at least once (have cached info). Reuses the processed `beforeUpload`, `action`, and `data` from the first attempt. If no cache is found, fires `onError` with `UploadRetrySkipError`. Skips silently if the file has an active request. |
 
 ## Development
 
