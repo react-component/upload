@@ -86,7 +86,8 @@ class AjaxUploader extends Component<UploadProps> {
   };
 
   onKeyDown = (e: React.KeyboardEvent<HTMLDivElement>) => {
-    if (e.key === 'Enter') {
+    if (e.key === 'Enter' || e.key === ' ') {
+      e.preventDefault();
       this.onClick(e);
     }
   };
@@ -378,7 +379,7 @@ class AjaxUploader extends Component<UploadProps> {
       ? {}
       : {
           onClick: openFileDialogOnClick ? this.onClick : () => {},
-          onKeyDown: openFileDialogOnClick ? this.onKeyDown : () => {},
+          onKeyDown: openFileDialogOnClick && !hasControlInside ? this.onKeyDown : () => {},
           onMouseEnter,
           onMouseLeave,
           onDrop: this.onFileDrop,
