@@ -302,6 +302,20 @@ class AjaxUploader extends Component<UploadProps> {
     this.reqs[uid] = request(requestOption, { defaultRequest });
   }
 
+  retry = (originFile: RcFile) => {
+    const { uid } = originFile;
+    this.processFile(originFile, [originFile])
+      .then(fileInfo => {
+        if (this.reqs[uid]) {
+          return;
+        }
+        if (fileInfo.parsedFile) {
+          this.post(fileInfo);
+        }
+      })
+      .catch(() => {});
+  };
+
   reset() {
     this.setState({
       uid: getUid(),
@@ -360,6 +374,7 @@ class AjaxUploader extends Component<UploadProps> {
     const dirProps: any = directory
       ? { directory: 'directory', webkitdirectory: 'webkitdirectory' }
       : {};
+    const isInteractive = openFileDialogOnClick && !hasControlInside;
     const events = disabled
       ? {}
       : {
@@ -369,15 +384,10 @@ class AjaxUploader extends Component<UploadProps> {
           onMouseLeave,
           onDrop: this.onFileDrop,
           onDragOver: this.onFileDragOver,
-          tabIndex: hasControlInside || !openFileDialogOnClick ? undefined : '0',
+          tabIndex: isInteractive ? '0' : undefined,
         };
     return (
-      <Tag
-        {...events}
-        className={cls}
-        role={hasControlInside || !openFileDialogOnClick ? undefined : 'button'}
-        style={style}
-      >
+      <Tag {...events} className={cls} role={isInteractive ? 'button' : undefined} style={style}>
         <input
           {...pickAttrs(otherProps, { aria: true, data: true })}
           id={id}
